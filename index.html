@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ViewEstate | נכסים שנראים כמו שמרגישים</title>
+  <meta name="description" content="דורון — מתווך נכסים מוסמך וצלם מקצועי. כל נכס מקבל וידאו מקצועי, שיווק חכם עם QR code, ותיווך אמין.">
+  <meta property="og:title" content="ViewEstate | נכסים שנראים כמו שמרגישים">
+  <meta property="og:description" content="מתווך נכסים + צלם מקצועי = כל נכס מקבל הצגה שהוא ראוי לה">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=85">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700;900&family=Heebo:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== RESET & VARIABLES ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #F8F4EE;
+      --bg-alt:      #EDE8DF;
+      --bg-card:     #E8E2D6;
+      --bg-dark:     #1C1008;
+      --bg-dark2:    #251508;
+      --gold:        #9A7230;
+      --gold-light:  #C9A35A;
+      --gold-pale:   #E8D5A8;
+      --gold-dark:   #6B4E1A;
+      --text:        #1C1008;
+      --text-mid:    #56382A;
+      --text-muted:  #8A6A50;
+      --border:      rgba(154,114,48,0.18);
+      --border-md:   rgba(154,114,48,0.30);
+      --serif:       'Frank Ruhl Libre', 'David', Georgia, serif;
+      --sans:        'Heebo', Arial, sans-serif;
+      --ease:        cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --t:           0.45s var(--ease);
+    }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    img, video { display: block; }
+    button { font-family: var(--sans); cursor: pointer; }
+
+    /* ===== NAVIGATION ===== */
+    .nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 200;
+      padding: 28px 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: var(--t);
+    }
+
+    .nav--scrolled {
+      background: rgba(28, 16, 8, 0.97);
+      backdrop-filter: blur(24px) saturate(1.4);
+      -webkit-backdrop-filter: blur(24px) saturate(1.4);
+      padding: 16px 64px;
+      box-shadow: 0 1px 0 rgba(154,114,48,0.15);
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      display: flex;
+      align-items: baseline;
+      gap: 1px;
+      direction: ltr;
+    }
+
+    .logo-v { color: var(--gold-light); }
+    .logo-e { color: var(--bg); }
+
+    .nav:not(.nav--scrolled) .logo-v { color: var(--gold); }
+    .nav:not(.nav--scrolled) .logo-e { color: var(--text); }
+
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav__links a {
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.8px;
+      color: rgba(28,16,8,0.7);
+      transition: color 0.3s;
+    }
+
+    .nav--scrolled .nav__links a { color: rgba(248,244,238,0.6); }
+    .nav__links a:hover { color: var(--gold-light) !important; }
+
+    .nav__cta {
+      border: 1px solid var(--gold-dark);
+      color: var(--gold-dark) !important;
+      padding: 9px 22px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.8px;
+      transition: all 0.3s !important;
+      border-radius: 1px;
+    }
+
+    .nav--scrolled .nav__cta { border-color: var(--gold-light); color: var(--gold-light) !important; }
+    .nav__cta:hover { background: var(--gold-light) !important; color: #1C1008 !important; border-color: var(--gold-light) !important; }
+
+    .nav__ham {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      background: none;
+      border: none;
+    }
+
+    .nav__ham span {
+      display: block;
+      width: 26px;
+      height: 2px;
+      background: var(--text);
+      transition: var(--t);
+      border-radius: 2px;
+    }
+
+    .nav--scrolled .nav__ham span { background: var(--bg); }
+
+    /* Mobile menu */
+    .nav__mobile {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--bg-dark);
+      z-index: 190;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+    }
+
+    .nav__mobile.open { display: flex; }
+    .nav__mobile a { font-family: var(--serif); font-size: 32px; color: var(--bg); font-weight: 700; letter-spacing: 1px; transition: color 0.3s; }
+    .nav__mobile a:hover { color: var(--gold-light); }
+    .nav__mobile-close { position: absolute; top: 24px; left: 24px; background: none; border: none; color: var(--bg); font-size: 32px; cursor: pointer; }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 720px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero__video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 115%;
+      object-fit: cover;
+      z-index: 1;
+      will-change: transform;
+    }
+
+    .hero__overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: linear-gradient(
+        155deg,
+        rgba(28,16,8,0.62) 0%,
+        rgba(28,16,8,0.18) 45%,
+        rgba(28,16,8,0.72) 100%
+      );
+    }
+
+    .hero__warm {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: rgba(160, 80, 20, 0.06);
+      mix-blend-mode: multiply;
+    }
+
+    .hero__content {
+      position: relative;
+      z-index: 3;
+      text-align: center;
+      max-width: 900px;
+      padding: 0 24px;
+    }
+
+    .hero__eyebrow {
+      font-size: 11px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold-pale);
+      font-weight: 500;
+      margin-bottom: 32px;
+      font-family: var(--sans);
+      opacity: 0.9;
+    }
+
+    .hero__h1 {
+      font-family: var(--serif);
+      font-size: clamp(60px, 10vw, 112px);
+      font-weight: 700;
+      line-height: 1.0;
+      color: #FAF6F0;
+      margin-bottom: 28px;
+      letter-spacing: -1px;
+    }
+
+    .hero__h1 em {
+      font-style: italic;
+      color: var(--gold-light);
+      display: block;
+    }
+
+    .hero__sub {
+      font-size: clamp(16px, 2vw, 19px);
+      color: rgba(250,246,240,0.72);
+      font-weight: 300;
+      max-width: 520px;
+      margin: 0 auto 52px;
+      line-height: 1.8;
+    }
+
+    .hero__actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: var(--sans);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--t);
+      border: none;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: #FAF6F0;
+      padding: 16px 44px;
+      font-size: 15px;
+    }
+    .btn-gold:hover { background: var(--gold-light); transform: translateY(-3px); box-shadow: 0 16px 40px rgba(154,114,48,0.28); }
+
+    .btn-ghost-light {
+      background: transparent;
+      color: rgba(250,246,240,0.88);
+      padding: 16px 40px;
+      font-size: 15px;
+      border: 1px solid rgba(250,246,240,0.28);
+    }
+    .btn-ghost-light:hover { border-color: rgba(250,246,240,0.65); background: rgba(250,246,240,0.06); }
+
+    .btn-ghost-dark {
+      background: transparent;
+      color: var(--text);
+      padding: 13px 32px;
+      font-size: 14px;
+      border: 1px solid var(--border-md);
+    }
+    .btn-ghost-dark:hover { border-color: var(--gold); color: var(--gold); }
+
+    .btn-ghost-light-on-dark {
+      background: transparent;
+      color: rgba(250,246,240,0.75);
+      padding: 13px 32px;
+      font-size: 14px;
+      border: 1px solid rgba(250,246,240,0.2);
+    }
+    .btn-ghost-light-on-dark:hover { border-color: var(--gold-light); color: var(--gold-light); }
+
+    .btn-wa {
+      background: #25D366;
+      color: white;
+      padding: 18px 44px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .btn-wa:hover { background: #1ebe5d; transform: translateY(-3px); box-shadow: 0 16px 40px rgba(37,211,102,0.22); }
+
+    /* Sound button */
+    .hero__sound {
+      position: absolute;
+      bottom: 48px;
+      left: 64px;
+      z-index: 4;
+      background: rgba(28,16,8,0.32);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(250,246,240,0.16);
+      color: rgba(250,246,240,0.78);
+      padding: 10px 18px;
+      font-size: 13px;
+      font-family: var(--sans);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--t);
+    }
+    .hero__sound:hover { border-color: var(--gold-light); color: var(--gold-light); }
+
+    /* Scroll line */
+    .hero__scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero__scroll-line {
+      width: 1px;
+      height: 64px;
+      background: linear-gradient(to bottom, var(--gold-pale), transparent);
+      animation: scrollPulse 2.4s ease-in-out infinite;
+    }
+
+    .hero__scroll-label {
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(250,246,240,0.4);
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      direction: ltr;
+      margin-top: 4px;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.9; transform: scaleY(1);   transform-origin: top; }
+      60%       { opacity: 0.2; transform: scaleY(0.35); transform-origin: top; }
+    }
+
+    /* ===== SECTION HELPERS ===== */
+    .section-eyebrow {
+      font-size: 10px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .section-eyebrow--light { color: var(--gold-light); }
+
+    .section-h2 {
+      font-family: var(--serif);
+      font-size: clamp(34px, 4vw, 58px);
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .section-h2--dark { color: var(--text); }
+    .section-h2--light { color: #FAF6F0; }
+
+    .gold-bar { width: 52px; height: 2px; background: var(--gold); }
+
+    /* ===== PROPERTIES SECTION ===== */
+    .sec-props {
+      background: var(--bg-dark);
+      padding: 120px 64px;
+    }
+
+    .sec-props__header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 64px;
+      gap: 24px;
+    }
+
+    /* 2-col grid: featured 2/3, side 1/3 */
+    .props-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 3px;
+    }
+
+    .prop-card {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      background: #0D0806;
+    }
+
+    .prop-card--feat { grid-row: span 2; min-height: 680px; }
+    .prop-card--sm   { min-height: 335px; }
+
+    .prop-card__media {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1s var(--ease);
+    }
+
+    .prop-card:hover .prop-card__media { transform: scale(1.06); }
+
+    .prop-card__shade {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(14,8,3,0.94) 0%, rgba(14,8,3,0) 55%);
+      z-index: 2;
+      transition: var(--t);
+    }
+
+    .prop-card:hover .prop-card__shade {
+      background: linear-gradient(to top, rgba(14,8,3,0.96) 0%, rgba(14,8,3,0.12) 55%);
+    }
+
+    .prop-card__body {
+      position: absolute;
+      bottom: 0;
+      left: 0; right: 0;
+      padding: 32px;
+      z-index: 3;
+      transform: translateY(5px);
+      transition: transform 0.5s var(--ease);
+    }
+
+    .prop-card:hover .prop-card__body { transform: translateY(0); }
+
+    .prop-card__type {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .prop-card__name {
+      font-family: var(--serif);
+      font-size: 24px;
+      color: #FAF6F0;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .prop-card--feat .prop-card__name { font-size: 34px; }
+
+    .prop-card__info {
+      font-size: 14px;
+      color: rgba(250,246,240,0.58);
+      font-weight: 300;
+    }
+
+    .prop-card__play-cue {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 72px;
+      height: 72px;
+      border: 2px solid rgba(250,246,240,0.45);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 4;
+      opacity: 0;
+      transition: var(--t);
+      backdrop-filter: blur(8px);
+      background: rgba(28,16,8,0.18);
+    }
+
+    .prop-card:hover .prop-card__play-cue { opacity: 1; }
+
+    .play-tri {
+      width: 0; height: 0;
+      border-top: 11px solid transparent;
+      border-bottom: 11px solid transparent;
+      border-right: 18px solid rgba(250,246,240,0.92);
+      margin-right: -4px;
+    }
+
+    .prop-card__video-tag {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 4;
+      background: rgba(154,114,48,0.88);
+      backdrop-filter: blur(8px);
+      color: #FAF6F0;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: var(--t);
+    }
+
+    .prop-card:hover .prop-card__video-tag { opacity: 1; transform: translateY(0); }
+
+    /* ===== STATS ===== */
+    .sec-stats {
+      background: var(--bg-dark2);
+      padding: 80px 64px;
+      border-top: 1px solid rgba(154,114,48,0.18);
+      border-bottom: 1px solid rgba(154,114,48,0.18);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px;
+      text-align: center;
+    }
+
+    .stat__num {
+      font-family: var(--serif);
+      font-size: 64px;
+      font-weight: 700;
+      color: var(--gold-light);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .stat__label {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(250,246,240,0.45);
+    }
+
+    /* ===== ABOUT ===== */
+    .sec-about {
+      background: var(--bg);
+      padding: 140px 64px;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 5fr 6fr;
+      gap: 96px;
+      align-items: center;
+    }
+
+    .about-visual { position: relative; }
+
+    .about-img-wrap {
+      aspect-ratio: 3/4;
+      overflow: hidden;
+    }
+
+    .about-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 1.2s var(--ease);
+    }
+
+    .about-img-wrap:hover img { transform: scale(1.04); }
+
+    .about-badge {
+      position: absolute;
+      bottom: -28px;
+      right: -28px;
+      width: 148px; height: 148px;
+      background: var(--gold);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 4px;
+    }
+
+    .about-badge__num {
+      font-family: var(--serif);
+      font-size: 46px;
+      font-weight: 700;
+      color: #FAF6F0;
+      line-height: 1;
+    }
+
+    .about-badge__txt {
+      font-size: 12px;
+      color: rgba(250,246,240,0.85);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      line-height: 1.4;
+    }
+
+    .about-text {
+      font-size: 17px;
+      line-height: 1.88;
+      color: var(--text-mid);
+      margin: 28px 0 44px;
+    }
+
+    .feat-list { display: flex; flex-direction: column; gap: 22px; }
+
+    .feat-item { display: flex; align-items: flex-start; gap: 18px; }
+
+    .feat-icon {
+      width: 46px; height: 46px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border-md);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 20px;
+    }
+
+    .feat-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .feat-desc  { font-size: 14px; color: var(--text-muted); line-height: 1.55; }
+
+    /* ===== QR CONCEPT ===== */
+    .sec-qr {
+      background: var(--bg-dark);
+      padding: 140px 64px;
+    }
+
+    .qr-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 96px;
+      align-items: center;
+    }
+
+    .qr-desc {
+      font-size: 17px;
+      color: rgba(250,246,240,0.58);
+      line-height: 1.85;
+      max-width: 460px;
+      margin: 28px 0 52px;
+    }
+
+    .qr-steps { display: flex; flex-direction: column; gap: 38px; }
+
+    .qr-step { display: flex; gap: 28px; align-items: flex-start; }
+
+    .qr-step__n {
+      font-family: 'Playfair Display', serif;
+      font-size: 52px;
+      font-weight: 700;
+      color: var(--gold-light);
+      opacity: 0.18;
+      line-height: 1;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .qr-step__title {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 600;
+      color: #FAF6F0;
+      margin-bottom: 6px;
+    }
+
+    .qr-step__desc { font-size: 14px; color: rgba(250,246,240,0.48); line-height: 1.65; }
+
+    /* Phone mockup */
+    .phone-wrap { display: flex; justify-content: center; }
+
+    .phone {
+      width: 272px;
+      background: #100806;
+      border-radius: 52px;
+      padding: 11px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 48px 88px rgba(0,0,0,0.75),
+        inset 0 0 0 1px rgba(255,255,255,0.03);
+      position: relative;
+    }
+
+    .phone::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 76px; height: 7px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 100px;
+      z-index: 10;
+    }
+
+    .phone__screen {
+      border-radius: 42px;
+      overflow: hidden;
+      aspect-ratio: 9/20;
+      position: relative;
+      background: #000;
+    }
+
+    .phone__screen video { width: 100%; height: 100%; object-fit: cover; }
+
+    .phone__ui {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 50%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 22px 18px 20px;
+    }
+
+    .phone__badge {
+      background: var(--gold);
+      color: #FAF6F0;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      padding: 4px 9px;
+      margin-bottom: 10px;
+      width: fit-content;
+      border-radius: 1px;
+    }
+
+    .phone__prop-name { font-family: var(--serif); font-size: 21px; color: white; line-height: 1.2; margin-bottom: 4px; }
+    .phone__prop-meta { font-size: 12px; color: rgba(255,255,255,0.52); margin-bottom: 14px; }
+
+    .phone__wa {
+      background: #25D366;
+      color: white;
+      border: none;
+      padding: 13px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-size: 14px; font-weight: 700;
+      cursor: pointer;
+      font-family: var(--sans);
+      width: 100%;
+    }
+
+    /* ===== TESTIMONIALS ===== */
+    .sec-testi {
+      background: var(--bg-alt);
+      padding: 120px 64px;
+    }
+
+    .sec-testi .sec-header { text-align: center; margin-bottom: 72px; }
+    .sec-testi .gold-bar { margin: 16px auto 0; }
+
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 28px;
+    }
+
+    .testi-card {
+      background: var(--bg);
+      padding: 44px 36px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: var(--t);
+    }
+
+    .testi-card:hover { transform: translateY(-4px); box-shadow: 0 20px 48px rgba(28,16,8,0.08); }
+
+    .testi-card::before {
+      content: '"';
+      position: absolute;
+      top: 16px;
+      right: 28px;
+      font-family: 'Playfair Display', serif;
+      font-size: 96px;
+      color: var(--gold-light);
+      opacity: 0.12;
+      line-height: 1;
+      direction: ltr;
+    }
+
+    .testi-text { font-size: 16px; line-height: 1.82; color: var(--text-mid); margin-bottom: 28px; position: relative; }
+    .testi-name { font-weight: 700; font-size: 15px; color: var(--text); margin-bottom: 2px; }
+    .testi-role { font-size: 13px; color: var(--text-muted); }
+    .testi-stars { color: var(--gold); font-size: 14px; margin-bottom: 20px; letter-spacing: 2px; }
+
+    /* ===== CONTACT ===== */
+    .sec-contact {
+      background: var(--bg-dark);
+      padding: 120px 64px;
+      text-align: center;
+    }
+
+    .sec-contact .gold-bar { margin: 20px auto 52px; }
+
+    .contact-sub {
+      font-size: 18px;
+      color: rgba(250,246,240,0.58);
+      max-width: 480px;
+      margin: 0 auto 52px;
+      line-height: 1.78;
+    }
+
+    .contact-btns {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--bg-dark2);
+      border-top: 1px solid rgba(154,114,48,0.12);
+      padding: 48px 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 3px;
+    }
+
+    .footer-copy { font-size: 13px; color: rgba(250,246,240,0.28); }
+
+    .footer-links { display: flex; gap: 28px; }
+    .footer-links a { font-size: 13px; color: rgba(250,246,240,0.38); transition: color 0.3s; }
+    .footer-links a:hover { color: var(--gold-light); }
+
+    /* ===== SCROLL ANIMATIONS ===== */
+    .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.9s ease, transform 0.9s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.12s; }
+    .delay-2 { transition-delay: 0.24s; }
+    .delay-3 { transition-delay: 0.38s; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1100px) {
+      .nav, .nav--scrolled { padding-left: 32px; padding-right: 32px; }
+      .sec-props, .sec-about, .sec-qr, .sec-testi, .sec-contact { padding-left: 32px; padding-right: 32px; }
+      .sec-stats { padding-left: 32px; padding-right: 32px; }
+      footer { padding-left: 32px; padding-right: 32px; }
+      .hero__sound { left: 32px; }
+      .about-grid { grid-template-columns: 1fr; gap: 72px; }
+      .about-badge { bottom: -16px; right: -16px; }
+      .qr-inner { grid-template-columns: 1fr; gap: 72px; }
+      .props-grid { grid-template-columns: 1fr 1fr; }
+      .prop-card--feat { grid-column: span 2; min-height: 500px; grid-row: span 1; }
+      .stats-grid { grid-template-columns: repeat(2,1fr); }
+      .testi-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .nav, .nav--scrolled { padding-left: 20px; padding-right: 20px; }
+      .nav__links { display: none; }
+      .nav__ham { display: flex; }
+      .sec-props, .sec-about, .sec-qr, .sec-testi, .sec-contact { padding: 72px 20px; }
+      .sec-stats { padding: 56px 20px; }
+      footer { padding: 36px 20px; flex-direction: column; text-align: center; }
+      .hero { min-height: 100dvh; }
+      .hero__sound { left: 20px; bottom: 28px; }
+      .hero__scroll { display: none; }
+      .hero__h1 { font-size: clamp(50px, 14vw, 80px); }
+      .props-grid { grid-template-columns: 1fr; }
+      .prop-card--feat { grid-column: span 1; min-height: 420px; }
+      .prop-card--sm { min-height: 280px; }
+      .stats-grid { grid-template-columns: repeat(2,1fr); gap: 28px; }
+      .stat__num { font-size: 48px; }
+      .sec-props__header { flex-direction: column; align-items: flex-start; gap: 24px; }
+      .testi-grid { grid-template-columns: 1fr; }
+      .contact-btns { flex-direction: column; align-items: center; }
+      .footer-links { gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAV ===== -->
+  <nav class="nav" id="nav">
+    <a href="index.html" class="logo">
+      <span class="logo-v">VIEW</span><span class="logo-e">ESTATE</span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="#properties">נכסים</a></li>
+      <li><a href="#about">אודות</a></li>
+      <li><a href="#concept">השיטה שלנו</a></li>
+      <li><a href="#contact" class="nav__cta">דבר עם דורון</a></li>
+    </ul>
+    <button class="nav__ham" id="navHam" aria-label="פתח תפריט">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="nav__mobile" id="mobileMenu">
+    <button class="nav__mobile-close" id="mobileClose" aria-label="סגור">✕</button>
+    <a href="#properties" onclick="closeMobile()">נכסים</a>
+    <a href="#about" onclick="closeMobile()">אודות</a>
+    <a href="#concept" onclick="closeMobile()">השיטה שלנו</a>
+    <a href="#contact" onclick="closeMobile()">צור קשר</a>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="home">
+    <video class="hero__video" id="heroVid" autoplay muted loop playsinline
+           poster="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=85">
+      <!-- Replace with your own property video -->
+      <source src="https://videos.pexels.com/video-files/3196787/3196787-hd_1920_1080_30fps.mp4" type="video/mp4">
+    </video>
+    <div class="hero__overlay"></div>
+    <div class="hero__warm"></div>
+
+    <div class="hero__content">
+      <p class="hero__eyebrow">מתווך נכסים · צילום ווידאו מקצועי · viewestate.co.il</p>
+      <h1 class="hero__h1">
+        כל נכס
+        <em>ראוי להיראות</em>
+      </h1>
+      <p class="hero__sub">
+        דורון — מתווך מוסמך וצלם מקצועי.<br>
+        כי הרושם הראשון נוצר לפני שפותחים את הדלת.
+      </p>
+      <div class="hero__actions">
+        <a href="#properties" class="btn btn-gold">צפה בנכסים</a>
+        <a href="#contact" class="btn btn-ghost-light">דבר עם דורון</a>
+      </div>
+    </div>
+
+    <button class="hero__sound" id="soundBtn" onclick="toggleSound()">
+      <span id="soundIcon">🔇</span>
+      <span id="soundTxt">הפעל צליל</span>
+    </button>
+
+    <div class="hero__scroll" aria-hidden="true">
+      <div class="hero__scroll-line"></div>
+      <span class="hero__scroll-label">גלול</span>
+    </div>
+  </section>
+
+  <!-- ===== PROPERTIES ===== -->
+  <section class="sec-props" id="properties">
+    <div class="sec-props__header reveal">
+      <div>
+        <p class="section-eyebrow section-eyebrow--light">נכסים נבחרים</p>
+        <h2 class="section-h2 section-h2--light">נכסים<br>שמספרים סיפור</h2>
+      </div>
+      <a href="#contact" class="btn btn-ghost-light-on-dark" style="align-self:flex-end">
+        כל הנכסים &larr;
+      </a>
+    </div>
+
+    <div class="props-grid">
+      <!-- Featured property – replace video src with your footage -->
+      <div class="prop-card prop-card--feat" onclick="window.location='property.html'" title="פתח דף נכס">
+        <video class="prop-card__media" autoplay muted loop playsinline
+               poster="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1400&q=85">
+          <source src="https://videos.pexels.com/video-files/3196787/3196787-hd_1920_1080_30fps.mp4" type="video/mp4">
+        </video>
+        <div class="prop-card__shade"></div>
+        <div class="prop-card__video-tag">▶ &nbsp;וידאו</div>
+        <div class="prop-card__play-cue"><div class="play-tri"></div></div>
+        <div class="prop-card__body">
+          <p class="prop-card__type">פנטהאוז · תל אביב</p>
+          <h3 class="prop-card__name">פנטהאוז רוטשילד 22</h3>
+          <p class="prop-card__info">4,800,000 ₪ &nbsp;·&nbsp; 5 חדרים &nbsp;·&nbsp; 160 מ"ר &nbsp;·&nbsp; קומה 12</p>
+        </div>
+      </div>
+
+      <div class="prop-card prop-card--sm" onclick="window.location='property.html'">
+        <img class="prop-card__media"
+             src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=900&q=80"
+             alt="וילה הרצליה פיתוח">
+        <div class="prop-card__shade"></div>
+        <div class="prop-card__play-cue"><div class="play-tri"></div></div>
+        <div class="prop-card__body">
+          <p class="prop-card__type">וילה · הרצליה פיתוח</p>
+          <h3 class="prop-card__name">וילה בשכונת הזהב</h3>
+          <p class="prop-card__info">7,200,000 ₪ &nbsp;·&nbsp; 7 חדרים &nbsp;·&nbsp; 320 מ"ר</p>
+        </div>
+      </div>
+
+      <div class="prop-card prop-card--sm" onclick="window.location='property.html'">
+        <img class="prop-card__media"
+             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&q=80"
+             alt="דירת גן תל אביב">
+        <div class="prop-card__shade"></div>
+        <div class="prop-card__play-cue"><div class="play-tri"></div></div>
+        <div class="prop-card__body">
+          <p class="prop-card__type">דירת גן · תל אביב</p>
+          <h3 class="prop-card__name">גן פרטי בלב העיר</h3>
+          <p class="prop-card__info">3,900,000 ₪ &nbsp;·&nbsp; 4 חדרים &nbsp;·&nbsp; 130 מ"ר</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STATS ===== -->
+  <div class="sec-stats">
+    <div class="stats-grid">
+      <div class="reveal">
+        <div class="stat__num">120+</div>
+        <div class="stat__label">עסקאות שנסגרו</div>
+      </div>
+      <div class="reveal delay-1">
+        <div class="stat__num">8</div>
+        <div class="stat__label">שנות ניסיון</div>
+      </div>
+      <div class="reveal delay-2">
+        <div class="stat__num">200+</div>
+        <div class="stat__label">סרטוני נכסים</div>
+      </div>
+      <div class="reveal delay-3">
+        <div class="stat__num">98%</div>
+        <div class="stat__label">שביעות רצון</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="sec-about" id="about">
+    <div class="about-grid">
+      <div class="about-visual reveal">
+        <div class="about-img-wrap">
+          <!-- Replace with your professional photo -->
+          <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&q=85" alt="דורון — ViewEstate">
+        </div>
+        <div class="about-badge">
+          <div class="about-badge__num">8+</div>
+          <div class="about-badge__txt">שנות<br>ניסיון</div>
+        </div>
+      </div>
+
+      <div class="reveal delay-1">
+        <p class="section-eyebrow">הכוח הכפול</p>
+        <h2 class="section-h2 section-h2--dark">
+          מתווך.<br>צלם.<br>
+          <span style="color:var(--gold);font-style:italic">אחד.</span>
+        </h2>
+        <div class="gold-bar" style="margin-top:28px"></div>
+        <p class="about-text">
+          שמי דורון, מתווך נכסים מוסמך עם למעלה מ-8 שנות ניסיון בשוק
+          הנדל"ן הישראלי. לצד רישיון התיווך, אני צלם ומפיק וידאו מקצועי —
+          כי אני מאמין שכל נכס ראוי להצגה שהוא ראוי לה.
+        </p>
+        <div class="feat-list">
+          <div class="feat-item">
+            <div class="feat-icon">⚖️</div>
+            <div>
+              <div class="feat-title">רישיון תיווך מוסמך</div>
+              <div class="feat-desc">ניסיון עשיר, ידע מעמיק בשוק הנדל"ן הישראלי</div>
+            </div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-icon">🎬</div>
+            <div>
+              <div class="feat-title">צילום ווידאו מקצועי</div>
+              <div class="feat-desc">ציוד מקצועי, עריכה מקצועית, תוצאה קולנועית</div>
+            </div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-icon">📱</div>
+            <div>
+              <div class="feat-title">שיווק דיגיטלי חכם</div>
+              <div class="feat-desc">QR code ייחודי לכל נכס, דפי נכס אישיים, רשתות חברתיות</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== QR CONCEPT ===== -->
+  <section class="sec-qr" id="concept">
+    <div class="qr-inner">
+      <div class="reveal">
+        <p class="section-eyebrow section-eyebrow--light">השיטה החדשנית</p>
+        <h2 class="section-h2 section-h2--light">
+          הנכס שלך<br>בכיס של כל<br>
+          <em style="color:var(--gold-light)">עובר אורח</em>
+        </h2>
+        <p class="qr-desc">
+          שלט מקצועי עם QR code ייחודי במרפסת.<br>
+          סורקים — רואים וידאו מקצועי מיידית.<br>
+          גוללים — תמונות, פרטים, ו-WhatsApp ישיר.
+        </p>
+        <div class="qr-steps">
+          <div class="qr-step">
+            <div class="qr-step__n">01</div>
+            <div>
+              <div class="qr-step__title">שלט + QR code במרפסת</div>
+              <div class="qr-step__desc">שלט מקצועי עם קיוארקוד ייחודי לנכס שלך מותקן בכניסה</div>
+            </div>
+          </div>
+          <div class="qr-step">
+            <div class="qr-step__n">02</div>
+            <div>
+              <div class="qr-step__title">סורקים ← וידאו מיידי</div>
+              <div class="qr-step__desc">עובר האורח סורק ומיד רץ סרטון וידאו מקצועי של הנכס</div>
+            </div>
+          </div>
+          <div class="qr-step">
+            <div class="qr-step__n">03</div>
+            <div>
+              <div class="qr-step__title">גוללים ← תמונות + פרטים</div>
+              <div class="qr-step__desc">גלריית תמונות מקצועית ופרטי הנכס המלאים</div>
+            </div>
+          </div>
+          <div class="qr-step">
+            <div class="qr-step__n">04</div>
+            <div>
+              <div class="qr-step__title">לחיצה ← WhatsApp ישיר</div>
+              <div class="qr-step__desc">מתעניין יוצר קשר בשניה — ישירות אליך</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phone-wrap reveal delay-2">
+        <div class="phone">
+          <div class="phone__screen">
+            <video autoplay muted loop playsinline
+                   poster="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80">
+              <source src="https://videos.pexels.com/video-files/3196787/3196787-hd_1920_1080_30fps.mp4" type="video/mp4">
+            </video>
+            <div class="phone__ui">
+              <div class="phone__badge">VIEWESTATE</div>
+              <div class="phone__prop-name">פנטהאוז<br>רוטשילד 22</div>
+              <div class="phone__prop-meta">5 חדרים · 160 מ"ר · תל אביב</div>
+              <button class="phone__wa">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/>
+                  <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.944-1.418A9.953 9.953 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+                </svg>
+                שלח הודעה בוואצאפ
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section class="sec-testi">
+    <div class="sec-header reveal">
+      <p class="section-eyebrow" style="text-align:center">לקוחות מספרים</p>
+      <h2 class="section-h2 section-h2--dark" style="text-align:center">המילים שלהם</h2>
+      <div class="gold-bar"></div>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">
+          הסרטון שדורון הכין לדירה שלנו גרם לה להיראות כמו פנטהאוז.
+          קיבלנו 4 הצעות רציניות תוך שבועיים.
+        </p>
+        <div class="testi-name">מיכל ואורי כ.</div>
+        <div class="testi-role">מוכרים, תל אביב</div>
+      </div>
+      <div class="testi-card reveal delay-1">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">
+          הגעתי לדירה אחרי שסרקתי את ה-QR מהשלט במרפסת.
+          הוידאו מכר לי אותה עוד לפני שנכנסתי.
+        </p>
+        <div class="testi-name">גיל ט.</div>
+        <div class="testi-role">קונה, הרצליה</div>
+      </div>
+      <div class="testi-card reveal delay-2">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">
+          הייתי סקפטי אם הוידאו שווה את ההשקעה.
+          הנכס נמכר ב-200,000 ₪ יותר ממה שציפיתי. מדבר בעד עצמו.
+        </p>
+        <div class="testi-name">יוסי א.</div>
+        <div class="testi-role">מוכר, ירושלים</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="sec-contact" id="contact">
+    <p class="section-eyebrow section-eyebrow--light">צור קשר</p>
+    <h2 class="section-h2 section-h2--light reveal" style="margin-bottom:0">מוכן לצעד הבא?</h2>
+    <div class="gold-bar reveal"></div>
+    <p class="contact-sub reveal">
+      בין אם אתה מוכר, קונה, או רוצה לשמוע עוד על השיטה שלנו — דורון כאן בשבילך
+    </p>
+    <div class="contact-btns reveal">
+      <a href="https://wa.me/972502448682?text=%D7%A9%D7%9C%D7%95%D7%9D%20%D7%93%D7%95%D7%A8%D7%95%D7%9F%2C%20%D7%A8%D7%90%D7%99%D7%AA%D7%99%20%D7%90%D7%AA%20viewestate%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D"
+         class="btn btn-wa" target="_blank" rel="noopener">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/>
+          <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.944-1.418A9.953 9.953 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+        </svg>
+        שלח הודעה בוואצאפ
+      </a>
+      <a href="tel:+972502448682" class="btn btn-ghost-light" style="display:inline-flex;align-items:center;gap:10px">
+        📞 &nbsp;0502-448682
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <a href="index.html" class="footer-logo">
+      <span style="color:var(--gold-light)">VIEW</span><span style="color:rgba(250,246,240,0.8)">ESTATE</span>
+    </a>
+    <p class="footer-copy">© 2025 ViewEstate · דורון · viewestate.co.il</p>
+    <nav class="footer-links">
+      <a href="#properties">נכסים</a>
+      <a href="#about">אודות</a>
+      <a href="#contact">צור קשר</a>
+    </nav>
+  </footer>
+
+  <script>
+    // ── NAV scroll ──
+    const nav = document.getElementById('nav');
+    const onScroll = () => nav.classList.toggle('nav--scrolled', window.scrollY > 80);
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // ── Mobile menu ──
+    document.getElementById('navHam').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+    document.getElementById('mobileClose').addEventListener('click', closeMobile);
+    function closeMobile() {
+      document.getElementById('mobileMenu').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // ── Hero sound ──
+    const heroVid = document.getElementById('heroVid');
+    let soundOn = false;
+    function toggleSound() {
+      soundOn = !soundOn;
+      heroVid.muted = !soundOn;
+      document.getElementById('soundIcon').textContent = soundOn ? '🔊' : '🔇';
+      document.getElementById('soundTxt').textContent  = soundOn ? 'השתק'  : 'הפעל צליל';
+    }
+
+    // ── Parallax hero video ──
+    const heroVideo = document.querySelector('.hero__video');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY < window.innerHeight) {
+        heroVideo.style.transform = `translateY(${window.scrollY * 0.22}px)`;
+      }
+    }, { passive: true });
+
+    // ── Scroll reveal ──
+    const revealObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          revealObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -32px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+    // ── Property card stagger ──
+    const gridEl = document.querySelector('.props-grid');
+    if (gridEl) {
+      gridEl.querySelectorAll('.prop-card').forEach(c => {
+        c.style.opacity = '0';
+        c.style.transform = 'translateY(28px)';
+        c.style.transition = 'opacity 0.85s ease, transform 0.85s ease';
+      });
+      new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.querySelectorAll('.prop-card').forEach((c, i) => {
+              setTimeout(() => {
+                c.style.opacity = '1';
+                c.style.transform = 'translateY(0)';
+              }, i * 160);
+            });
+          }
+        });
+      }, { threshold: 0.08 }).observe(gridEl);
+    }
+  </script>
+</body>
+</html>
