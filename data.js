@@ -25,10 +25,10 @@ window.VIEWESTATE_DATA = {
 
   /* ---- סטטיסטיקות (דף הבית) ---- */
   stats: [
-    { num: "120+", label: "עסקאות שנסגרו" },
-    { num: "8",    label: "שנות ניסיון" },
-    { num: "200+", label: "סרטוני נכסים" },
-    { num: "98%",  label: "שביעות רצון" }
+    { num: "4K",   label: "וידאו מקצועי לכל נכס" },
+    { num: "QR",   label: "שיווק חכם וחדשני" },
+    { num: "VIP",  label: "הצגה יוקרתית" },
+    { num: "100%", label: "יחס אישי ומחויבות" }
   ],
 
   /* ---- המלצות לקוחות (דף הבית) ---- */
@@ -59,7 +59,8 @@ window.VIEWESTATE_DATA = {
      כל נכס:
        id          — מזהה ייחודי באנגלית (משמש ב-URL: property.html?id=...)
        featured    — true = כרטיס גדול בראש הרשת בדף הבית
-       status      — טקסט תווית ("נכס זמין למכירה" וכו')
+       saleStatus  — סטטוס מכירה: "sale" (למכירה) / "negotiation" (במשא ומתן) / "sold" (נמכר)
+       status      — טקסט תווית ישן (לא בשימוש לתצוגה — saleStatus מחליף אותו)
        type        — סוג הנכס (פנטהאוז / וילה / דירת גן ...)
        name        — שם הנכס לתצוגה
        city, neighborhood
@@ -75,6 +76,7 @@ window.VIEWESTATE_DATA = {
     {
       id:           "rothschild-22",
       featured:     true,
+      saleStatus:   "sale",
       status:       "נכס זמין למכירה",
       type:         "פנטהאוז",
       name:         "פנטהאוז רוטשילד 22",
@@ -112,6 +114,7 @@ window.VIEWESTATE_DATA = {
     {
       id:           "herzliya-gold",
       featured:     false,
+      saleStatus:   "negotiation",
       status:       "נכס זמין למכירה",
       type:         "וילה",
       name:         "וילה בשכונת הזהב",
@@ -143,6 +146,7 @@ window.VIEWESTATE_DATA = {
     {
       id:           "tlv-garden",
       featured:     false,
+      saleStatus:   "sold",
       status:       "נכס זמין למכירה",
       type:         "דירת גן",
       name:         "גן פרטי בלב העיר",

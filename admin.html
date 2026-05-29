@@ -210,7 +210,13 @@
           <div class="field"><label>שם הנכס *</label><input id="f-name" required></div>
           <div class="field"><label>מזהה (id) *<span class="hint"> — באנגלית, ל-URL</span></label><input id="f-id" required dir="ltr" placeholder="rothschild-22"></div>
           <div class="field"><label>סוג</label><input id="f-type" placeholder="פנטהאוז"></div>
-          <div class="field"><label>תווית סטטוס</label><input id="f-status" placeholder="נכס זמין למכירה"></div>
+          <div class="field"><label>סטטוס מכירה</label>
+            <select id="f-saleStatus">
+              <option value="sale">למכירה</option>
+              <option value="negotiation">במשא ומתן</option>
+              <option value="sold">נמכר</option>
+            </select>
+          </div>
           <div class="field"><label>עיר</label><input id="f-city"></div>
           <div class="field"><label>שכונה</label><input id="f-neighborhood"></div>
           <div class="field"><label>מחיר (₪)</label><input id="f-price" type="number" inputmode="numeric"></div>
@@ -320,6 +326,9 @@
       const num = Number(n);
       return (n == null || n === '' || isNaN(num)) ? (n || '') : num.toLocaleString('en-US') + ' ₪';
     }
+    function saleStatusLabel(s) {
+      return s === 'negotiation' ? 'במשא ומתן' : s === 'sold' ? 'נמכר' : 'למכירה';
+    }
 
     /* ════════════════════════════════════════════
        RENDER
@@ -335,7 +344,7 @@
       }
       list.innerHTML = data.properties.map((p, i) => {
         const thumb = (p.gallery && p.gallery[0]) || p.poster || '';
-        const meta = [p.type, p.city, fmtPrice(p.price)].filter(Boolean).join(' · ');
+        const meta = [p.type, p.city, fmtPrice(p.price), saleStatusLabel(p.saleStatus)].filter(Boolean).join(' · ');
         return `
         <div class="pcard">
           <img class="pcard__thumb" src="${esc(thumb)}" alt="" onerror="this.style.visibility='hidden'">
@@ -424,7 +433,7 @@
       document.getElementById('f-origid').value = f ? f.id : '';
       const set = (k, v) => document.getElementById('f-' + k).value = (v == null ? '' : v);
       set('name', f && f.name); set('id', f && f.id); set('type', f && f.type);
-      set('status', f ? f.status : 'נכס זמין למכירה');
+      document.getElementById('f-saleStatus').value = (f && f.saleStatus) ? f.saleStatus : 'sale';
       set('city', f && f.city); set('neighborhood', f && f.neighborhood); set('price', f && f.price);
       set('rooms', f && f.rooms); set('area', f && f.area); set('floor', f && f.floor);
       set('floorsTotal', f && f.floorsTotal); set('balcony', f && f.balcony); set('parking', f && f.parking);
@@ -457,7 +466,7 @@
 
       const obj = {
         id, featured: document.getElementById('f-featured').checked,
-        status: val('status'), type: val('type'), name: val('name'),
+        saleStatus: document.getElementById('f-saleStatus').value, type: val('type'), name: val('name'),
         city: val('city'), neighborhood: val('neighborhood'), price: numOr('price'),
         rooms: numOr('rooms'), area: numOr('area'), floor: numOr('floor'),
         floorsTotal: numOr('floorsTotal'), balcony: numOr('balcony'), parking: numOr('parking'),

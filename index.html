@@ -533,6 +533,25 @@
 
     .prop-card:hover .prop-card__video-tag { opacity: 1; transform: translateY(0); }
 
+    /* status rectangle (ירוק למכירה / כתום במשא ומתן / אדום נמכר) */
+    .prop-card__status {
+      position: absolute;
+      bottom: 20px; left: 20px;
+      z-index: 5;
+      padding: 6px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      border-radius: 3px;
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.28);
+    }
+    .prop-card__status.st-sale { background: #1F9D4D; }
+    .prop-card__status.st-neg  { background: #E08A1E; }
+    .prop-card__status.st-sold { background: #C0392B; }
+
+    .prop-card--sold .prop-card__media { filter: grayscale(0.45) brightness(0.82); }
+
     /* ===== STATS ===== */
     .sec-stats {
       background: var(--bg-dark2);
@@ -1040,8 +1059,7 @@
           <img src="doron.jpg" alt="דורון — מתווך נכסים מוסמך וצלם מקצועי, ViewEstate">
         </div>
         <div class="about-badge">
-          <div class="about-badge__num">8+</div>
-          <div class="about-badge__txt">שנות<br>ניסיון</div>
+          <div class="about-badge__txt" style="font-family:var(--serif);font-size:23px;font-weight:700;line-height:1.3">נדל"ן<br>הדור<br>הבא</div>
         </div>
       </div>
 
@@ -1053,23 +1071,23 @@
         </h2>
         <div class="gold-bar" style="margin-top:28px"></div>
         <p class="about-text">
-          שמי דורון, מתווך נכסים מוסמך עם למעלה מ-8 שנות ניסיון בשוק
-          הנדל"ן הישראלי. לצד רישיון התיווך, אני צלם ומפיק וידאו מקצועי —
-          כי אני מאמין שכל נכס ראוי להצגה שהוא ראוי לה.
+          שמי דורון — מתווך נכסים מוסמך וצלם וידאו מקצועי. אני מביא לעולם
+          הנדל"ן גישה של הדור הבא: שיווק חכם והצגה איכותית ויוקרתית של כל נכס.
+          אני מאמין שכל נכס ראוי להצגה ברמה הגבוהה ביותר — וזה בדיוק מה שאני נותן.
         </p>
         <div class="feat-list">
           <div class="feat-item">
             <div class="feat-icon" aria-hidden="true">⚖️</div>
             <div>
               <div class="feat-title">רישיון תיווך מוסמך</div>
-              <div class="feat-desc">ניסיון עשיר, ידע מעמיק בשוק הנדל"ן הישראלי</div>
+              <div class="feat-desc">תיווך מקצועי ואמין, ליווי אישי וצמוד בכל שלב</div>
             </div>
           </div>
           <div class="feat-item">
             <div class="feat-icon" aria-hidden="true">🎬</div>
             <div>
               <div class="feat-title">צילום ווידאו מקצועי</div>
-              <div class="feat-desc">ציוד מקצועי, עריכה מקצועית, תוצאה קולנועית</div>
+              <div class="feat-desc">ציוד מקצועי, עריכה קולנועית, הצגה יוקרתית לכל נכס</div>
             </div>
           </div>
           <div class="feat-item">
@@ -1249,6 +1267,14 @@
     function waLink(text) {
       return 'https://wa.me/' + (AGENT.whatsapp || '') + '?text=' + encodeURIComponent(text);
     }
+    function saleStatusInfo(s) {
+      switch (s) {
+        case 'negotiation': return { label: 'במשא ומתן', cls: 'st-neg' };
+        case 'sold':        return { label: 'נמכר',      cls: 'st-sold' };
+        case 'sale':
+        default:            return { label: 'למכירה',    cls: 'st-sale' };
+      }
+    }
 
     /* -- properties grid (featured first) -- */
     (function renderProps() {
@@ -1263,11 +1289,13 @@
         const media = (feat && p.video)
           ? `<video class="prop-card__media" autoplay muted loop playsinline poster="${esc(p.poster || heroImg)}"><source src="${esc(p.video)}" type="video/mp4"></video>`
           : `<img class="prop-card__media" src="${esc(heroImg)}" alt="${esc(p.name)}" loading="lazy">`;
-        const label = [esc(p.name), esc(p.type || ''), esc(p.city || ''), info].filter(Boolean).join(', ');
+        const ss = saleStatusInfo(p.saleStatus);
+        const label = [esc(p.name), esc(p.type || ''), esc(p.city || ''), ss.label, info].filter(Boolean).join(', ');
         return `
-          <a class="prop-card ${feat ? 'prop-card--feat' : 'prop-card--sm'}" href="property.html?id=${encodeURIComponent(p.id)}" aria-label="פתח דף נכס: ${label}">
+          <a class="prop-card ${feat ? 'prop-card--feat' : 'prop-card--sm'}${p.saleStatus === 'sold' ? ' prop-card--sold' : ''}" href="property.html?id=${encodeURIComponent(p.id)}" aria-label="פתח דף נכס: ${label}">
             ${media}
             <div class="prop-card__shade"></div>
+            <div class="prop-card__status ${ss.cls}">${ss.label}</div>
             ${(feat && p.video) ? '<div class="prop-card__video-tag" aria-hidden="true">▶ &nbsp;וידאו</div>' : ''}
             <div class="prop-card__play-cue" aria-hidden="true"><div class="play-tri"></div></div>
             <div class="prop-card__body">
