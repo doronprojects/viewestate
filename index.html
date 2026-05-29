@@ -533,22 +533,42 @@
 
     .prop-card:hover .prop-card__video-tag { opacity: 1; transform: translateY(0); }
 
-    /* status rectangle (ירוק למכירה / כתום במשא ומתן / אדום נמכר) */
+    /* status traffic-light (עיגול + תווית; הפעיל בצבע, השאר אפור) */
     .prop-card__status {
       position: absolute;
-      bottom: 20px; left: 20px;
+      top: 18px; left: 18px;
       z-index: 5;
-      padding: 6px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(14,8,3,0.52);
+      backdrop-filter: blur(9px);
+      -webkit-backdrop-filter: blur(9px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+    }
+    .ps-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
       font-size: 11px;
       font-weight: 700;
-      letter-spacing: 1.2px;
-      border-radius: 3px;
-      color: #FFFFFF;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.28);
+      letter-spacing: 0.4px;
+      color: rgba(250,246,240,0.40);
+      transition: var(--t);
     }
-    .prop-card__status.st-sale { background: #1F9D4D; }
-    .prop-card__status.st-neg  { background: #E08A1E; }
-    .prop-card__status.st-sold { background: #C0392B; }
+    .ps-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: rgba(250,246,240,0.22);
+      flex: none;
+      transition: var(--t);
+    }
+    .ps-row.is-on { color: #FFFFFF; }
+    .ps-sale.is-on .ps-dot { background: #25B25A; box-shadow: 0 0 10px rgba(37,178,90,0.95); }
+    .ps-neg.is-on  .ps-dot { background: #E89321; box-shadow: 0 0 10px rgba(232,147,33,0.95); }
+    .ps-sold.is-on .ps-dot { background: #D33F2E; box-shadow: 0 0 10px rgba(211,63,46,0.95); }
 
     .prop-card--sold .prop-card__media { filter: grayscale(0.45) brightness(0.82); }
 
@@ -1295,7 +1315,11 @@
           <a class="prop-card ${feat ? 'prop-card--feat' : 'prop-card--sm'}${p.saleStatus === 'sold' ? ' prop-card--sold' : ''}" href="property.html?id=${encodeURIComponent(p.id)}" aria-label="פתח דף נכס: ${label}">
             ${media}
             <div class="prop-card__shade"></div>
-            <div class="prop-card__status ${ss.cls}">${ss.label}</div>
+            <div class="prop-card__status" aria-label="סטטוס: ${ss.label}">
+              <span class="ps-row ps-sale${(p.saleStatus || 'sale') === 'sale' ? ' is-on' : ''}"><i class="ps-dot"></i><b>למכירה</b></span>
+              <span class="ps-row ps-neg${p.saleStatus === 'negotiation' ? ' is-on' : ''}"><i class="ps-dot"></i><b>במשא ומתן</b></span>
+              <span class="ps-row ps-sold${p.saleStatus === 'sold' ? ' is-on' : ''}"><i class="ps-dot"></i><b>נמכר</b></span>
+            </div>
             ${(feat && p.video) ? '<div class="prop-card__video-tag" aria-hidden="true">▶ &nbsp;וידאו</div>' : ''}
             <div class="prop-card__play-cue" aria-hidden="true"><div class="play-tri"></div></div>
             <div class="prop-card__body">
