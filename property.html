@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>פנטהאוז רוטשילד 22 | ViewEstate</title>
-  <meta name="description" content="5 חדרים · 160 מ״ר · קומה 12 · תל אביב · 4,800,000 ₪">
+  <title>נכס | ViewEstate</title>
+  <meta name="description" content="נכס למכירה · ViewEstate">
 
-  <!-- Open Graph – important for QR share previews -->
-  <meta property="og:title"       content="פנטהאוז רוטשילד 22 | ViewEstate">
-  <meta property="og:description" content="5 חדרים · 160 מ״ר · תל אביב · 4,800,000 ₪">
-  <meta property="og:image"       content="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=85">
+  <!-- Open Graph – important for QR share previews (updated dynamically) -->
+  <meta property="og:title"       id="ogTitle" content="ViewEstate">
+  <meta property="og:description" id="ogDesc"  content="נכס למכירה · ViewEstate">
+  <meta property="og:image"       id="ogImg"   content="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=85">
   <meta property="og:type"        content="website">
   <meta name="theme-color"        content="#1C1008">
 
@@ -30,7 +30,7 @@
       --gold-pale:   #E8D5A8;
       --text:        #1C1008;
       --text-mid:    #56382A;
-      --text-muted:  #8A6A50;
+      --text-muted:  #785B42;
       --border:      rgba(154,114,48,0.18);
       --border-md:   rgba(154,114,48,0.30);
       --sans:        'Heebo', Arial, sans-serif;
@@ -135,6 +135,7 @@
     }
 
     .vh__sound:hover { border-color: var(--gold-light); }
+    .vh__sound.hidden { display: none; }
 
     /* ── Bottom info ── */
     .vh__info {
@@ -167,7 +168,7 @@
 
     .vh__meta {
       font-size: 15px;
-      color: rgba(248,244,238,0.68);
+      color: rgba(248,244,238,0.82);
       font-weight: 300;
       margin-bottom: 18px;
     }
@@ -253,7 +254,7 @@
 
     .spec-lbl {
       font-size: 10px;
-      color: rgba(248,244,238,0.42);
+      color: rgba(248,244,238,0.72);
       letter-spacing: 1.5px;
     }
 
@@ -290,6 +291,10 @@
       cursor: pointer;
       background: var(--bg-card);
       position: relative;
+      padding: 0;
+      width: 100%;
+      font: inherit;
+      display: block;
     }
 
     .g-item:first-child { grid-column: span 2; aspect-ratio: 16/9; }
@@ -341,6 +346,8 @@
       line-height: 1.9;
       color: var(--text-mid);
     }
+
+    .sec-desc p + p { margin-top: 14px; }
 
     /* ── Specs table ── */
     .sec-specs {
@@ -398,6 +405,63 @@
     .agent-name { font-family: var(--serif); font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
     .agent-role { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
     .agent-brand { font-size: 12px; color: var(--gold); font-weight: 600; }
+
+    /* ── Lead form ── */
+    .sec-lead {
+      padding: 44px 24px;
+      background: var(--bg-dark);
+    }
+
+    .sec-lead__head { text-align: center; margin-bottom: 28px; }
+    .sec-lead__eyebrow { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold-light); font-weight: 600; margin-bottom: 10px; }
+    .sec-lead h2 { font-family: var(--serif); font-size: clamp(24px,5vw,34px); font-weight: 700; color: #FAF6F0; line-height: 1.2; }
+    .sec-lead__sub { font-size: 14px; color: rgba(248,244,238,0.78); margin-top: 10px; }
+
+    .lead-form { max-width: 520px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+    .lead-field { display: flex; flex-direction: column; gap: 6px; }
+    .lead-field label { font-size: 12px; color: rgba(248,244,238,0.78); letter-spacing: 0.5px; }
+    .lead-field input,
+    .lead-field textarea,
+    .lead-field select {
+      background: rgba(248,244,238,0.06);
+      border: 1px solid rgba(248,244,238,0.18);
+      color: #FAF6F0;
+      padding: 13px 14px;
+      font-family: var(--sans);
+      font-size: 15px;
+      border-radius: 3px;
+      transition: border-color 0.3s;
+    }
+    .lead-field input::placeholder, .lead-field textarea::placeholder { color: rgba(248,244,238,0.32); }
+    .lead-field input:focus, .lead-field textarea:focus, .lead-field select:focus { outline: none; border-color: var(--gold-light); }
+    .lead-field textarea { resize: vertical; min-height: 80px; }
+    .lead-field select option { background: var(--bg-dark); color: #FAF6F0; }
+
+    .lead-submit {
+      background: #25D366;
+      color: white;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: background 0.3s, transform 0.3s;
+      margin-top: 6px;
+    }
+    .lead-submit:hover { background: #1ebe5d; transform: translateY(-2px); }
+    .lead-note { text-align: center; font-size: 12px; color: rgba(248,244,238,0.62); margin-top: 4px; }
+
+    .prop-footer {
+      background: #160C05;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+    .prop-footer a { font-size: 13px; color: rgba(248,244,238,0.7); transition: color 0.3s; }
+    .prop-footer a:hover { color: var(--gold-light); }
 
     /* ═══════════════════════════════════════
        STICKY CTA BAR — mobile-first WhatsApp
@@ -515,6 +579,33 @@
     .lightbox__prev:hover, .lightbox__next:hover { background: rgba(255,255,255,0.18); }
 
     /* ═══════════════════════════════════════
+       NOT FOUND STATE
+    ═══════════════════════════════════════ */
+    .notfound {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      background: var(--bg-dark);
+    }
+    .notfound .logo-sm { font-size: 26px; margin-bottom: 24px; }
+    .notfound h1 { font-family: var(--serif); font-size: 28px; color: #FAF6F0; margin-bottom: 12px; }
+    .notfound p { color: rgba(248,244,238,0.55); margin-bottom: 28px; }
+    .notfound a {
+      border: 1px solid var(--gold-light);
+      color: var(--gold-light);
+      padding: 13px 32px;
+      font-size: 14px;
+      border-radius: 2px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .notfound a:hover { background: var(--gold-light); color: var(--bg-dark); }
+
+    /* ═══════════════════════════════════════
        DESKTOP ENHANCEMENTS
     ═══════════════════════════════════════ */
     @media (min-width: 640px) {
@@ -524,7 +615,7 @@
 
     @media (min-width: 768px) {
       .sec-gallery { padding: 48px; }
-      .sec-desc, .sec-specs, .sec-agent { padding-left: 48px; padding-right: 48px; }
+      .sec-desc, .sec-specs, .sec-agent, .sec-lead { padding-left: 48px; padding-right: 48px; }
       .cta-bar { padding: 16px 48px; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
 
       .gallery-grid { grid-template-columns: repeat(3, 1fr); }
@@ -539,7 +630,7 @@
 
     @media (min-width: 1024px) {
       .sec-gallery { padding: 64px; }
-      .sec-desc, .sec-specs, .sec-agent { padding-left: 64px; padding-right: 64px; }
+      .sec-desc, .sec-specs, .sec-agent, .sec-lead { padding-left: 64px; padding-right: 64px; }
       .cta-bar { padding: 20px 64px; }
       .vh__info { padding: 56px 64px; }
     }
@@ -547,247 +638,282 @@
 </head>
 <body>
 
-  <!-- ═══════════════════ VIDEO HERO ═══════════════════ -->
-  <div class="vh">
-    <!-- Replace src with your property video URL -->
-    <video class="vh__video" id="propVid" autoplay muted loop playsinline
-           poster="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=85">
-      <source src="https://videos.pexels.com/video-files/3196787/3196787-hd_1920_1080_30fps.mp4" type="video/mp4">
-    </video>
-    <div class="vh__shade"></div>
-
-    <!-- Top bar -->
-    <div class="vh__topbar">
-      <a href="index.html" class="logo-sm">
-        <span class="v">VIEW</span><span class="e">ESTATE</span>
-      </a>
-      <a href="index.html" class="back-link">← כל הנכסים</a>
-    </div>
-
-    <!-- Sound toggle -->
-    <button class="vh__sound" id="soundBtn" onclick="toggleSound()" aria-label="הפעל צליל">🔇</button>
-
-    <!-- Property info overlay -->
-    <div class="vh__info">
-      <div class="vh__badge">נכס זמין למכירה</div>
-      <h1 class="vh__title">פנטהאוז רוטשילד 22</h1>
-      <p class="vh__meta">5 חדרים &nbsp;·&nbsp; 160 מ"ר &nbsp;·&nbsp; קומה 12 &nbsp;·&nbsp; תל אביב</p>
-      <div class="vh__price">4,800,000 ₪</div>
-    </div>
-
-    <!-- Scroll cue -->
-    <div class="vh__cue">
-      <span class="vh__cue-label">תמונות</span>
-      <div class="vh__cue-arrow"></div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════ SPECS STRIP ═══════════════════ -->
-  <div class="specs-strip">
-    <div class="spec-item">
-      <span class="spec-icon">🛏️</span>
-      <span class="spec-val">5</span>
-      <span class="spec-lbl">חדרים</span>
-    </div>
-    <div class="spec-item">
-      <span class="spec-icon">📐</span>
-      <span class="spec-val">160</span>
-      <span class="spec-lbl">מ"ר</span>
-    </div>
-    <div class="spec-item">
-      <span class="spec-icon">🏢</span>
-      <span class="spec-val">12</span>
-      <span class="spec-lbl">קומה</span>
-    </div>
-    <div class="spec-item">
-      <span class="spec-icon">🌳</span>
-      <span class="spec-val">40</span>
-      <span class="spec-lbl">מ"ר מרפסת</span>
-    </div>
-    <div class="spec-item">
-      <span class="spec-icon">🅿️</span>
-      <span class="spec-val">2</span>
-      <span class="spec-lbl">חניות</span>
-    </div>
-    <div class="spec-item">
-      <span class="spec-icon">🗓️</span>
-      <span class="spec-val">2019</span>
-      <span class="spec-lbl">שנת בנייה</span>
-    </div>
-  </div>
-
-  <!-- ═══════════════════ PAGE CONTENT ═══════════════════ -->
-  <main class="page-content">
-
-    <!-- Gallery -->
-    <div class="sec-gallery">
-      <h2>גלריית תמונות</h2>
-      <div class="gallery-grid" id="gallery">
-        <div class="g-item" data-idx="0">
-          <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1400&q=85" alt="סלון">
-          <div class="g-item__overlay"><span class="g-item__zoom">⊕</span></div>
-        </div>
-        <div class="g-item" data-idx="1">
-          <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=900&q=80" alt="מטבח">
-          <div class="g-item__overlay"><span class="g-item__zoom">⊕</span></div>
-        </div>
-        <div class="g-item" data-idx="2">
-          <img src="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=900&q=80" alt="חדר שינה">
-          <div class="g-item__overlay"><span class="g-item__zoom">⊕</span></div>
-        </div>
-        <div class="g-item" data-idx="3">
-          <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=900&q=80" alt="מטבח">
-          <div class="g-item__overlay"><span class="g-item__zoom">⊕</span></div>
-        </div>
-        <div class="g-item" data-idx="4">
-          <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=900&q=80" alt="חדר רחצה">
-          <div class="g-item__overlay"><span class="g-item__zoom">⊕</span></div>
-        </div>
-        <div class="g-item" data-idx="5">
-          <img src="https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=900&q=80" alt="מרפסת">
-          <div class="g-item__overlay"><span class="g-item__zoom">⊕</span></div>
-        </div>
-        <div class="g-item" data-idx="6">
-          <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=900&q=80" alt="חיצוני">
-          <div class="g-item__overlay"><span class="g-item__zoom">⊕</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Description -->
-    <div class="sec-desc">
-      <h2>תיאור הנכס</h2>
-      <p>
-        פנטהאוז מרהיב בלב רוטשילד, תל אביב. קומה 12 עם נוף פנורמי לעיר ולים התיכון.
-        הנכס עוצב ברמה גבוהה עם חומרים מהמשובחים — אבן, עץ אקזוטי, ומתכת מוסגרת.
-        הסלון המרווח זורם לטראסה ענקית של 40 מ"ר, מושלמת לבידור.
-        מטבח אמריקאי מאובזר ב-Gaggenau. שלושה חדרי שינה עם חדרי רחצה en-suite.
-        מחסן, חניון כפול, ומשרת בית.
-      </p>
-    </div>
-
-    <!-- Specs table -->
-    <div class="sec-specs">
-      <h2>פרטי הנכס</h2>
-      <div class="specs-tbl">
-        <div class="spec-row">
-          <span class="spec-row__key">מחיר</span>
-          <span class="spec-row__val">4,800,000 ₪</span>
-        </div>
-        <div class="spec-row">
-          <span class="spec-row__key">עיר</span>
-          <span class="spec-row__val">תל אביב</span>
-        </div>
-        <div class="spec-row">
-          <span class="spec-row__key">שכונה</span>
-          <span class="spec-row__val">רוטשילד</span>
-        </div>
-        <div class="spec-row">
-          <span class="spec-row__key">שטח</span>
-          <span class="spec-row__val">160 מ"ר</span>
-        </div>
-        <div class="spec-row">
-          <span class="spec-row__key">חדרים</span>
-          <span class="spec-row__val">5 חדרים</span>
-        </div>
-        <div class="spec-row">
-          <span class="spec-row__key">קומה</span>
-          <span class="spec-row__val">12 מתוך 14</span>
-        </div>
-        <div class="spec-row">
-          <span class="spec-row__key">מרפסת</span>
-          <span class="spec-row__val">40 מ"ר</span>
-        </div>
-        <div class="spec-row">
-          <span class="spec-row__key">חניה</span>
-          <span class="spec-row__val">2 מקומות</span>
-        </div>
-        <div class="spec-row">
-          <span class="spec-row__key">מחסן</span>
-          <span class="spec-row__val">כן</span>
-        </div>
-        <div class="spec-row">
-          <span class="spec-row__key">מעלית</span>
-          <span class="spec-row__val">כן</span>
-        </div>
-        <div class="spec-row">
-          <span class="spec-row__key">שנת בנייה</span>
-          <span class="spec-row__val">2019</span>
-        </div>
-        <div class="spec-row">
-          <span class="spec-row__key">מצב</span>
-          <span class="spec-row__val">מחודש 2024</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Agent card -->
-    <div class="sec-agent">
-      <!-- Replace with your actual photo -->
-      <img class="agent-photo"
-           src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&q=80"
-           alt="דורון">
-      <div>
-        <div class="agent-name">דורון</div>
-        <div class="agent-role">מתווך נכסים מוסמך · צלם מקצועי</div>
-        <div class="agent-brand">⚖️ ViewEstate · viewestate.co.il</div>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- ═══════════════════ STICKY CTA ═══════════════════ -->
-  <div class="cta-bar">
-    <a href="https://wa.me/972502448682?text=%D7%A9%D7%9C%D7%95%D7%9D%20%D7%93%D7%95%D7%A8%D7%95%D7%9F%2C%20%D7%A8%D7%90%D7%99%D7%AA%D7%99%20%D7%90%D7%AA%20%D7%A4%D7%A0%D7%98%D7%94%D7%90%D7%95%D7%96%20%D7%A8%D7%95%D7%98%D7%A9%D7%99%D7%9C%D7%93%2022%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D"
-       class="cta-wa" target="_blank" rel="noopener">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/>
-        <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.944-1.418A9.953 9.953 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
-      </svg>
-      שלח הודעה לדורון
-    </a>
-    <a href="tel:+972502448682" class="cta-call" aria-label="התקשר">📞</a>
-  </div>
+  <!-- Rendered dynamically from data.js based on ?id= -->
+  <div id="app"></div>
 
   <!-- ═══════════════════ LIGHTBOX ═══════════════════ -->
-  <div class="lightbox" id="lightbox">
-    <button class="lightbox__close" onclick="closeLB()">✕</button>
-    <button class="lightbox__prev" onclick="shiftLB(1)">›</button>
-    <button class="lightbox__next" onclick="shiftLB(-1)">‹</button>
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="תצוגת גלריה">
+    <button class="lightbox__close" onclick="closeLB()" aria-label="סגור תצוגת תמונה">✕</button>
+    <button class="lightbox__prev" onclick="shiftLB(1)" aria-label="התמונה הקודמת">›</button>
+    <button class="lightbox__next" onclick="shiftLB(-1)" aria-label="התמונה הבאה">‹</button>
     <img class="lightbox__img" id="lbImg" src="" alt="">
     <div class="lightbox__counter" id="lbCounter"></div>
   </div>
 
+  <script src="data.js"></script>
   <script>
-    // ── Sound toggle ──
-    const vid = document.getElementById('propVid');
-    let sound = false;
-    function toggleSound() {
-      sound = !sound;
-      vid.muted = !sound;
-      document.getElementById('soundBtn').textContent = sound ? '🔊' : '🔇';
+    /* ---------- helpers ---------- */
+    const DATA = window.VIEWESTATE_DATA || { agent: {}, properties: [] };
+    const AGENT = DATA.agent || {};
+
+    function esc(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+    function fmtPrice(n) {
+      if (n == null || n === '') return '';
+      const num = Number(n);
+      if (isNaN(num)) return esc(n);
+      return num.toLocaleString('en-US') + ' ₪';
+    }
+    function getParam(name) {
+      return new URLSearchParams(location.search).get(name);
+    }
+    function findProperty(id) {
+      const list = DATA.properties || [];
+      if (id) return list.find(p => p.id === id) || null;
+      return list.find(p => p.featured) || list[0] || null;
+    }
+    function waLink(text) {
+      return 'https://wa.me/' + (AGENT.whatsapp || '') + '?text=' + encodeURIComponent(text);
     }
 
-    // ── Hide scroll cue on first scroll ──
-    const cue = document.querySelector('.vh__cue');
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 40 && cue) {
-        cue.style.opacity = '0';
-        cue.style.transition = 'opacity 0.6s ease';
+    /* ---------- render ---------- */
+    const prop = findProperty(getParam('id'));
+    const app = document.getElementById('app');
+
+    if (!prop) {
+      app.innerHTML = `
+        <div class="notfound">
+          <div class="logo-sm"><span class="v">VIEW</span><span class="e">ESTATE</span></div>
+          <h1>הנכס לא נמצא</h1>
+          <p>ייתכן שהנכס הוסר או שהקישור שגוי.</p>
+          <a href="index.html">← חזרה לכל הנכסים</a>
+        </div>`;
+    } else {
+      renderProperty(prop);
+    }
+
+    function renderProperty(p) {
+      /* meta / SEO */
+      const metaLine = [p.rooms ? p.rooms + ' חדרים' : '', p.area ? p.area + ' מ"ר' : '',
+                        p.floor ? 'קומה ' + p.floor : '', p.city].filter(Boolean).join(' · ');
+      document.title = p.name + ' | ViewEstate';
+      const heroImg = (p.gallery && p.gallery[0]) || p.poster || '';
+      setMeta('ogTitle', p.name + ' | ViewEstate');
+      setMeta('ogDesc', metaLine + ' · ' + fmtPrice(p.price));
+      setMeta('ogImg', heroImg);
+      document.querySelector('meta[name="description"]').setAttribute('content', metaLine + ' · ' + fmtPrice(p.price));
+
+      /* specs strip — only show non-empty */
+      const stripDefs = [
+        { icon: '🛏️', val: p.rooms,   lbl: 'חדרים' },
+        { icon: '📐', val: p.area,    lbl: 'מ"ר' },
+        { icon: '🏢', val: p.floor,   lbl: 'קומה' },
+        { icon: '🌳', val: p.balcony, lbl: 'מ"ר מרפסת' },
+        { icon: '🅿️', val: p.parking, lbl: 'חניות' },
+        { icon: '🗓️', val: p.year,    lbl: 'שנת בנייה' }
+      ].filter(s => s.val !== '' && s.val != null && s.val !== 0);
+      const stripHtml = stripDefs.map(s => `
+        <div class="spec-item">
+          <span class="spec-icon">${s.icon}</span>
+          <span class="spec-val">${esc(s.val)}</span>
+          <span class="spec-lbl">${esc(s.lbl)}</span>
+        </div>`).join('');
+
+      /* gallery */
+      const gallery = (p.gallery && p.gallery.length) ? p.gallery : (p.poster ? [p.poster] : []);
+      const galleryHtml = gallery.map((src, i) => `
+        <button type="button" class="g-item" data-idx="${i}" aria-label="הגדלת תמונה ${i + 1} מתוך ${gallery.length}: ${esc(p.name)}">
+          <img src="${esc(src)}" alt="${esc(p.name)} — תמונה ${i + 1}" loading="lazy">
+          <div class="g-item__overlay" aria-hidden="true"><span class="g-item__zoom">⊕</span></div>
+        </button>`).join('');
+
+      /* description — split on newlines into paragraphs */
+      const descHtml = String(p.description || '').split(/\n+/).filter(Boolean)
+        .map(par => `<p>${esc(par)}</p>`).join('') || '<p>אין תיאור זמין.</p>';
+
+      /* specs table — only non-empty rows */
+      const floorTxt = p.floor ? (p.floorsTotal ? p.floor + ' מתוך ' + p.floorsTotal : String(p.floor)) : '';
+      const rows = [
+        ['מחיר', fmtPrice(p.price)],
+        ['עיר', p.city],
+        ['שכונה', p.neighborhood],
+        ['שטח', p.area ? p.area + ' מ"ר' : ''],
+        ['חדרים', p.rooms ? p.rooms + ' חדרים' : ''],
+        ['קומה', floorTxt],
+        ['מרפסת', p.balcony ? p.balcony + ' מ"ר' : ''],
+        ['חניה', p.parking ? p.parking + ' מקומות' : ''],
+        ['מחסן', p.storage],
+        ['מעלית', p.elevator],
+        ['שנת בנייה', p.year],
+        ['מצב', p.condition]
+      ].filter(r => r[1] !== '' && r[1] != null);
+      const tableHtml = rows.map(r => `
+        <div class="spec-row">
+          <span class="spec-row__key">${esc(r[0])}</span>
+          <span class="spec-row__val">${esc(r[1])}</span>
+        </div>`).join('');
+
+      /* hero media — video if available, else image */
+      const heroMedia = p.video
+        ? `<video class="vh__video" id="propVid" autoplay muted loop playsinline poster="${esc(p.poster || heroImg)}">
+             <source src="${esc(p.video)}" type="video/mp4">
+           </video>`
+        : `<img class="vh__video" src="${esc(p.poster || heroImg)}" alt="${esc(p.name)}">`;
+
+      /* whatsapp prefilled */
+      const waText = `שלום ${AGENT.name || ''}, ראיתי את הנכס "${p.name}" באתר ViewEstate ואשמח לשמוע פרטים.`;
+      const waHref = waLink(waText);
+
+      app.innerHTML = `
+      <div class="vh">
+        ${heroMedia}
+        <div class="vh__shade"></div>
+        <div class="vh__topbar">
+          <a href="index.html" class="logo-sm"><span class="v">VIEW</span><span class="e">ESTATE</span></a>
+          <a href="index.html" class="back-link">← כל הנכסים</a>
+        </div>
+        ${p.video ? '<button class="vh__sound" id="soundBtn" onclick="toggleSound()" aria-label="הפעל צליל">🔇</button>' : ''}
+        <div class="vh__info">
+          ${p.status ? `<div class="vh__badge">${esc(p.status)}</div>` : ''}
+          <h1 class="vh__title">${esc(p.name)}</h1>
+          <p class="vh__meta">${esc([p.rooms ? p.rooms + ' חדרים' : '', p.area ? p.area + ' מ"ר' : '', p.floor ? 'קומה ' + p.floor : '', p.city].filter(Boolean).join('  ·  '))}</p>
+          <div class="vh__price">${fmtPrice(p.price)}</div>
+        </div>
+        <div class="vh__cue"><span class="vh__cue-label">תמונות</span><div class="vh__cue-arrow"></div></div>
+      </div>
+
+      <div class="specs-strip">${stripHtml}</div>
+
+      <main class="page-content">
+        <div class="sec-gallery">
+          <h2>גלריית תמונות</h2>
+          <div class="gallery-grid" id="gallery">${galleryHtml}</div>
+        </div>
+
+        <div class="sec-desc">
+          <h2>תיאור הנכס</h2>
+          ${descHtml}
+        </div>
+
+        <div class="sec-specs">
+          <h2>פרטי הנכס</h2>
+          <div class="specs-tbl">${tableHtml}</div>
+        </div>
+
+        <div class="sec-agent">
+          <img class="agent-photo" src="${esc(AGENT.photo || '')}" alt="${esc(AGENT.name || '')}">
+          <div>
+            <div class="agent-name">${esc(AGENT.name || '')}</div>
+            <div class="agent-role">${esc(AGENT.role || '')}</div>
+            <div class="agent-brand">⚖️ ${esc(AGENT.brand || 'ViewEstate')} · ${esc(AGENT.site || '')}</div>
+          </div>
+        </div>
+
+        <div class="sec-lead">
+          <div class="sec-lead__head">
+            <div class="sec-lead__eyebrow">השאירו פרטים</div>
+            <h2>מתעניינים בנכס הזה?</h2>
+            <p class="sec-lead__sub">מלאו פרטים ונחזור אליכם — או שלחו ישירות בוואטסאפ</p>
+          </div>
+          <form class="lead-form" id="leadForm">
+            <div class="lead-field">
+              <label for="lf-name">שם מלא</label>
+              <input type="text" id="lf-name" name="name" autocomplete="name" placeholder="השם שלך" required>
+            </div>
+            <div class="lead-field">
+              <label for="lf-phone">טלפון</label>
+              <input type="tel" id="lf-phone" name="tel" autocomplete="tel" placeholder="050-0000000" required>
+            </div>
+            <div class="lead-field">
+              <label for="lf-interest">תחום עניין</label>
+              <select id="lf-interest">
+                <option value="קונה פוטנציאלי">אני מתעניין/ת לקנות</option>
+                <option value="רוצה לקבל פרטים">רוצה לקבל פרטים נוספים</option>
+                <option value="לתאם צפייה">לתאם צפייה בנכס</option>
+                <option value="כללי">פנייה כללית</option>
+              </select>
+            </div>
+            <div class="lead-field">
+              <label for="lf-msg">הודעה (אופציונלי)</label>
+              <textarea id="lf-msg" placeholder="משהו שתרצו להוסיף?"></textarea>
+            </div>
+            <button type="submit" class="lead-submit">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.944-1.418A9.953 9.953 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
+              שלח/י לדורון בוואטסאפ
+            </button>
+            <p class="lead-note">הפרטים נשלחים ישירות לוואטסאפ של דורון</p>
+          </form>
+        </div>
+
+        <footer class="prop-footer">
+          <a href="index.html">← כל הנכסים</a>
+          <a href="accessibility.html">הצהרת נגישות</a>
+        </footer>
+      </main>
+
+      <div class="cta-bar">
+        <a href="${waHref}" class="cta-wa" target="_blank" rel="noopener">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.944-1.418A9.953 9.953 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
+          שלח הודעה לדורון
+        </a>
+        <a href="tel:+${esc(AGENT.whatsapp || '')}" class="cta-call" aria-label="התקשר">📞</a>
+      </div>`;
+
+      wireUp(p);
+    }
+
+    function setMeta(id, content) {
+      const el = document.getElementById(id);
+      if (el) el.setAttribute('content', content);
+    }
+
+    /* ---------- interactions ---------- */
+    function toggleSound() {
+      const vid = document.getElementById('propVid');
+      if (!vid) return;
+      vid.muted = !vid.muted;
+      document.getElementById('soundBtn').textContent = vid.muted ? '🔇' : '🔊';
+    }
+
+    let srcs = [], current = 0;
+
+    function wireUp(p) {
+      /* hide scroll cue on first scroll */
+      const cue = document.querySelector('.vh__cue');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 40 && cue) { cue.style.opacity = '0'; cue.style.transition = 'opacity 0.6s ease'; }
+      }, { passive: true, once: true });
+
+      /* lightbox */
+      const items = document.querySelectorAll('.g-item');
+      srcs = [...items].map(i => i.querySelector('img').src);
+      items.forEach(item => item.addEventListener('click', () => openLB(parseInt(item.dataset.idx))));
+
+      /* lead form → whatsapp */
+      const form = document.getElementById('leadForm');
+      if (form) {
+        form.addEventListener('submit', e => {
+          e.preventDefault();
+          const name = document.getElementById('lf-name').value.trim();
+          const phone = document.getElementById('lf-phone').value.trim();
+          const interest = document.getElementById('lf-interest').value;
+          const msg = document.getElementById('lf-msg').value.trim();
+          const lines = [
+            `שלום ${AGENT.name || ''}, פנייה דרך אתר ViewEstate:`,
+            ``,
+            `*נכס:* ${p.name}`,
+            `*שם:* ${name}`,
+            `*טלפון:* ${phone}`,
+            `*עניין:* ${interest}`,
+            msg ? `*הודעה:* ${msg}` : ''
+          ].filter(l => l !== null && l !== undefined);
+          window.open(waLink(lines.join('\n')), '_blank');
+        });
       }
-    }, { passive: true, once: true });
-
-    // ── Lightbox ──
-    const items = document.querySelectorAll('.g-item');
-    let current = 0;
-    const srcs = [...items].map(i => i.querySelector('img').src);
-
-    items.forEach(item => {
-      item.addEventListener('click', () => {
-        current = parseInt(item.dataset.idx);
-        openLB(current);
-      });
-    });
+    }
 
     function openLB(idx) {
       current = idx;
@@ -796,23 +922,18 @@
       document.getElementById('lightbox').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
-
     function closeLB() {
       document.getElementById('lightbox').classList.remove('open');
       document.body.style.overflow = '';
     }
-
     function shiftLB(dir) {
+      if (!srcs.length) return;
       current = (current + dir + srcs.length) % srcs.length;
       openLB(current);
     }
 
-    document.getElementById('lightbox').addEventListener('click', function(e) {
-      if (e.target === this) closeLB();
-    });
-
+    document.getElementById('lightbox').addEventListener('click', function (e) { if (e.target === this) closeLB(); });
     document.getElementById('lbImg').addEventListener('click', e => e.stopPropagation());
-
     document.addEventListener('keydown', e => {
       if (!document.getElementById('lightbox').classList.contains('open')) return;
       if (e.key === 'Escape') closeLB();
@@ -820,17 +941,17 @@
       if (e.key === 'ArrowLeft')  shiftLB(1);
     });
 
-    // ── Touch swipe for lightbox ──
+    /* touch swipe for lightbox */
     let lbTouchX = null;
-    document.getElementById('lightbox').addEventListener('touchstart', e => {
-      lbTouchX = e.touches[0].clientX;
-    }, { passive: true });
-    document.getElementById('lightbox').addEventListener('touchend', e => {
+    const lb = document.getElementById('lightbox');
+    lb.addEventListener('touchstart', e => { lbTouchX = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', e => {
       if (lbTouchX === null) return;
       const diff = lbTouchX - e.changedTouches[0].clientX;
       if (Math.abs(diff) > 40) shiftLB(diff > 0 ? 1 : -1);
       lbTouchX = null;
     }, { passive: true });
   </script>
+  <script src="accessibility.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>הצהרת נגישות | ViewEstate</title>
+  <meta name="description" content="הצהרת הנגישות של אתר ViewEstate — עמידה בתקן הישראלי ת\"י 5568 ברמה AA.">
+  <meta name="robots" content="index,follow">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Heebo:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:          #F8F4EE;
+      --bg-alt:      #EDE8DF;
+      --bg-dark:     #1C1008;
+      --gold:        #9A7230;
+      --gold-light:  #C9A35A;
+      --gold-dark:   #6B4E1A;
+      --text:        #1C1008;
+      --text-mid:    #4A3325;
+      --text-muted:  #6B4E32;
+      --border:      rgba(154,114,48,0.2);
+      --border-md:   rgba(154,114,48,0.32);
+      --sans:        'Heebo', Arial, sans-serif;
+      --serif:       'Frank Ruhl Libre', Georgia, serif;
+    }
+    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-weight: 300; line-height: 1.8; }
+    a { color: var(--gold-dark); text-decoration: underline; text-underline-offset: 3px; }
+    a:hover { color: var(--gold); }
+
+    /* top bar */
+    .topbar {
+      background: var(--bg-dark);
+      padding: 18px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo-sm { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; letter-spacing: 3px; direction: ltr; text-decoration: none; }
+    .logo-sm .v { color: var(--gold-light); }
+    .logo-sm .e { color: rgba(248,244,238,0.92); }
+    .back-link {
+      font-size: 13px; color: rgba(248,244,238,0.85);
+      border: 1px solid rgba(248,244,238,0.22);
+      padding: 8px 16px; border-radius: 2px; text-decoration: none;
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .back-link:hover { border-color: var(--gold-light); color: #fff; }
+
+    /* hero */
+    .a11y-hero {
+      background: var(--bg-dark);
+      padding: 56px 24px 64px;
+      text-align: center;
+      border-bottom: 3px solid var(--gold);
+    }
+    .a11y-hero .eyebrow {
+      font-size: 11px; letter-spacing: 5px; text-transform: uppercase;
+      color: var(--gold-light); font-weight: 600; margin-bottom: 14px;
+    }
+    .a11y-hero h1 {
+      font-family: var(--serif); font-size: clamp(30px, 6vw, 48px);
+      color: #FAF6F0; font-weight: 700; line-height: 1.15;
+    }
+    .a11y-hero p { color: rgba(248,244,238,0.82); max-width: 600px; margin: 16px auto 0; font-size: 16px; }
+
+    /* content */
+    main {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 48px 24px 96px;
+    }
+    section { margin-bottom: 44px; }
+    h2 {
+      font-family: var(--serif); font-size: 24px; font-weight: 700;
+      color: var(--text); margin-bottom: 14px;
+      padding-bottom: 10px; border-bottom: 1px solid var(--border);
+    }
+    h3 { font-size: 17px; font-weight: 600; color: var(--text); margin: 20px 0 8px; }
+    p { color: var(--text-mid); font-size: 16px; margin-bottom: 12px; }
+    ul { list-style: none; margin: 12px 0; padding: 0; }
+    li {
+      color: var(--text-mid); font-size: 16px; padding: 6px 0 6px 0;
+      position: relative; padding-right: 26px;
+    }
+    li::before {
+      content: '✓'; position: absolute; right: 0; top: 6px;
+      color: var(--gold); font-weight: 700;
+    }
+    .lim li::before { content: '•'; color: var(--gold-dark); }
+
+    /* contact card */
+    .contact-card {
+      background: var(--bg-alt);
+      border: 1px solid var(--border-md);
+      border-right: 4px solid var(--gold);
+      border-radius: 4px;
+      padding: 24px 28px;
+      margin-top: 8px;
+    }
+    .contact-card h2 { border: none; padding: 0; margin-bottom: 6px; }
+    .wa-cta {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 16px;
+      background: #25D366; color: #fff;
+      padding: 13px 28px; border-radius: 4px;
+      font-size: 15px; font-weight: 700; text-decoration: none;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .wa-cta:hover { background: #1ebe5d; color: #fff; transform: translateY(-2px); }
+
+    .updated { font-size: 14px; color: var(--text-muted); margin-top: 36px; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a href="index.html" class="logo-sm"><span class="v">VIEW</span><span class="e">ESTATE</span></a>
+    <a href="index.html" class="back-link">← חזרה לאתר</a>
+  </div>
+
+  <div class="a11y-hero">
+    <p class="eyebrow">נגישות לכל גולש</p>
+    <h1>הצהרת נגישות</h1>
+    <p>אנו רואים חשיבות עליונה במתן שירות שוויוני לכלל הגולשים, ופועלים להנגיש את האתר לאנשים עם מוגבלות.</p>
+  </div>
+
+  <main id="main">
+
+    <section>
+      <h2>המחויבות שלנו</h2>
+      <p>
+        אתר ViewEstate שואף לאפשר לכל אדם, לרבות אנשים עם מוגבלות, לגלוש בו בנוחות ובכבוד.
+        אנו משקיעים מאמצים ומשאבים כדי להבטיח שהאתר יהיה נגיש וידידותי לשימוש, מתוך אמונה
+        שלכל אדם מגיעה הזכות לחיות בשוויון, בכבוד, בנוחות ובעצמאות.
+      </p>
+    </section>
+
+    <section>
+      <h2>רמת הנגישות באתר</h2>
+      <p>
+        האתר הונגש בהתאם להוראות תקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות),
+        התשע"ג–2013, ובהתאם לתקן הישראלי <strong>ת"י 5568</strong> המבוסס על הנחיות
+        <strong>WCAG 2.0</strong> ברמת התאמה <strong>AA</strong>.
+      </p>
+    </section>
+
+    <section>
+      <h2>מה הונגש באתר</h2>
+      <ul>
+        <li>תפריט נגישות מובנה הזמין בכל עמודי האתר (כפתור עגול בפינה התחתונה).</li>
+        <li>הגדלת טקסט בכמה רמות, ללא פגיעה בתצוגה.</li>
+        <li>מצב ניגודיות גבוהה לטובת בעלי לקות ראייה.</li>
+        <li>הדגשת קישורים וגופן קריא יותר.</li>
+        <li>עצירת אנימציות ותנועה, כולל כיבוד העדפת המערכת (prefers-reduced-motion).</li>
+        <li>סמן עכבר מוגדל.</li>
+        <li>ניווט מלא באמצעות מקלדת והדגשת מיקוד ברורה (focus).</li>
+        <li>קישור "דלג לתוכן הראשי" לטובת גולשי מקלדת וקוראי מסך.</li>
+        <li>תיאורי תמונה חלופיים (alt) ותגיות ARIA לרכיבים אינטראקטיביים.</li>
+        <li>מבנה כותרות היררכי וסדר קריאה הגיוני בקוראי מסך.</li>
+        <li>ניגודיות צבעים מותאמת בהתאם לתקן.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>שימוש בתפריט הנגישות</h2>
+      <p>
+        בכל עמוד באתר מופיע כפתור נגישות עגול בפינה התחתונה. לחיצה עליו פותחת תפריט המאפשר
+        להתאים את התצוגה לצרכים שלך. ההעדפות נשמרות בדפדפן וייטענו אוטומטית בביקור הבא.
+        ניתן לאפס את כל ההגדרות בכל עת באמצעות כפתור "איפוס הגדרות".
+      </p>
+    </section>
+
+    <section>
+      <h2>מגבלות ידועות</h2>
+      <p>
+        חלק מהתכנים באתר מבוססים על שירותים חיצוניים (כגון נגני וידאו ומפות) שייתכן שאינם
+        נגישים במלואם. כמו כן, ייתכן שבחלק מהדפים יתגלו רכיבים שטרם הונגשו במלואם. אנו ממשיכים
+        לבדוק ולשפר את נגישות האתר באופן שוטף.
+      </p>
+      <ul class="lim">
+        <li>סרטוני וידאו מוטמעים עשויים שלא לכלול כתוביות בכל המקרים.</li>
+        <li>תכנים של צד שלישי אינם תמיד בשליטתנו המלאה.</li>
+      </ul>
+    </section>
+
+    <section>
+      <div class="contact-card">
+        <h2>פניות בנושא נגישות</h2>
+        <p>נתקלתם בקושי או במחסום נגישות באתר, או שיש לכם הצעה לשיפור? נשמח לשמוע — השאירו לנו הודעה ונטפל בכך בהקדם.</p>
+        <a id="coordWa" class="wa-cta" href="#" target="_blank" rel="noopener">השארת הודעה</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>איך לפנות אלינו</h2>
+      <p>
+        אם במהלך הגלישה נתקלתם בקושי או במחסום נגישות כלשהו, אנא השאירו לנו הודעה באמצעות הכפתור שלמעלה.
+        כדי שנוכל לטפל בפנייה במהירות, נשמח אם תפרטו את העמוד שבו נתקלתם בבעיה, את סוג הבעיה,
+        ואת סוג הדפדפן והמכשיר שבהם השתמשתם.
+      </p>
+    </section>
+
+    <p class="updated" id="updated"></p>
+
+  </main>
+
+  <script src="data.js"></script>
+  <script>
+    (function () {
+      var A = (window.VIEWESTATE_DATA && window.VIEWESTATE_DATA.agent) || {};
+      var wa = A.whatsapp || '';
+
+      var waEl = document.getElementById('coordWa');
+      if (waEl) {
+        waEl.href = 'https://wa.me/' + wa +
+          '?text=' + encodeURIComponent('שלום, אני פונה בנושא נגישות באתר ViewEstate.');
+      }
+
+      var upd = document.getElementById('updated');
+      if (upd) upd.textContent = 'הצהרת הנגישות עודכנה לאחרונה בתאריך 29.05.2026';
+    })();
+  </script>
+  <script src="accessibility.js" defer></script>
+</body>
+</html>
