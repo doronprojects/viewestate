@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>פנטהאוז רוטשילד 22 | ViewEstate</title>
+  <meta name="description" content="5 חדרים · 160 מ״ר · קומה 12 · תל אביב · 4,800,000 ₪">
+
+  <!-- Open Graph – important for QR share previews -->
+  <meta property="og:title"       content="פנטהאוז רוטשילד 22 | ViewEstate">
+  <meta property="og:description" content="5 חדרים · 160 מ״ר · תל אביב · 4,800,000 ₪">
+  <meta property="og:image"       content="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=85">
+  <meta property="og:type"        content="website">
+  <meta name="theme-color"        content="#1C1008">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Heebo:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #F8F4EE;
+      --bg-alt:      #EDE8DF;
+      --bg-card:     #E5DFCE;
+      --bg-dark:     #1C1008;
+      --gold:        #9A7230;
+      --gold-light:  #C9A35A;
+      --gold-pale:   #E8D5A8;
+      --text:        #1C1008;
+      --text-mid:    #56382A;
+      --text-muted:  #8A6A50;
+      --border:      rgba(154,114,48,0.18);
+      --border-md:   rgba(154,114,48,0.30);
+      --sans:        'Heebo', Arial, sans-serif;
+      --serif:       'Frank Ruhl Libre', Georgia, serif;
+      --ease:        cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    html { -webkit-font-smoothing: antialiased; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-weight: 300; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    img, video { display: block; }
+    button { font-family: var(--sans); cursor: pointer; border: none; }
+
+    /* ═══════════════════════════════════════
+       VIDEO HERO — full screen, video first
+    ═══════════════════════════════════════ */
+    .vh {
+      position: relative;
+      height: 100vh;
+      height: 100dvh;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .vh__video {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    .vh__shade {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: linear-gradient(
+        to bottom,
+        rgba(20,10,4,0.52)  0%,
+        rgba(20,10,4,0.0)   28%,
+        rgba(20,10,4,0.0)   52%,
+        rgba(20,10,4,0.88) 100%
+      );
+    }
+
+    /* ── Top bar ── */
+    .vh__topbar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 10;
+    }
+
+    .logo-sm {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      direction: ltr;
+    }
+
+    .logo-sm .v { color: var(--gold-light); }
+    .logo-sm .e { color: rgba(248,244,238,0.9); }
+
+    .back-link {
+      font-size: 13px;
+      color: rgba(248,244,238,0.78);
+      background: rgba(20,10,4,0.28);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(248,244,238,0.14);
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 2px;
+      transition: border-color 0.3s, color 0.3s;
+    }
+
+    .back-link:hover { border-color: rgba(248,244,238,0.4); color: white; }
+
+    /* ── Sound button ── */
+    .vh__sound {
+      position: absolute;
+      top: 50%;
+      right: 18px;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: rgba(20,10,4,0.38);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(248,244,238,0.18);
+      color: rgba(248,244,238,0.85);
+      font-size: 19px;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.3s;
+    }
+
+    .vh__sound:hover { border-color: var(--gold-light); }
+
+    /* ── Bottom info ── */
+    .vh__info {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 32px 24px;
+      z-index: 10;
+    }
+
+    .vh__badge {
+      display: inline-block;
+      background: var(--gold);
+      color: #FAF6F0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      padding: 4px 11px;
+      margin-bottom: 12px;
+    }
+
+    .vh__title {
+      font-family: var(--serif);
+      font-size: clamp(28px, 7vw, 52px);
+      color: #FAF6F0;
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .vh__meta {
+      font-size: 15px;
+      color: rgba(248,244,238,0.68);
+      font-weight: 300;
+      margin-bottom: 18px;
+    }
+
+    .vh__price {
+      font-family: var(--serif);
+      font-size: clamp(24px, 5vw, 36px);
+      color: #FAF6F0;
+      font-weight: 700;
+    }
+
+    /* ── Scroll cue ── */
+    .vh__cue {
+      position: absolute;
+      bottom: 136px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: cueFloat 2.2s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .vh__cue-label {
+      font-size: 10px;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: rgba(248,244,238,0.42);
+    }
+
+    .vh__cue-arrow {
+      width: 20px; height: 20px;
+      border-left: none;
+      border-top: none;
+      border-right: 2px solid rgba(248,244,238,0.35);
+      border-bottom: 2px solid rgba(248,244,238,0.35);
+      transform: rotate(45deg);
+    }
+
+    @keyframes cueFloat {
+      0%, 100% { opacity: 0.85; transform: translateX(-50%) translateY(0); }
+      55%       { opacity: 0.35; transform: translateX(-50%) translateY(7px); }
+    }
+
+    /* ═══════════════════════════════════════
+       SPECS STRIP
+    ═══════════════════════════════════════ */
+    .specs-strip {
+      background: var(--bg-dark);
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+      border-bottom: 1px solid rgba(154,114,48,0.18);
+    }
+
+    .specs-strip::-webkit-scrollbar { display: none; }
+
+    .spec-item {
+      flex: 1;
+      min-width: 100px;
+      padding: 18px 20px;
+      text-align: center;
+      border-left: 1px solid rgba(154,114,48,0.12);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .spec-item:first-child { border-left: none; }
+
+    .spec-icon { font-size: 18px; margin-bottom: 3px; }
+
+    .spec-val {
+      font-size: 17px;
+      font-weight: 700;
+      color: #FAF6F0;
+      font-family: var(--serif);
+    }
+
+    .spec-lbl {
+      font-size: 10px;
+      color: rgba(248,244,238,0.42);
+      letter-spacing: 1.5px;
+    }
+
+    /* ═══════════════════════════════════════
+       MAIN CONTENT
+    ═══════════════════════════════════════ */
+    .page-content {
+      padding-bottom: 92px; /* clearance for sticky CTA */
+    }
+
+    /* ── Gallery ── */
+    .sec-gallery {
+      padding: 32px 16px 28px;
+      background: var(--bg);
+    }
+
+    .sec-gallery h2 {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 18px;
+      padding: 0 6px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 3px;
+    }
+
+    .g-item {
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--bg-card);
+      position: relative;
+    }
+
+    .g-item:first-child { grid-column: span 2; aspect-ratio: 16/9; }
+    .g-item:not(:first-child) { aspect-ratio: 4/3; }
+
+    .g-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.65s var(--ease);
+    }
+
+    .g-item:hover img { transform: scale(1.04); }
+
+    .g-item__overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0);
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.3s;
+    }
+
+    .g-item:hover .g-item__overlay { background: rgba(0,0,0,0.12); }
+
+    .g-item__zoom {
+      opacity: 0;
+      color: white;
+      font-size: 22px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      transition: opacity 0.3s;
+    }
+
+    .g-item:hover .g-item__zoom { opacity: 1; }
+
+    /* ── Description ── */
+    .sec-desc {
+      padding: 36px 24px;
+      background: var(--bg-alt);
+    }
+
+    .sec-desc h2 {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+
+    .sec-desc p {
+      font-size: 16px;
+      line-height: 1.9;
+      color: var(--text-mid);
+    }
+
+    /* ── Specs table ── */
+    .sec-specs {
+      padding: 36px 24px;
+      background: var(--bg);
+    }
+
+    .sec-specs h2 {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .specs-tbl {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .spec-row {
+      background: var(--bg);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .spec-row__key { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; }
+    .spec-row__val { font-size: 16px; font-weight: 600; color: var(--text); }
+
+    /* ── Agent card ── */
+    .sec-agent {
+      padding: 32px 24px;
+      background: var(--bg-alt);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    .agent-photo {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--gold);
+      flex-shrink: 0;
+    }
+
+    .agent-name { font-family: var(--serif); font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .agent-role { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+    .agent-brand { font-size: 12px; color: var(--gold); font-weight: 600; }
+
+    /* ═══════════════════════════════════════
+       STICKY CTA BAR — mobile-first WhatsApp
+    ═══════════════════════════════════════ */
+    .cta-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 12px 16px;
+      padding-bottom: max(12px, env(safe-area-inset-bottom));
+      background: rgba(248,244,238,0.97);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid var(--border-md);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .cta-wa {
+      flex: 1;
+      background: #25D366;
+      color: white;
+      padding: 15px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: var(--sans);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+
+    .cta-wa:hover { background: #1ebe5d; }
+
+    .cta-call {
+      width: 52px; height: 52px;
+      background: var(--bg-alt);
+      border: 2px solid var(--border-md);
+      color: var(--text);
+      font-size: 20px;
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none;
+      transition: border-color 0.3s;
+    }
+
+    .cta-call:hover { border-color: var(--gold); }
+
+    /* ═══════════════════════════════════════
+       LIGHTBOX
+    ═══════════════════════════════════════ */
+    .lightbox {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.96);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .lightbox.open { display: flex; }
+
+    .lightbox__img {
+      max-width: 100%;
+      max-height: 90vh;
+      object-fit: contain;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .lightbox__close {
+      position: absolute;
+      top: 18px; left: 18px;
+      background: none; border: none;
+      color: rgba(255,255,255,0.75);
+      font-size: 30px;
+      cursor: pointer;
+      padding: 6px;
+      line-height: 1;
+      transition: color 0.3s;
+    }
+
+    .lightbox__close:hover { color: white; }
+
+    .lightbox__counter {
+      position: absolute;
+      bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.45);
+      font-size: 13px;
+      letter-spacing: 2px;
+    }
+
+    .lightbox__prev,
+    .lightbox__next {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: white;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .lightbox__prev { right: 16px; }
+    .lightbox__next { left: 16px; }
+    .lightbox__prev:hover, .lightbox__next:hover { background: rgba(255,255,255,0.18); }
+
+    /* ═══════════════════════════════════════
+       DESKTOP ENHANCEMENTS
+    ═══════════════════════════════════════ */
+    @media (min-width: 640px) {
+      .vh__info { padding: 48px 48px; }
+      .specs-strip { padding: 0 48px; }
+    }
+
+    @media (min-width: 768px) {
+      .sec-gallery { padding: 48px; }
+      .sec-desc, .sec-specs, .sec-agent { padding-left: 48px; padding-right: 48px; }
+      .cta-bar { padding: 16px 48px; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+
+      .gallery-grid { grid-template-columns: repeat(3, 1fr); }
+      .g-item:first-child { grid-column: span 3; aspect-ratio: 21/9; }
+      .g-item:not(:first-child) { aspect-ratio: 16/10; }
+
+      .specs-tbl { grid-template-columns: repeat(3,1fr); }
+
+      .lightbox__prev { right: 32px; }
+      .lightbox__next { left: 32px; }
+    }
+
+    @media (min-width: 1024px) {
+      .sec-gallery { padding: 64px; }
+      .sec-desc, .sec-specs, .sec-agent { padding-left: 64px; padding-right: 64px; }
+      .cta-bar { padding: 20px 64px; }
+      .vh__info { padding: 56px 64px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════ VIDEO HERO ═══════════════════ -->
+  <div class="vh">
+    <!-- Replace src with your property video URL -->
+    <video class="vh__video" id="propVid" autoplay muted loop playsinline
+           poster="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=85">
+      <source src="https://videos.pexels.com/video-files/3196787/3196787-hd_1920_1080_30fps.mp4" type="video/mp4">
+    </video>
+    <div class="vh__shade"></div>
+
+    <!-- Top bar -->
+    <div class="vh__topbar">
+      <a href="index.html" class="logo-sm">
+        <span class="v">VIEW</span><span class="e">ESTATE</span>
+      </a>
+      <a href="index.html" class="back-link">← כל הנכסים</a>
+    </div>
+
+    <!-- Sound toggle -->
+    <button class="vh__sound" id="soundBtn" onclick="toggleSound()" aria-label="הפעל צליל">🔇</button>
+
+    <!-- Property info overlay -->
+    <div class="vh__info">
+      <div class="vh__badge">נכס זמין למכירה</div>
+      <h1 class="vh__title">פנטהאוז רוטשילד 22</h1>
+      <p class="vh__meta">5 חדרים &nbsp;·&nbsp; 160 מ"ר &nbsp;·&nbsp; קומה 12 &nbsp;·&nbsp; תל אביב</p>
+      <div class="vh__price">4,800,000 ₪</div>
+    </div>
+
+    <!-- Scroll cue -->
+    <div class="vh__cue">
+      <span class="vh__cue-label">תמונות</span>
+      <div class="vh__cue-arrow"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SPECS STRIP ═══════════════════ -->
+  <div class="specs-strip">
+    <div class="spec-item">
+      <span class="spec-icon">🛏️</span>
+      <span class="spec-val">5</span>
+      <span class="spec-lbl">חדרים</span>
+    </div>
+    <div class="spec-item">
+      <span class="spec-icon">📐</span>
+      <span class="spec-val">160</span>
+      <span class="spec-lbl">מ"ר</span>
+    </div>
+    <div class="spec-item">
+      <span class="spec-icon">🏢</span>
+      <span class="spec-val">12</span>
+      <span class="spec-lbl">קומה</span>
+    </div>
+    <div class="spec-item">
+      <span class="spec-icon">🌳</span>
+      <span class="spec-val">40</span>
+      <span class="spec-lbl">מ"ר מרפסת</span>
+    </div>
+    <div class="spec-item">
+      <span class="spec-icon">🅿️</span>
+      <span class="spec-val">2</span>
+      <span class="spec-lbl">חניות</span>
+    </div>
+    <div class="spec-item">
+      <span class="spec-icon">🗓️</span>
+      <span class="spec-val">2019</span>
+      <span class="spec-lbl">שנת בנייה</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ PAGE CONTENT ═══════════════════ -->
+  <main class="page-content">
+
+    <!-- Gallery -->
+    <div class="sec-gallery">
+      <h2>גלריית תמונות</h2>
+      <div class="gallery-grid" id="gallery">
+        <div class="g-item" data-idx="0">
+          <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1400&q=85" alt="סלון">
+          <div class="g-item__overlay"><span class="g-item__zoom">⊕</span></div>
+        </div>
+        <div class="g-item" data-idx="1">
+          <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=900&q=80" alt="מטבח">
+          <div class="g-item__overlay"><span class="g-item__zoom">⊕</span></div>
+        </div>
+        <div class="g-item" data-idx="2">
+          <img src="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=900&q=80" alt="חדר שינה">
+          <div class="g-item__overlay"><span class="g-item__zoom">⊕</span></div>
+        </div>
+        <div class="g-item" data-idx="3">
+          <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=900&q=80" alt="מטבח">
+          <div class="g-item__overlay"><span class="g-item__zoom">⊕</span></div>
+        </div>
+        <div class="g-item" data-idx="4">
+          <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=900&q=80" alt="חדר רחצה">
+          <div class="g-item__overlay"><span class="g-item__zoom">⊕</span></div>
+        </div>
+        <div class="g-item" data-idx="5">
+          <img src="https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=900&q=80" alt="מרפסת">
+          <div class="g-item__overlay"><span class="g-item__zoom">⊕</span></div>
+        </div>
+        <div class="g-item" data-idx="6">
+          <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=900&q=80" alt="חיצוני">
+          <div class="g-item__overlay"><span class="g-item__zoom">⊕</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="sec-desc">
+      <h2>תיאור הנכס</h2>
+      <p>
+        פנטהאוז מרהיב בלב רוטשילד, תל אביב. קומה 12 עם נוף פנורמי לעיר ולים התיכון.
+        הנכס עוצב ברמה גבוהה עם חומרים מהמשובחים — אבן, עץ אקזוטי, ומתכת מוסגרת.
+        הסלון המרווח זורם לטראסה ענקית של 40 מ"ר, מושלמת לבידור.
+        מטבח אמריקאי מאובזר ב-Gaggenau. שלושה חדרי שינה עם חדרי רחצה en-suite.
+        מחסן, חניון כפול, ומשרת בית.
+      </p>
+    </div>
+
+    <!-- Specs table -->
+    <div class="sec-specs">
+      <h2>פרטי הנכס</h2>
+      <div class="specs-tbl">
+        <div class="spec-row">
+          <span class="spec-row__key">מחיר</span>
+          <span class="spec-row__val">4,800,000 ₪</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-row__key">עיר</span>
+          <span class="spec-row__val">תל אביב</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-row__key">שכונה</span>
+          <span class="spec-row__val">רוטשילד</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-row__key">שטח</span>
+          <span class="spec-row__val">160 מ"ר</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-row__key">חדרים</span>
+          <span class="spec-row__val">5 חדרים</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-row__key">קומה</span>
+          <span class="spec-row__val">12 מתוך 14</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-row__key">מרפסת</span>
+          <span class="spec-row__val">40 מ"ר</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-row__key">חניה</span>
+          <span class="spec-row__val">2 מקומות</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-row__key">מחסן</span>
+          <span class="spec-row__val">כן</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-row__key">מעלית</span>
+          <span class="spec-row__val">כן</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-row__key">שנת בנייה</span>
+          <span class="spec-row__val">2019</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-row__key">מצב</span>
+          <span class="spec-row__val">מחודש 2024</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agent card -->
+    <div class="sec-agent">
+      <!-- Replace with your actual photo -->
+      <img class="agent-photo"
+           src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&q=80"
+           alt="דורון">
+      <div>
+        <div class="agent-name">דורון</div>
+        <div class="agent-role">מתווך נכסים מוסמך · צלם מקצועי</div>
+        <div class="agent-brand">⚖️ ViewEstate · viewestate.co.il</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ═══════════════════ STICKY CTA ═══════════════════ -->
+  <div class="cta-bar">
+    <a href="https://wa.me/972502448682?text=%D7%A9%D7%9C%D7%95%D7%9D%20%D7%93%D7%95%D7%A8%D7%95%D7%9F%2C%20%D7%A8%D7%90%D7%99%D7%AA%D7%99%20%D7%90%D7%AA%20%D7%A4%D7%A0%D7%98%D7%94%D7%90%D7%95%D7%96%20%D7%A8%D7%95%D7%98%D7%A9%D7%99%D7%9C%D7%93%2022%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D"
+       class="cta-wa" target="_blank" rel="noopener">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/>
+        <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.944-1.418A9.953 9.953 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+      </svg>
+      שלח הודעה לדורון
+    </a>
+    <a href="tel:+972502448682" class="cta-call" aria-label="התקשר">📞</a>
+  </div>
+
+  <!-- ═══════════════════ LIGHTBOX ═══════════════════ -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox__close" onclick="closeLB()">✕</button>
+    <button class="lightbox__prev" onclick="shiftLB(1)">›</button>
+    <button class="lightbox__next" onclick="shiftLB(-1)">‹</button>
+    <img class="lightbox__img" id="lbImg" src="" alt="">
+    <div class="lightbox__counter" id="lbCounter"></div>
+  </div>
+
+  <script>
+    // ── Sound toggle ──
+    const vid = document.getElementById('propVid');
+    let sound = false;
+    function toggleSound() {
+      sound = !sound;
+      vid.muted = !sound;
+      document.getElementById('soundBtn').textContent = sound ? '🔊' : '🔇';
+    }
+
+    // ── Hide scroll cue on first scroll ──
+    const cue = document.querySelector('.vh__cue');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 40 && cue) {
+        cue.style.opacity = '0';
+        cue.style.transition = 'opacity 0.6s ease';
+      }
+    }, { passive: true, once: true });
+
+    // ── Lightbox ──
+    const items = document.querySelectorAll('.g-item');
+    let current = 0;
+    const srcs = [...items].map(i => i.querySelector('img').src);
+
+    items.forEach(item => {
+      item.addEventListener('click', () => {
+        current = parseInt(item.dataset.idx);
+        openLB(current);
+      });
+    });
+
+    function openLB(idx) {
+      current = idx;
+      document.getElementById('lbImg').src = srcs[idx];
+      document.getElementById('lbCounter').textContent = `${idx + 1} / ${srcs.length}`;
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLB() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function shiftLB(dir) {
+      current = (current + dir + srcs.length) % srcs.length;
+      openLB(current);
+    }
+
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+      if (e.target === this) closeLB();
+    });
+
+    document.getElementById('lbImg').addEventListener('click', e => e.stopPropagation());
+
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('lightbox').classList.contains('open')) return;
+      if (e.key === 'Escape') closeLB();
+      if (e.key === 'ArrowRight') shiftLB(-1);
+      if (e.key === 'ArrowLeft')  shiftLB(1);
+    });
+
+    // ── Touch swipe for lightbox ──
+    let lbTouchX = null;
+    document.getElementById('lightbox').addEventListener('touchstart', e => {
+      lbTouchX = e.touches[0].clientX;
+    }, { passive: true });
+    document.getElementById('lightbox').addEventListener('touchend', e => {
+      if (lbTouchX === null) return;
+      const diff = lbTouchX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) shiftLB(diff > 0 ? 1 : -1);
+      lbTouchX = null;
+    }, { passive: true });
+  </script>
+</body>
+</html>
