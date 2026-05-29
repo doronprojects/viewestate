@@ -18,7 +18,7 @@ window.VIEWESTATE_DATA = {
     phone:    "0502448682",          // לתצוגה ולחיוג
     whatsapp: "972502448682",        // פורמט בינלאומי ל-wa.me
     email:    "",                    // אופציונלי
-    photo:    "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=85",
+    photo:    "doron.jpg",
     site:     "viewestate.co.il",
     brand:    "ViewEstate"
   },
