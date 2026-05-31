@@ -135,6 +135,12 @@
 
     .vh__sound:hover { border-color: var(--gold-light); }
     .vh__sound.hidden { display: none; }
+    .vh__sound svg {
+      width: 20px; height: 20px;
+      stroke: currentColor; stroke-width: 1.7;
+      stroke-linecap: round; stroke-linejoin: round;
+      fill: none; display: block;
+    }
 
     /* ── Bottom info ── */
     .vh__info {
@@ -245,7 +251,24 @@
 
     .spec-item:first-child { border-left: none; }
 
-    .spec-icon { font-size: 18px; margin-bottom: 3px; }
+    .spec-icon {
+      color: var(--gold-light);
+      margin-bottom: 6px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .spec-icon svg {
+      width: 24px;
+      height: 24px;
+      display: block;
+      stroke: currentColor;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
 
     .spec-val {
       font-size: 17px;
@@ -515,6 +538,12 @@
     }
 
     .cta-call:hover { border-color: var(--gold); }
+    .cta-call svg {
+      width: 22px; height: 22px;
+      stroke: var(--gold); stroke-width: 1.7;
+      stroke-linecap: round; stroke-linejoin: round;
+      fill: none; display: block;
+    }
 
     /* ═══════════════════════════════════════
        LIGHTBOX
@@ -717,13 +746,21 @@
       document.querySelector('meta[name="description"]').setAttribute('content', metaLine + ' · ' + fmtPrice(p.price));
 
       /* specs strip — only show non-empty */
+      const ICONS = {
+        rooms:   '<svg viewBox="0 0 24 24" width="24" height="24"><path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"/><path d="M2 18h20"/><path d="M12 4v6"/></svg>',
+        area:    '<svg viewBox="0 0 24 24" width="24" height="24"><path d="M3 8V5a2 2 0 0 1 2-2h3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M8 16 16 8"/><path d="M16 13v3h-3"/><path d="M8 11V8h3"/></svg>',
+        floor:   '<svg viewBox="0 0 24 24" width="24" height="24"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>',
+        balcony: '<svg viewBox="0 0 24 24" width="24" height="24"><path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/></svg>',
+        parking: '<svg viewBox="0 0 24 24" width="24" height="24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>',
+        year:    '<svg viewBox="0 0 24 24" width="24" height="24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg>'
+      };
       const stripDefs = [
-        { icon: '🛏️', val: p.rooms,   lbl: 'חדרים' },
-        { icon: '📐', val: p.area,    lbl: 'מ"ר' },
-        { icon: '🏢', val: p.floor,   lbl: 'קומה' },
-        { icon: '🌳', val: p.balcony, lbl: 'מ"ר מרפסת' },
-        { icon: '🅿️', val: p.parking, lbl: 'חניות' },
-        { icon: '🗓️', val: p.year,    lbl: 'שנת בנייה' }
+        { icon: ICONS.rooms,   val: p.rooms,   lbl: 'חדרים' },
+        { icon: ICONS.area,    val: p.area,    lbl: 'מ"ר' },
+        { icon: ICONS.floor,   val: p.floor,   lbl: 'קומה' },
+        { icon: ICONS.balcony, val: p.balcony, lbl: 'מ"ר מרפסת' },
+        { icon: ICONS.parking, val: p.parking, lbl: 'חניות' },
+        { icon: ICONS.year,    val: p.year,    lbl: 'שנת בנייה' }
       ].filter(s => s.val !== '' && s.val != null && s.val !== 0);
       const stripHtml = stripDefs.map(s => `
         <div class="spec-item">
@@ -785,7 +822,7 @@
           <a href="index.html" class="logo-sm"><span class="v">VIEW</span><span class="e">ESTATE</span></a>
           <a href="index.html" class="back-link">← כל הנכסים</a>
         </div>
-        ${p.video ? '<button class="vh__sound" id="soundBtn" onclick="toggleSound()" aria-label="הפעל צליל">🔇</button>' : ''}
+        ${p.video ? '<button class="vh__sound" id="soundBtn" onclick="toggleSound()" aria-label="הפעל צליל"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z\"/><line x1=\"22\" x2=\"16\" y1=\"9\" y2=\"15\"/><line x1=\"16\" x2=\"22\" y1=\"9\" y2=\"15\"/></svg></button>' : ''}
         <div class="vh__info">
           ${(function(){ var ss = saleStatusInfo(p.saleStatus); return `<div class="vh__badge ${ss.cls}">${ss.label}</div>`; })()}
           <h1 class="vh__title">${esc(p.name)}</h1>
@@ -818,7 +855,7 @@
           <div>
             <div class="agent-name">${esc(AGENT.name || '')}</div>
             <div class="agent-role">${esc(AGENT.role || '')}</div>
-            <div class="agent-brand">⚖️ ${esc(AGENT.brand || 'ViewEstate')} · ${esc(AGENT.site || '')}</div>
+            <div class="agent-brand"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg> ${esc(AGENT.brand || 'ViewEstate')} · ${esc(AGENT.site || '')}</div>
           </div>
         </div>
 
@@ -869,7 +906,7 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.944-1.418A9.953 9.953 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
           שלח הודעה לדורון
         </a>
-        <a href="tel:+${esc(AGENT.whatsapp || '')}" class="cta-call" aria-label="התקשר">📞</a>
+        <a href="tel:+${esc(AGENT.whatsapp || '')}" class="cta-call" aria-label="התקשר"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg></a>
       </div>`;
 
       wireUp(p);
@@ -881,11 +918,14 @@
     }
 
     /* ---------- interactions ---------- */
+    const SND_OFF = '<svg viewBox="0 0 24 24" width="20" height="20"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
+    const SND_ON  = '<svg viewBox="0 0 24 24" width="20" height="20"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.4 6.4a9 9 0 0 1 0 11.3"/></svg>';
     function toggleSound() {
       const vid = document.getElementById('propVid');
       if (!vid) return;
       vid.muted = !vid.muted;
-      document.getElementById('soundBtn').textContent = vid.muted ? '🔇' : '🔊';
+      if (!vid.muted) vid.play().catch(() => {});
+      document.getElementById('soundBtn').innerHTML = vid.muted ? SND_OFF : SND_ON;
     }
 
     let srcs = [], current = 0;

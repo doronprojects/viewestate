@@ -333,6 +333,13 @@
       transition: var(--t);
     }
     .hero__sound:hover { border-color: var(--gold-light); color: var(--gold-light); }
+    .hero__sound #soundIcon { display: flex; align-items: center; }
+    .hero__sound svg {
+      width: 16px; height: 16px;
+      stroke: currentColor; stroke-width: 1.7;
+      stroke-linecap: round; stroke-linejoin: round;
+      fill: none; display: block;
+    }
 
     /* Scroll line */
     .hero__scroll {
@@ -678,7 +685,15 @@
       border: 1px solid var(--border-md);
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
-      font-size: 20px;
+      color: var(--gold);
+    }
+    .feat-icon svg {
+      width: 23px; height: 23px;
+      stroke: currentColor;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
     }
 
     .feat-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
@@ -1041,7 +1056,7 @@
     </div>
 
     <button class="hero__sound" id="soundBtn" onclick="toggleSound()">
-      <span id="soundIcon">🔇</span>
+      <span id="soundIcon"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg></span>
       <span id="soundTxt">הפעל צליל</span>
     </button>
 
@@ -1098,21 +1113,21 @@
         </p>
         <div class="feat-list">
           <div class="feat-item">
-            <div class="feat-icon" aria-hidden="true">⚖️</div>
+            <div class="feat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="23" height="23"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg></div>
             <div>
               <div class="feat-title">רישיון תיווך מוסמך</div>
               <div class="feat-desc">תיווך מקצועי ואמין, ליווי אישי וצמוד בכל שלב</div>
             </div>
           </div>
           <div class="feat-item">
-            <div class="feat-icon" aria-hidden="true">🎬</div>
+            <div class="feat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="23" height="23"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2"/></svg></div>
             <div>
               <div class="feat-title">וידאו מקצועי לכל נכס</div>
               <div class="feat-desc">ציוד מקצועי, עריכה קולנועית, הצגה יוקרתית לכל נכס</div>
             </div>
           </div>
           <div class="feat-item">
-            <div class="feat-icon" aria-hidden="true">📱</div>
+            <div class="feat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="23" height="23"><rect width="14" height="20" x="5" y="2" rx="2.5"/><path d="M12 18h.01"/></svg></div>
             <div>
               <div class="feat-title">שיווק דיגיטלי חכם</div>
               <div class="feat-desc">QR code ייחודי לכל נכס, דפי נכס אישיים, רשתות חברתיות</div>
@@ -1409,10 +1424,13 @@
     // ── Hero sound ──
     const heroVid = document.getElementById('heroVid');
     let soundOn = false;
+    const SND_OFF = '<svg viewBox="0 0 24 24" width="16" height="16"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
+    const SND_ON  = '<svg viewBox="0 0 24 24" width="16" height="16"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.4 6.4a9 9 0 0 1 0 11.3"/></svg>';
     function toggleSound() {
       soundOn = !soundOn;
       heroVid.muted = !soundOn;
-      document.getElementById('soundIcon').textContent = soundOn ? '🔊' : '🔇';
+      if (soundOn) heroVid.play().catch(() => {});
+      document.getElementById('soundIcon').innerHTML = soundOn ? SND_ON : SND_OFF;
       document.getElementById('soundTxt').textContent  = soundOn ? 'השתק'  : 'הפעל צליל';
     }
 
