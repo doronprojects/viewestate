@@ -1090,7 +1090,7 @@
     <div class="about-grid">
       <div class="about-visual reveal">
         <div class="about-img-wrap">
-          <img src="doron.jpg" alt="דורון — מתווך נכסים מוסמך, ViewEstate">
+          <img src="doron.jpg" alt="דורון — מתווך נכסים מוסמך, ViewEstate" loading="lazy" decoding="async">
         </div>
         <div class="about-badge">
           <div class="about-badge__txt" style="font-family:var(--serif);font-size:23px;font-weight:700;line-height:1.3">נדל"ן<br>הדור<br>הבא</div>
@@ -1323,7 +1323,7 @@
                       p.floor ? 'קומה ' + p.floor : ''].filter(Boolean).join('  ·  ');
         const media = (feat && p.video)
           ? `<video class="prop-card__media" autoplay muted loop playsinline poster="${esc(p.poster || heroImg)}"><source src="${esc(p.video)}" type="video/mp4"></video>`
-          : `<img class="prop-card__media" src="${esc(heroImg)}" alt="${esc(p.name)}" loading="lazy">`;
+          : `<img class="prop-card__media" src="${esc(heroImg)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`;
         const ss = saleStatusInfo(p.saleStatus);
         const label = [esc(p.name), esc(p.type || ''), esc(p.city || ''), ss.label, info].filter(Boolean).join(', ');
         return `
