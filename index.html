@@ -1031,7 +1031,7 @@
   <main id="main">
   <!-- ===== HERO ===== -->
   <section class="hero" id="home">
-    <video class="hero__video" id="heroVid" autoplay muted loop playsinline
+    <video class="hero__video" id="heroVid" autoplay muted loop playsinline preload="auto"
            poster="videos/hero-poster.jpg">
       <source src="videos/hero.mp4" type="video/mp4">
     </video>
@@ -1435,10 +1435,17 @@
 
     // ── Parallax hero video ──
     const heroVideo = document.querySelector('.hero__video');
+    let heroTicking = false;
     window.addEventListener('scroll', () => {
-      if (window.scrollY < window.innerHeight) {
-        heroVideo.style.transform = `translateY(${window.scrollY * 0.22}px)`;
-      }
+      if (heroTicking) return;
+      heroTicking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        if (y < window.innerHeight) {
+          heroVideo.style.transform = `translate3d(0, ${y * 0.22}px, 0)`;
+        }
+        heroTicking = false;
+      });
     }, { passive: true });
 
     // ── Scroll reveal ──
