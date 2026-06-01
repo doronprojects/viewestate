@@ -901,10 +901,16 @@
         </div>`).join('');
 
       /* hero media — video if available, else image */
+      const vidSources = (function () {
+        let s = '';
+        if (/^videos\/.*\.mp4$/i.test(p.video || '')) {
+          s += `<source src="${esc(p.video.replace(/\.mp4$/i, '.webm'))}" type="video/webm">`;
+        }
+        s += `<source src="${esc(p.video)}" type="video/mp4">`;
+        return s;
+      })();
       const heroMedia = p.video
-        ? `<video class="vh__video" id="propVid" autoplay muted loop playsinline poster="${esc(p.poster || heroImg)}">
-             <source src="${esc(p.video)}" type="video/mp4">
-           </video>`
+        ? `<video class="vh__video" id="propVid" autoplay muted loop playsinline poster="${esc(p.poster || heroImg)}">${vidSources}</video>`
         : `<img class="vh__video" src="${esc(p.poster || heroImg)}" alt="${esc(nm)}">`;
 
       /* whatsapp prefilled */
