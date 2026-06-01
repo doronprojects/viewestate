@@ -14,7 +14,9 @@ window.VIEWESTATE_DATA = {
   /* ---- פרטי המתווך / המותג ---- */
   agent: {
     name:     "דורון",
+    name_en:  "Doron",
     role:     "מתווך נכסים מוסמך",
+    role_en:  "Licensed Real-Estate Agent",
     phone:    "0502448682",          // לתצוגה ולחיוג
     whatsapp: "972502448682",        // פורמט בינלאומי ל-wa.me
     email:    "",                    // אופציונלי
@@ -80,8 +82,19 @@ window.VIEWESTATE_DATA = {
       status:       "נכס זמין למכירה",
       type:         "פנטהאוז",
       name:         "פנטהאוז רוטשילד 22",
+      name_en:         "Rothschild 22 Penthouse",
+      type_en:         "Penthouse",
       city:         "תל אביב",
+      city_en:         "Tel Aviv",
       neighborhood: "רוטשילד",
+      neighborhood_en: "Rothschild",
+      condition_en:    "Renovated 2024",
+      areaInfo:
+        "שדרות רוטשילד הן לב ליבה של תל אביב — שדרה ירוקה היסטורית המשלבת אדריכלות באוהאוס לצד מגדלים מודרניים. במרחק הליכה: בתי קפה, מסעדות שף, גלריות והתיאטרון הקאמרי. תחבורה ציבורית מצוינת וקרבה לים ולמרכזי העסקים של העיר.",
+      areaInfo_en:
+        "Rothschild Boulevard is the very heart of Tel Aviv — a historic green avenue blending Bauhaus architecture with modern towers. Within walking distance: cafés, chef restaurants, galleries and the Cameri Theatre. Excellent public transport, close to the beach and the city's business hubs.",
+      description_en:
+        "A stunning penthouse in the heart of Rothschild, Tel Aviv. 12th floor with panoramic views over the city and the Mediterranean. Finished to a high standard with the finest materials — stone, exotic wood and framed metal. The spacious living room flows onto a huge 40 sqm terrace, perfect for entertaining. American kitchen equipped by Gaggenau. Three en-suite bedrooms. Storage, double parking and a service room.",
       price:        4800000,
       rooms:        5,
       area:         160,
@@ -118,8 +131,19 @@ window.VIEWESTATE_DATA = {
       status:       "נכס זמין למכירה",
       type:         "וילה",
       name:         "וילה בשכונת הזהב",
+      name_en:         "Villa in the Gold Quarter",
+      type_en:         "Villa",
       city:         "הרצליה פיתוח",
+      city_en:         "Herzliya Pituach",
       neighborhood: "שכונת הזהב",
+      neighborhood_en: "Gold Quarter",
+      condition_en:    "Excellent",
+      areaInfo:
+        "שכונת הזהב בהרצליה פיתוח היא מהיוקרתיות בישראל — רחובות שקטים, בתים פרטיים מרווחים וקרבה לחופי הים. אזור מבוקש למשפחות ולאנשי עסקים, עם בתי ספר מובילים, מרינה, מלונות יוקרה ומרכזי קניות במרחק נסיעה קצר.",
+      areaInfo_en:
+        "The Gold Quarter in Herzliya Pituach is among Israel's most prestigious neighborhoods — quiet streets, spacious private homes and proximity to the beaches. A sought-after area for families and professionals, with leading schools, a marina, luxury hotels and shopping centers a short drive away.",
+      description_en:
+        "A luxurious villa in the Gold Quarter of Herzliya Pituach. 320 sqm built on a spacious plot, 7 rooms, a private pool and a landscaped garden. Meticulous architectural design with open, light-filled spaces.",
       price:        7200000,
       rooms:        7,
       area:         320,
@@ -150,8 +174,19 @@ window.VIEWESTATE_DATA = {
       status:       "נכס זמין למכירה",
       type:         "דירת גן",
       name:         "גן פרטי בלב העיר",
+      name_en:         "Private Garden in the City Center",
+      type_en:         "Garden Apartment",
       city:         "תל אביב",
+      city_en:         "Tel Aviv",
       neighborhood: "לב העיר",
+      neighborhood_en: "City Center",
+      condition_en:    "Renovated",
+      areaInfo:
+        "לב העיר תל אביב — שילוב של רחובות עירוניים תוססים עם פינות שקטות וירוקות. במרחק הליכה: שוק, בתי קפה, תחבורה ציבורית ומוסדות תרבות. מיקום מרכזי שמאפשר לחיות את העיר בלי רכב.",
+      areaInfo_en:
+        "Tel Aviv city center — a mix of lively urban streets with quiet, green corners. Within walking distance: a market, cafés, public transport and cultural institutions. A central location that lets you live the city without a car.",
+      description_en:
+        "A unique garden apartment in the heart of Tel Aviv with a private green garden. 4 rooms, 130 sqm, a winning location within walking distance of everything. A rare blend of urban calm and privacy.",
       price:        3900000,
       rooms:        4,
       area:         130,

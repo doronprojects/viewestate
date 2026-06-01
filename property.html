@@ -115,6 +115,23 @@
 
     .back-link:hover { border-color: rgba(248,244,238,0.4); color: white; }
 
+    .vh__topbar-actions { display: flex; align-items: center; gap: 8px; }
+    .vh__lang {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: rgba(248,244,238,0.82);
+      background: rgba(20,10,4,0.28);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(248,244,238,0.14);
+      padding: 8px 12px;
+      border-radius: 2px;
+      min-width: 40px;
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .vh__lang:hover { border-color: var(--gold-light); color: var(--gold-light); }
+
     /* ── Sound button ── */
     .vh__sound {
       position: absolute;
@@ -687,6 +704,71 @@
     const DATA = window.VIEWESTATE_DATA || { agent: {}, properties: [] };
     const AGENT = DATA.agent || {};
 
+    /* ---------- i18n ---------- */
+    let LANG = (function () {
+      const q = new URLSearchParams(location.search).get('lang');
+      if (q === 'en' || q === 'he') return q;
+      return localStorage.getItem('ve_lang') || 'he';
+    })();
+    const STR = {
+      he: {
+        dir: 'rtl', langBtn: 'EN',
+        back: '← כל הנכסים', cuePhotos: 'תמונות',
+        l_rooms: 'חדרים', l_area: 'מ"ר', l_floor: 'קומה', l_balcony: 'מ"ר מרפסת', l_parking: 'חניות', l_year: 'שנת בנייה',
+        h_gallery: 'גלריית תמונות', h_desc: 'תיאור הנכס', h_area: 'על האזור', h_specs: 'פרטי הנכס',
+        noDesc: 'אין תיאור זמין.',
+        t_price: 'מחיר', t_city: 'עיר', t_neighborhood: 'שכונה', t_area: 'שטח', t_rooms: 'חדרים', t_floor: 'קומה', t_balcony: 'מרפסת', t_parking: 'חניה', t_storage: 'מחסן', t_elevator: 'מעלית', t_year: 'שנת בנייה', t_condition: 'מצב',
+        lead_eyebrow: 'השאירו פרטים', lead_h: 'מתעניינים בנכס הזה?', lead_sub: 'מלאו פרטים ונחזור אליכם — או שלחו ישירות בוואטסאפ',
+        f_name: 'שם מלא', f_name_ph: 'השם שלך', f_phone: 'טלפון', f_phone_ph: '050-0000000', f_interest: 'תחום עניין', f_msg: 'הודעה (אופציונלי)', f_msg_ph: 'משהו שתרצו להוסיף?',
+        opt_buy: 'אני מתעניין/ת לקנות', opt_info: 'רוצה לקבל פרטים נוספים', opt_visit: 'לתאם צפייה בנכס', opt_general: 'פנייה כללית',
+        foot_acc: 'הצהרת נגישות',
+        u_sqm: 'מ"ר', u_rooms: 'חדרים', u_floorOf: 'מתוך', u_spots: 'מקומות',
+        ss_sale: 'למכירה', ss_neg: 'במשא ומתן', ss_sold: 'נמכר',
+        notfound_h: 'הנכס לא נמצא', notfound_p: 'ייתכן שהנכס הוסר או שהקישור שגוי.', notfound_a: '← חזרה לכל הנכסים',
+        aria_sound: 'הפעל צליל', aria_call: 'התקשר', aria_lang: 'switch to English'
+      },
+      en: {
+        dir: 'ltr', langBtn: 'עב',
+        back: '← All properties', cuePhotos: 'Photos',
+        l_rooms: 'Rooms', l_area: 'm²', l_floor: 'Floor', l_balcony: 'Balcony m²', l_parking: 'Parking', l_year: 'Year',
+        h_gallery: 'Photo Gallery', h_desc: 'Description', h_area: 'About the Area', h_specs: 'Property Details',
+        noDesc: 'No description available.',
+        t_price: 'Price', t_city: 'City', t_neighborhood: 'Neighborhood', t_area: 'Area', t_rooms: 'Rooms', t_floor: 'Floor', t_balcony: 'Balcony', t_parking: 'Parking', t_storage: 'Storage', t_elevator: 'Elevator', t_year: 'Year built', t_condition: 'Condition',
+        lead_eyebrow: 'Leave your details', lead_h: 'Interested in this property?', lead_sub: "Fill in your details and we'll get back to you — or message directly on WhatsApp",
+        f_name: 'Full name', f_name_ph: 'Your name', f_phone: 'Phone', f_phone_ph: '050-0000000', f_interest: 'Interest', f_msg: 'Message (optional)', f_msg_ph: 'Anything to add?',
+        opt_buy: "I'm interested in buying", opt_info: 'I want more details', opt_visit: 'Schedule a viewing', opt_general: 'General inquiry',
+        foot_acc: 'Accessibility statement',
+        u_sqm: 'm²', u_rooms: 'rooms', u_floorOf: 'of', u_spots: 'spots',
+        ss_sale: 'For Sale', ss_neg: 'Under Offer', ss_sold: 'Sold',
+        notfound_h: 'Property not found', notfound_p: 'The property may have been removed or the link is incorrect.', notfound_a: '← Back to all properties',
+        aria_sound: 'Play sound', aria_call: 'Call', aria_lang: 'מעבר לעברית'
+      }
+    };
+    function t(k) { return (STR[LANG] && STR[LANG][k] != null) ? STR[LANG][k] : STR.he[k]; }
+    function pick(o, base) {
+      if (!o) return '';
+      if (LANG === 'en' && o[base + '_en'] != null && o[base + '_en'] !== '') return o[base + '_en'];
+      return o[base] != null ? o[base] : '';
+    }
+    function ynt(v) {
+      if (LANG !== 'en') return v;
+      if (v === 'כן') return 'Yes';
+      if (v === 'לא') return 'No';
+      return v;
+    }
+    function applyDir() {
+      document.documentElement.lang = LANG;
+      document.documentElement.dir = t('dir');
+    }
+    function toggleLang() {
+      LANG = (LANG === 'he') ? 'en' : 'he';
+      localStorage.setItem('ve_lang', LANG);
+      paint();
+    }
+
+    /* gallery/lightbox state (declared early so wireUp can assign on first paint) */
+    let srcs = [], current = 0;
+
     function esc(s) {
       return String(s == null ? '' : s)
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -711,10 +793,10 @@
     }
     function saleStatusInfo(s) {
       switch (s) {
-        case 'negotiation': return { label: 'במשא ומתן', cls: 'st-neg' };
-        case 'sold':        return { label: 'נמכר',      cls: 'st-sold' };
+        case 'negotiation': return { label: t('ss_neg'),  cls: 'st-neg' };
+        case 'sold':        return { label: t('ss_sold'), cls: 'st-sold' };
         case 'sale':
-        default:            return { label: 'למכירה',    cls: 'st-sale' };
+        default:            return { label: t('ss_sale'), cls: 'st-sale' };
       }
     }
 
@@ -722,25 +804,34 @@
     const prop = findProperty(getParam('id'));
     const app = document.getElementById('app');
 
-    if (!prop) {
-      app.innerHTML = `
-        <div class="notfound">
-          <div class="logo-sm"><span class="v">VIEW</span><span class="e">ESTATE</span></div>
-          <h1>הנכס לא נמצא</h1>
-          <p>ייתכן שהנכס הוסר או שהקישור שגוי.</p>
-          <a href="index.html">← חזרה לכל הנכסים</a>
-        </div>`;
-    } else {
-      renderProperty(prop);
+    function paint() {
+      applyDir();
+      if (!prop) {
+        app.innerHTML = `
+          <div class="notfound">
+            <div class="logo-sm"><span class="v">VIEW</span><span class="e">ESTATE</span></div>
+            <h1>${t('notfound_h')}</h1>
+            <p>${t('notfound_p')}</p>
+            <a href="index.html">${t('notfound_a')}</a>
+          </div>`;
+      } else {
+        renderProperty(prop);
+      }
     }
+    paint();
 
     function renderProperty(p) {
       /* meta / SEO */
-      const metaLine = [p.rooms ? p.rooms + ' חדרים' : '', p.area ? p.area + ' מ"ר' : '',
-                        p.floor ? 'קומה ' + p.floor : '', p.city].filter(Boolean).join(' · ');
-      document.title = p.name + ' | ViewEstate';
+      const nm = pick(p, 'name');
+      const metaLine = [
+        p.rooms ? p.rooms + ' ' + t('u_rooms') : '',
+        p.area  ? p.area  + ' ' + t('u_sqm')   : '',
+        p.floor ? t('t_floor') + ' ' + p.floor : '',
+        pick(p, 'city')
+      ].filter(Boolean).join('  ·  ');
+      document.title = nm + ' | ViewEstate';
       const heroImg = (p.gallery && p.gallery[0]) || p.poster || '';
-      setMeta('ogTitle', p.name + ' | ViewEstate');
+      setMeta('ogTitle', nm + ' | ViewEstate');
       setMeta('ogDesc', metaLine + ' · ' + fmtPrice(p.price));
       setMeta('ogImg', heroImg);
       document.querySelector('meta[name="description"]').setAttribute('content', metaLine + ' · ' + fmtPrice(p.price));
@@ -755,12 +846,12 @@
         year:    '<svg viewBox="0 0 24 24" width="24" height="24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg>'
       };
       const stripDefs = [
-        { icon: ICONS.rooms,   val: p.rooms,   lbl: 'חדרים' },
-        { icon: ICONS.area,    val: p.area,    lbl: 'מ"ר' },
-        { icon: ICONS.floor,   val: p.floor,   lbl: 'קומה' },
-        { icon: ICONS.balcony, val: p.balcony, lbl: 'מ"ר מרפסת' },
-        { icon: ICONS.parking, val: p.parking, lbl: 'חניות' },
-        { icon: ICONS.year,    val: p.year,    lbl: 'שנת בנייה' }
+        { icon: ICONS.rooms,   val: p.rooms,   lbl: t('l_rooms') },
+        { icon: ICONS.area,    val: p.area,    lbl: t('l_area') },
+        { icon: ICONS.floor,   val: p.floor,   lbl: t('l_floor') },
+        { icon: ICONS.balcony, val: p.balcony, lbl: t('l_balcony') },
+        { icon: ICONS.parking, val: p.parking, lbl: t('l_parking') },
+        { icon: ICONS.year,    val: p.year,    lbl: t('l_year') }
       ].filter(s => s.val !== '' && s.val != null && s.val !== 0);
       const stripHtml = stripDefs.map(s => `
         <div class="spec-item">
@@ -772,30 +863,36 @@
       /* gallery */
       const gallery = (p.gallery && p.gallery.length) ? p.gallery : (p.poster ? [p.poster] : []);
       const galleryHtml = gallery.map((src, i) => `
-        <button type="button" class="g-item" data-idx="${i}" aria-label="הגדלת תמונה ${i + 1} מתוך ${gallery.length}: ${esc(p.name)}">
-          <img src="${esc(src)}" alt="${esc(p.name)} — תמונה ${i + 1}" loading="lazy">
+        <button type="button" class="g-item" data-idx="${i}" aria-label="${esc(nm)} — ${i + 1}/${gallery.length}">
+          <img src="${esc(src)}" alt="${esc(nm)} — ${i + 1}" loading="lazy">
           <div class="g-item__overlay" aria-hidden="true"><span class="g-item__zoom">⊕</span></div>
         </button>`).join('');
 
       /* description — split on newlines into paragraphs */
-      const descHtml = String(p.description || '').split(/\n+/).filter(Boolean)
-        .map(par => `<p>${esc(par)}</p>`).join('') || '<p>אין תיאור זמין.</p>';
+      const descHtml = String(pick(p, 'description') || '').split(/\n+/).filter(Boolean)
+        .map(par => `<p>${esc(par)}</p>`).join('') || `<p>${esc(t('noDesc'))}</p>`;
+
+      /* about-the-area — optional section */
+      const areaRaw = pick(p, 'areaInfo');
+      const areaHtml = areaRaw
+        ? String(areaRaw).split(/\n+/).filter(Boolean).map(par => `<p>${esc(par)}</p>`).join('')
+        : '';
 
       /* specs table — only non-empty rows */
-      const floorTxt = p.floor ? (p.floorsTotal ? p.floor + ' מתוך ' + p.floorsTotal : String(p.floor)) : '';
+      const floorTxt = p.floor ? (p.floorsTotal ? p.floor + ' ' + t('u_floorOf') + ' ' + p.floorsTotal : String(p.floor)) : '';
       const rows = [
-        ['מחיר', fmtPrice(p.price)],
-        ['עיר', p.city],
-        ['שכונה', p.neighborhood],
-        ['שטח', p.area ? p.area + ' מ"ר' : ''],
-        ['חדרים', p.rooms ? p.rooms + ' חדרים' : ''],
-        ['קומה', floorTxt],
-        ['מרפסת', p.balcony ? p.balcony + ' מ"ר' : ''],
-        ['חניה', p.parking ? p.parking + ' מקומות' : ''],
-        ['מחסן', p.storage],
-        ['מעלית', p.elevator],
-        ['שנת בנייה', p.year],
-        ['מצב', p.condition]
+        [t('t_price'), fmtPrice(p.price)],
+        [t('t_city'), pick(p, 'city')],
+        [t('t_neighborhood'), pick(p, 'neighborhood')],
+        [t('t_area'), p.area ? p.area + ' ' + t('u_sqm') : ''],
+        [t('t_rooms'), p.rooms ? p.rooms + ' ' + t('u_rooms') : ''],
+        [t('t_floor'), floorTxt],
+        [t('t_balcony'), p.balcony ? p.balcony + ' ' + t('u_sqm') : ''],
+        [t('t_parking'), p.parking ? p.parking + ' ' + t('u_spots') : ''],
+        [t('t_storage'), ynt(p.storage)],
+        [t('t_elevator'), ynt(p.elevator)],
+        [t('t_year'), p.year],
+        [t('t_condition'), pick(p, 'condition')]
       ].filter(r => r[1] !== '' && r[1] != null);
       const tableHtml = rows.map(r => `
         <div class="spec-row">
@@ -808,10 +905,13 @@
         ? `<video class="vh__video" id="propVid" autoplay muted loop playsinline poster="${esc(p.poster || heroImg)}">
              <source src="${esc(p.video)}" type="video/mp4">
            </video>`
-        : `<img class="vh__video" src="${esc(p.poster || heroImg)}" alt="${esc(p.name)}">`;
+        : `<img class="vh__video" src="${esc(p.poster || heroImg)}" alt="${esc(nm)}">`;
 
       /* whatsapp prefilled */
-      const waText = `שלום ${AGENT.name || ''}, ראיתי את הנכס "${p.name}" באתר ViewEstate ואשמח לשמוע פרטים.`;
+      const agentNm = pick(AGENT, 'name') || '';
+      const waText = (LANG === 'en')
+        ? `Hello ${agentNm}, I saw the property "${nm}" on the ViewEstate site and would love to hear more.`
+        : `שלום ${agentNm}, ראיתי את הנכס "${nm}" באתר ViewEstate ואשמח לשמוע פרטים.`;
       const waHref = waLink(waText);
 
       app.innerHTML = `
@@ -820,93 +920,101 @@
         <div class="vh__shade"></div>
         <div class="vh__topbar">
           <a href="index.html" class="logo-sm"><span class="v">VIEW</span><span class="e">ESTATE</span></a>
-          <a href="index.html" class="back-link">← כל הנכסים</a>
+          <div class="vh__topbar-actions">
+            <button class="vh__lang" onclick="toggleLang()" aria-label="${esc(t('aria_lang'))}">${t('langBtn')}</button>
+            <a href="index.html" class="back-link">${t('back')}</a>
+          </div>
         </div>
-        ${p.video ? '<button class="vh__sound" id="soundBtn" onclick="toggleSound()" aria-label="הפעל צליל"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z\"/><line x1=\"22\" x2=\"16\" y1=\"9\" y2=\"15\"/><line x1=\"16\" x2=\"22\" y1=\"9\" y2=\"15\"/></svg></button>' : ''}
+        ${p.video ? '<button class="vh__sound" id="soundBtn" onclick="toggleSound()" aria-label="' + esc(t('aria_sound')) + '"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z\"/><line x1=\"22\" x2=\"16\" y1=\"9\" y2=\"15\"/><line x1=\"16\" x2=\"22\" y1=\"9\" y2=\"15\"/></svg></button>' : ''}
         <div class="vh__info">
           ${(function(){ var ss = saleStatusInfo(p.saleStatus); return `<div class="vh__badge ${ss.cls}">${ss.label}</div>`; })()}
-          <h1 class="vh__title">${esc(p.name)}</h1>
-          <p class="vh__meta">${esc([p.rooms ? p.rooms + ' חדרים' : '', p.area ? p.area + ' מ"ר' : '', p.floor ? 'קומה ' + p.floor : '', p.city].filter(Boolean).join('  ·  '))}</p>
+          <h1 class="vh__title">${esc(nm)}</h1>
+          <p class="vh__meta">${esc(metaLine)}</p>
           <div class="vh__price">${fmtPrice(p.price)}</div>
         </div>
-        <div class="vh__cue"><span class="vh__cue-label">תמונות</span><div class="vh__cue-arrow"></div></div>
+        <div class="vh__cue"><span class="vh__cue-label">${t('cuePhotos')}</span><div class="vh__cue-arrow"></div></div>
       </div>
 
       <div class="specs-strip">${stripHtml}</div>
 
       <main class="page-content">
         <div class="sec-gallery">
-          <h2>גלריית תמונות</h2>
+          <h2>${t('h_gallery')}</h2>
           <div class="gallery-grid" id="gallery">${galleryHtml}</div>
         </div>
 
         <div class="sec-desc">
-          <h2>תיאור הנכס</h2>
+          <h2>${t('h_desc')}</h2>
           ${descHtml}
         </div>
+        ${areaHtml ? `
+        <div class="sec-desc sec-area">
+          <h2>${t('h_area')}</h2>
+          ${areaHtml}
+        </div>` : ''}
 
         <div class="sec-specs">
-          <h2>פרטי הנכס</h2>
+          <h2>${t('h_specs')}</h2>
           <div class="specs-tbl">${tableHtml}</div>
         </div>
 
         <div class="sec-agent">
-          <img class="agent-photo" src="${esc(AGENT.photo || '')}" alt="${esc(AGENT.name || '')}">
+          <img class="agent-photo" src="${esc(AGENT.photo || '')}" alt="${esc(agentNm)}">
           <div>
-            <div class="agent-name">${esc(AGENT.name || '')}</div>
-            <div class="agent-role">${esc(AGENT.role || '')}</div>
+            <div class="agent-name">${esc(agentNm)}</div>
+            <div class="agent-role">${esc(pick(AGENT, 'role'))}</div>
             <div class="agent-brand"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg> ${esc(AGENT.brand || 'ViewEstate')} · ${esc(AGENT.site || '')}</div>
           </div>
         </div>
 
         <div class="sec-lead">
           <div class="sec-lead__head">
-            <div class="sec-lead__eyebrow">השאירו פרטים</div>
-            <h2>מתעניינים בנכס הזה?</h2>
-            <p class="sec-lead__sub">מלאו פרטים ונחזור אליכם — או שלחו ישירות בוואטסאפ</p>
+            <div class="sec-lead__eyebrow">${t('lead_eyebrow')}</div>
+            <h2>${t('lead_h')}</h2>
+            <p class="sec-lead__sub">${t('lead_sub')}</p>
           </div>
           <form class="lead-form" id="leadForm">
             <div class="lead-field">
-              <label for="lf-name">שם מלא</label>
-              <input type="text" id="lf-name" name="name" autocomplete="name" placeholder="השם שלך" required>
+              <label for="lf-name">${t('f_name')}</label>
+              <input type="text" id="lf-name" name="name" autocomplete="name" placeholder="${esc(t('f_name_ph'))}" required>
             </div>
             <div class="lead-field">
-              <label for="lf-phone">טלפון</label>
-              <input type="tel" id="lf-phone" name="tel" autocomplete="tel" placeholder="050-0000000" required>
+              <label for="lf-phone">${t('f_phone')}</label>
+              <input type="tel" id="lf-phone" name="tel" autocomplete="tel" placeholder="${esc(t('f_phone_ph'))}" required>
             </div>
             <div class="lead-field">
-              <label for="lf-interest">תחום עניין</label>
+              <label for="lf-interest">${t('f_interest')}</label>
               <select id="lf-interest">
-                <option value="קונה פוטנציאלי">אני מתעניין/ת לקנות</option>
-                <option value="רוצה לקבל פרטים">רוצה לקבל פרטים נוספים</option>
-                <option value="לתאם צפייה">לתאם צפייה בנכס</option>
-                <option value="כללי">פנייה כללית</option>
+                <option>${t('opt_buy')}</option>
+                <option>${t('opt_info')}</option>
+                <option>${t('opt_visit')}</option>
+                <option>${t('opt_general')}</option>
               </select>
             </div>
             <div class="lead-field">
-              <label for="lf-msg">הודעה (אופציונלי)</label>
-              <textarea id="lf-msg" placeholder="משהו שתרצו להוסיף?"></textarea>
+              <label for="lf-msg">${t('f_msg')}</label>
+              <textarea id="lf-msg" placeholder="${esc(t('f_msg_ph'))}"></textarea>
             </div>
             <button type="submit" class="lead-submit">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.944-1.418A9.953 9.953 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
-              שלח/י לדורון בוואטסאפ
+              ${LANG === 'en' ? 'Send to ' + esc(agentNm) + ' on WhatsApp' : 'שלח/י ל' + esc(agentNm) + ' בוואטסאפ'}
             </button>
-            <p class="lead-note">הפרטים נשלחים ישירות לוואטסאפ של דורון</p>
+            <p class="lead-note">${LANG === 'en' ? "Your details go directly to " + esc(agentNm) + "'s WhatsApp" : 'הפרטים נשלחים ישירות לוואטסאפ של ' + esc(agentNm)}</p>
           </form>
         </div>
 
         <footer class="prop-footer">
-          <a href="index.html">← כל הנכסים</a>
-          <a href="accessibility.html">הצהרת נגישות</a>
+          <a href="index.html">${t('back')}</a>
+          <a href="accessibility.html">${t('foot_acc')}</a>
         </footer>
       </main>
 
       <div class="cta-bar">
         <a href="${waHref}" class="cta-wa" target="_blank" rel="noopener">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.944-1.418A9.953 9.953 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
-          שלח הודעה לדורון
+          ${LANG === 'en' ? 'Message ' + esc(agentNm) : 'שלח הודעה ל' + esc(agentNm)}
         </a>
-        <a href="tel:+${esc(AGENT.whatsapp || '')}" class="cta-call" aria-label="התקשר"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg></a>
+        <a href="tel:+${esc(AGENT.whatsapp || '')}" class="cta-call" aria-label="${esc(t('aria_call'))}"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg></a>
       </div>`;
 
       wireUp(p);
@@ -927,8 +1035,6 @@
       if (!vid.muted) vid.play().catch(() => {});
       document.getElementById('soundBtn').innerHTML = vid.muted ? SND_OFF : SND_ON;
     }
-
-    let srcs = [], current = 0;
 
     function wireUp(p) {
       /* hide scroll cue on first scroll */
@@ -951,15 +1057,27 @@
           const phone = document.getElementById('lf-phone').value.trim();
           const interest = document.getElementById('lf-interest').value;
           const msg = document.getElementById('lf-msg').value.trim();
-          const lines = [
-            `שלום ${AGENT.name || ''}, פנייה דרך אתר ViewEstate:`,
-            ``,
-            `*נכס:* ${p.name}`,
-            `*שם:* ${name}`,
-            `*טלפון:* ${phone}`,
-            `*עניין:* ${interest}`,
-            msg ? `*הודעה:* ${msg}` : ''
-          ].filter(l => l !== null && l !== undefined);
+          const agentNm = pick(AGENT, 'name') || '';
+          const pNm = pick(p, 'name');
+          const lines = (LANG === 'en')
+            ? [
+                `Hello ${agentNm}, inquiry via the ViewEstate site:`,
+                ``,
+                `*Property:* ${pNm}`,
+                `*Name:* ${name}`,
+                `*Phone:* ${phone}`,
+                `*Interest:* ${interest}`,
+                msg ? `*Message:* ${msg}` : ''
+              ]
+            : [
+                `שלום ${agentNm}, פנייה דרך אתר ViewEstate:`,
+                ``,
+                `*נכס:* ${pNm}`,
+                `*שם:* ${name}`,
+                `*טלפון:* ${phone}`,
+                `*עניין:* ${interest}`,
+                msg ? `*הודעה:* ${msg}` : ''
+              ];
           window.open(waLink(lines.join('\n')), '_blank');
         });
       }
