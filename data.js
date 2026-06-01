@@ -106,8 +106,8 @@ window.VIEWESTATE_DATA = {
       elevator:     "כן",
       storage:      "כן",
       condition:    "מחודש 2024",
-      video:        "videos/hero.mp4",
-      poster:       "videos/hero-poster.jpg",
+      video:        "",
+      poster:       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1400&q=85",
       gallery: [
         "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1400&q=85",
         "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=900&q=80",

@@ -176,10 +176,9 @@
       position: absolute;
       inset: 0;
       width: 100%;
-      height: 115%;
+      height: 100%;
       object-fit: cover;
       z-index: 1;
-      will-change: transform;
     }
 
     .hero__overlay {
@@ -1435,20 +1434,9 @@
       document.getElementById('soundTxt').textContent  = soundOn ? 'השתק'  : 'הפעל צליל';
     }
 
-    // ── Parallax hero video ──
-    const heroVideo = document.querySelector('.hero__video');
-    let heroTicking = false;
-    window.addEventListener('scroll', () => {
-      if (heroTicking) return;
-      heroTicking = true;
-      requestAnimationFrame(() => {
-        const y = window.scrollY;
-        if (y < window.innerHeight) {
-          heroVideo.style.transform = `translate3d(0, ${y * 0.22}px, 0)`;
-        }
-        heroTicking = false;
-      });
-    }, { passive: true });
+    // ── Hero video parallax removed for smooth scrolling ──
+    // (a transformed, playing <video> repaints on every scroll frame and
+    //  causes jank on mid-range devices; a static hero scrolls perfectly)
 
     // ── Scroll reveal ──
     const revealObs = new IntersectionObserver((entries) => {
