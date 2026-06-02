@@ -2,6 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>ViewEstate | נכסים שנראים כמו שמרגישים</title>
   <meta name="description" content="דורון — מתווך נכסים מוסמך. נדל\"ן הדור הבא: שיווק חכם, וידאו מקצועי לכל נכס, והצגה איכותית ויוקרתית.">
@@ -100,10 +101,21 @@
       font-weight: 700;
       letter-spacing: 3px;
       display: flex;
-      align-items: baseline;
-      gap: 1px;
+      align-items: center;
+      gap: 11px;
       direction: ltr;
     }
+    .logo-word { display: inline-flex; align-items: baseline; }
+    .logo-mark {
+      width: 38px; height: 38px; flex-shrink: 0;
+      border: 1.5px solid var(--gold-light);
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 15px; letter-spacing: 1px;
+      color: var(--gold-light);
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .nav:not(.nav--scrolled) .logo-mark { border-color: var(--gold); color: var(--gold); }
 
     .logo-v { color: var(--gold-light); }
     .logo-e { color: var(--bg); }
@@ -1133,7 +1145,8 @@
   <!-- ===== NAV ===== -->
   <nav class="nav" id="nav">
     <a href="index.html" class="logo">
-      <span class="logo-v">VIEW</span><span class="logo-e">ESTATE</span>
+      <span class="logo-mark" aria-hidden="true">VE</span>
+      <span class="logo-word"><span class="logo-v">VIEW</span><span class="logo-e">ESTATE</span></span>
     </a>
     <ul class="nav__links">
       <li><a href="#properties">נכסים</a></li>
