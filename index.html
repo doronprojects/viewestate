@@ -1432,9 +1432,27 @@
       document.getElementById('soundTxt').textContent  = soundOn ? 'השתק'  : 'הפעל צליל';
     }
 
-    // ── Hero video parallax removed for smooth scrolling ──
-    // (a transformed, playing <video> repaints on every scroll frame and
-    //  causes jank on mid-range devices; a static hero scrolls perfectly)
+    // ── Hero video: pause while scrolling / off-screen, resume when idle ──
+    // A playing <video> decodes + composites every frame; doing that *during*
+    // a scroll gesture is what made desktop scrolling janky. We pause it the
+    // moment scrolling starts (it freezes on the current frame, so the hero
+    // still looks full) and resume shortly after scrolling stops. We also
+    // pause it whenever it leaves the viewport.
+    let heroInView = true;
+    let heroScrollIdle;
+    function heroPlay() { if (heroInView) heroVid.play().catch(() => {}); }
+    if (heroVid) {
+      new IntersectionObserver((entries) => {
+        heroInView = entries[0].isIntersecting;
+        if (heroInView) heroPlay(); else heroVid.pause();
+      }, { threshold: 0.05 }).observe(heroVid);
+
+      window.addEventListener('scroll', () => {
+        if (heroInView && !heroVid.paused) heroVid.pause();
+        clearTimeout(heroScrollIdle);
+        heroScrollIdle = setTimeout(heroPlay, 160);
+      }, { passive: true });
+    }
 
     // ── Scroll reveal ──
     const revealObs = new IntersectionObserver((entries) => {
