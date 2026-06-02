@@ -71,6 +71,29 @@
       box-shadow: 0 1px 0 rgba(154,114,48,0.15);
     }
 
+    /* ── Back-to-top button ── */
+    .to-top {
+      position: fixed;
+      left: 16px;
+      bottom: 24px;
+      z-index: 150;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--bg-dark);
+      border: 1px solid var(--gold);
+      color: var(--gold-light);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(12px);
+      transition: opacity 0.35s var(--ease), transform 0.35s var(--ease), visibility 0.35s, background 0.3s, color 0.3s;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.28);
+    }
+    .to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+    .to-top:hover { background: var(--gold); color: var(--bg-dark); }
+    .to-top svg { width: 22px; height: 22px; }
+
     .logo {
       font-family: 'Playfair Display', serif;
       font-size: 26px;
@@ -1282,6 +1305,10 @@
   </footer>
 
   <script src="data.js"></script>
+  <button class="to-top" id="toTop" aria-label="חזרה לראש הדף" title="חזרה לראש הדף">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+  </button>
+
   <script src="accessibility.js" defer></script>
   <script>
     /* ═══════════ DYNAMIC RENDER FROM data.js ═══════════ */
@@ -1405,8 +1432,14 @@
 
     // ── NAV scroll ──
     const nav = document.getElementById('nav');
-    const onScroll = () => nav.classList.toggle('nav--scrolled', window.scrollY > 80);
+    const toTop = document.getElementById('toTop');
+    const onScroll = () => {
+      const y = window.scrollY;
+      nav.classList.toggle('nav--scrolled', y > 80);
+      toTop.classList.toggle('show', y > 600);
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
+    toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
     // ── Mobile menu ──
     document.getElementById('navHam').addEventListener('click', () => {
