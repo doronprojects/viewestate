@@ -210,7 +210,6 @@
       z-index: 2;
       overflow: hidden;
       pointer-events: none;
-      mix-blend-mode: screen;
     }
     .hero__glow::before,
     .hero__glow::after {
@@ -222,13 +221,13 @@
     .hero__glow::before {
       width: 55vmax; height: 55vmax;
       top: -12%; right: -6%;
-      background: radial-gradient(circle, rgba(216,176,98,0.55), rgba(201,163,90,0.18) 38%, transparent 66%);
+      background: radial-gradient(circle, rgba(216,176,98,0.42), rgba(201,163,90,0.14) 38%, transparent 66%);
       animation: heroDrift1 22s ease-in-out infinite alternate;
     }
     .hero__glow::after {
       width: 48vmax; height: 48vmax;
       bottom: -14%; left: -8%;
-      background: radial-gradient(circle, rgba(184,128,48,0.50), rgba(154,114,48,0.16) 40%, transparent 66%);
+      background: radial-gradient(circle, rgba(184,128,48,0.38), rgba(154,114,48,0.12) 40%, transparent 66%);
       animation: heroDrift2 28s ease-in-out infinite alternate;
     }
     @keyframes heroDrift1 { to { transform: translate3d(-10%, 8%, 0) scale(1.15); } }
