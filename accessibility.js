@@ -53,7 +53,7 @@
     'box-shadow:0 0 0 5px rgba(0,0,0,.45)!important;border-radius:4px;}',
 
     /* כפתור צף (FAB) */
-    '#a11y-fab{position:fixed;left:16px;top:58%;z-index:99998;width:56px;height:56px;border-radius:50%;',
+    '#a11y-fab{position:fixed;left:8px;top:72%;z-index:99998;width:56px;height:56px;border-radius:50%;',
     'background:#3B2C1E;color:#F4E9D4;border:2px solid #C9A35A;cursor:pointer;display:flex;align-items:center;',
     'justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.35);padding:0;',
     'transform:translateY(-50%);transition:transform .25s ease;}',
