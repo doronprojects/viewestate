@@ -199,33 +199,42 @@
       z-index: 1;
       overflow: hidden;
       background:
-        radial-gradient(rgba(201,163,90,0.045) 1px, transparent 1px) 0 0 / 4px 4px,
+        radial-gradient(rgba(201,163,90,0.05) 1px, transparent 1px) 0 0 / 4px 4px,
         linear-gradient(155deg, #1C1008 0%, #251508 48%, #14100A 100%);
     }
-    /* two soft gold light-pools that drift slowly — alive but GPU-cheap */
-    .hero__bg::before,
-    .hero__bg::after {
+    /* drifting gold light — sits ABOVE the dark overlay and adds light
+       (mix-blend screen) so the motion is clearly visible */
+    .hero__glow {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      overflow: hidden;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+    .hero__glow::before,
+    .hero__glow::after {
       content: "";
       position: absolute;
       border-radius: 50%;
       will-change: transform;
     }
-    .hero__bg::before {
-      width: 62vmax; height: 62vmax;
-      top: -20%; right: -14%;
-      background: radial-gradient(circle, rgba(201,163,90,0.30), transparent 60%);
-      animation: heroDrift1 26s ease-in-out infinite alternate;
+    .hero__glow::before {
+      width: 55vmax; height: 55vmax;
+      top: -12%; right: -6%;
+      background: radial-gradient(circle, rgba(216,176,98,0.55), rgba(201,163,90,0.18) 38%, transparent 66%);
+      animation: heroDrift1 22s ease-in-out infinite alternate;
     }
-    .hero__bg::after {
-      width: 56vmax; height: 56vmax;
-      bottom: -24%; left: -16%;
-      background: radial-gradient(circle, rgba(154,114,48,0.32), transparent 62%);
-      animation: heroDrift2 34s ease-in-out infinite alternate;
+    .hero__glow::after {
+      width: 48vmax; height: 48vmax;
+      bottom: -14%; left: -8%;
+      background: radial-gradient(circle, rgba(184,128,48,0.50), rgba(154,114,48,0.16) 40%, transparent 66%);
+      animation: heroDrift2 28s ease-in-out infinite alternate;
     }
-    @keyframes heroDrift1 { to { transform: translate3d(-7%, 6%, 0) scale(1.12); } }
-    @keyframes heroDrift2 { to { transform: translate3d(9%, -6%, 0) scale(1.15); } }
+    @keyframes heroDrift1 { to { transform: translate3d(-10%, 8%, 0) scale(1.15); } }
+    @keyframes heroDrift2 { to { transform: translate3d(12%, -8%, 0) scale(1.18); } }
     @media (prefers-reduced-motion: reduce) {
-      .hero__bg::before, .hero__bg::after { animation: none; }
+      .hero__glow::before, .hero__glow::after { animation: none; }
     }
 
     .hero__overlay {
@@ -1080,6 +1089,7 @@
     <div class="hero__bg"></div>
     <div class="hero__overlay"></div>
     <div class="hero__warm"></div>
+    <div class="hero__glow" aria-hidden="true"></div>
 
     <div class="hero__content">
       <p class="hero__eyebrow">מתווך נכסים מוסמך · שיווק חכם · viewestate.co.il</p>
