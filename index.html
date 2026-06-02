@@ -107,8 +107,9 @@
     }
     .logo-word {
       display: inline-flex; align-items: baseline;
-      clip-path: inset(0 100% 0 0);
-      animation: logoWordWipe 0.8s var(--ease) 0.55s forwards;
+      transform-origin: -30px 50%;
+      opacity: 0;
+      animation: logoOrbit 1s cubic-bezier(0.34, 1.15, 0.4, 1) 0.45s forwards;
     }
     .logo-mark {
       position: relative;
@@ -129,13 +130,17 @@
     }
     .nav:not(.nav--scrolled) .logo-mark { border-color: var(--gold); color: var(--gold); }
     @keyframes logoMarkIn { to { opacity: 1; transform: scale(1); } }
-    @keyframes logoWordWipe { to { clip-path: inset(0 0 0 0); } }
+    @keyframes logoOrbit {
+      0%   { opacity: 0; transform: rotate(-270deg) scale(0.18); }
+      45%  { opacity: 1; }
+      100% { opacity: 1; transform: rotate(0deg) scale(1); }
+    }
 
     .logo-v { color: var(--gold-light); }
     .logo-e { color: var(--bg); }
 
     .nav:not(.nav--scrolled) .logo-v { color: var(--gold); }
-    .nav:not(.nav--scrolled) .logo-e { color: var(--text); }
+    .nav:not(.nav--scrolled) .logo-e { color: rgba(248,244,238,0.30); }
 
     .nav__links {
       display: flex;
@@ -276,7 +281,7 @@
     @media (prefers-reduced-motion: reduce) {
       .hero__glow::before, .hero__glow::after { animation: none; }
       .logo-mark { animation: none; opacity: 1; transform: none; }
-      .logo-word { animation: none; clip-path: none; }
+      .logo-word { animation: none; opacity: 1; transform: none; }
     }
 
     .hero__overlay {
