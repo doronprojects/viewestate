@@ -193,13 +193,22 @@
       justify-content: center;
     }
 
-    .hero__video {
+    .hero__bg {
       position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
       z-index: 1;
+      background:
+        radial-gradient(ellipse 70% 55% at 72% 18%, rgba(201,163,90,0.22), transparent 60%),
+        radial-gradient(ellipse 80% 60% at 18% 85%, rgba(107,78,26,0.20), transparent 55%),
+        linear-gradient(155deg, #1C1008 0%, #251508 48%, #14100A 100%);
+    }
+    .hero__bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(201,163,90,0.05) 1px, transparent 1px);
+      background-size: 4px 4px;
+      opacity: 0.5;
     }
 
     .hero__overlay {
@@ -1051,11 +1060,7 @@
   <main id="main">
   <!-- ===== HERO ===== -->
   <section class="hero" id="home">
-    <video class="hero__video" id="heroVid" autoplay muted loop playsinline preload="auto"
-           poster="videos/hero-poster.jpg">
-      <source src="videos/hero.webm" type="video/webm">
-      <source src="videos/hero.mp4" type="video/mp4">
-    </video>
+    <div class="hero__bg"></div>
     <div class="hero__overlay"></div>
     <div class="hero__warm"></div>
 
@@ -1074,11 +1079,6 @@
         <a href="#contact" class="btn btn-ghost-light">דבר עם דורון</a>
       </div>
     </div>
-
-    <button class="hero__sound" id="soundBtn" onclick="toggleSound()">
-      <span id="soundIcon"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg></span>
-      <span id="soundTxt">הפעל צליל</span>
-    </button>
 
     <div class="hero__scroll" aria-hidden="true">
       <div class="hero__scroll-line"></div>
@@ -1347,8 +1347,12 @@
         const heroImg = (p.gallery && p.gallery[0]) || p.poster || '';
         const info = [fmtPrice(p.price), p.rooms ? p.rooms + ' חדרים' : '', p.area ? p.area + ' מ"ר' : '',
                       p.floor ? 'קומה ' + p.floor : ''].filter(Boolean).join('  ·  ');
-        const media = (feat && p.video)
-          ? `<video class="prop-card__media" autoplay muted loop playsinline poster="${esc(p.poster || heroImg)}"><source src="${esc(p.video)}" type="video/mp4"></video>`
+        const cardSrcs = p.video
+          ? (/^videos\/.*\.mp4$/i.test(p.video) ? `<source src="${esc(p.video.replace(/\.mp4$/i, '.webm'))}" type="video/webm">` : '')
+            + `<source src="${esc(p.video)}" type="video/mp4">`
+          : '';
+        const media = p.video
+          ? `<video class="prop-card__media" autoplay muted loop playsinline preload="metadata" poster="${esc(p.poster || heroImg)}">${cardSrcs}</video>`
           : `<img class="prop-card__media" src="${esc(heroImg)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`;
         const ss = saleStatusInfo(p.saleStatus);
         const label = [esc(p.name), esc(p.type || ''), esc(p.city || ''), ss.label, info].filter(Boolean).join(', ');
@@ -1361,7 +1365,7 @@
               <span class="ps-row ps-neg${p.saleStatus === 'negotiation' ? ' is-on' : ''}"><i class="ps-dot"></i><b>במשא ומתן</b></span>
               <span class="ps-row ps-sold${p.saleStatus === 'sold' ? ' is-on' : ''}"><i class="ps-dot"></i><b>נמכר</b></span>
             </div>
-            ${(feat && p.video) ? '<div class="prop-card__video-tag" aria-hidden="true">▶ &nbsp;וידאו</div>' : ''}
+            ${p.video ? '<div class="prop-card__video-tag" aria-hidden="true">▶ &nbsp;וידאו</div>' : ''}
             <div class="prop-card__play-cue" aria-hidden="true"><div class="play-tri"></div></div>
             <div class="prop-card__body">
               <p class="prop-card__type">${esc(p.type || '')}${p.city ? ' · ' + esc(p.city) : ''}</p>
@@ -1452,40 +1456,8 @@
       document.body.style.overflow = '';
     }
 
-    // ── Hero sound ──
-    const heroVid = document.getElementById('heroVid');
-    let soundOn = false;
-    const SND_OFF = '<svg viewBox="0 0 24 24" width="16" height="16"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
-    const SND_ON  = '<svg viewBox="0 0 24 24" width="16" height="16"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.4 6.4a9 9 0 0 1 0 11.3"/></svg>';
-    function toggleSound() {
-      soundOn = !soundOn;
-      heroVid.muted = !soundOn;
-      if (soundOn) heroVid.play().catch(() => {});
-      document.getElementById('soundIcon').innerHTML = soundOn ? SND_ON : SND_OFF;
-      document.getElementById('soundTxt').textContent  = soundOn ? 'השתק'  : 'הפעל צליל';
-    }
-
-    // ── Hero video: pause while scrolling / off-screen, resume when idle ──
-    // A playing <video> decodes + composites every frame; doing that *during*
-    // a scroll gesture is what made desktop scrolling janky. We pause it the
-    // moment scrolling starts (it freezes on the current frame, so the hero
-    // still looks full) and resume shortly after scrolling stops. We also
-    // pause it whenever it leaves the viewport.
-    let heroInView = true;
-    let heroScrollIdle;
-    function heroPlay() { if (heroInView) heroVid.play().catch(() => {}); }
-    if (heroVid) {
-      new IntersectionObserver((entries) => {
-        heroInView = entries[0].isIntersecting;
-        if (heroInView) heroPlay(); else heroVid.pause();
-      }, { threshold: 0.05 }).observe(heroVid);
-
-      window.addEventListener('scroll', () => {
-        if (heroInView && !heroVid.paused) heroVid.pause();
-        clearTimeout(heroScrollIdle);
-        heroScrollIdle = setTimeout(heroPlay, 160);
-      }, { passive: true });
-    }
+    // (Hero is now a static branded background — no video, so no sound
+    //  toggle or scroll-pause logic is needed here.)
 
     // ── Scroll reveal ──
     const revealObs = new IntersectionObserver((entries) => {
