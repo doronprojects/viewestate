@@ -230,17 +230,23 @@
     .hero__glow::before {
       width: 55vmax; height: 55vmax;
       top: -12%; right: -6%;
-      background: radial-gradient(circle, rgba(216,176,98,0.42), rgba(201,163,90,0.14) 38%, transparent 66%);
-      animation: heroDrift1 22s ease-in-out infinite alternate;
+      background: radial-gradient(circle, rgba(216,176,98,0.50), rgba(201,163,90,0.16) 38%, transparent 66%);
+      animation: heroDrift1 15s ease-in-out infinite alternate;
     }
     .hero__glow::after {
       width: 48vmax; height: 48vmax;
       bottom: -14%; left: -8%;
-      background: radial-gradient(circle, rgba(184,128,48,0.38), rgba(154,114,48,0.12) 40%, transparent 66%);
-      animation: heroDrift2 28s ease-in-out infinite alternate;
+      background: radial-gradient(circle, rgba(184,128,48,0.46), rgba(154,114,48,0.14) 40%, transparent 66%);
+      animation: heroDrift2 19s ease-in-out infinite alternate;
     }
-    @keyframes heroDrift1 { to { transform: translate3d(-10%, 8%, 0) scale(1.15); } }
-    @keyframes heroDrift2 { to { transform: translate3d(12%, -8%, 0) scale(1.18); } }
+    @keyframes heroDrift1 {
+      0%   { transform: translate3d(0, 0, 0) scale(1);          opacity: 0.7; }
+      100% { transform: translate3d(-24%, 18%, 0) scale(1.28);  opacity: 1; }
+    }
+    @keyframes heroDrift2 {
+      0%   { transform: translate3d(0, 0, 0) scale(1);          opacity: 1; }
+      100% { transform: translate3d(26%, -18%, 0) scale(1.32);  opacity: 0.65; }
+    }
     @media (prefers-reduced-motion: reduce) {
       .hero__glow::before, .hero__glow::after { animation: none; }
     }
