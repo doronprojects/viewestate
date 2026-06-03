@@ -9,10 +9,34 @@
   <meta property="og:title" content="ViewEstate | נדל&quot;ן הדור הבא">
   <meta property="og:description" content="מתווך נכסים מוסמך · שיווק חכם והצגה איכותית ויוקרתית לכל נכס">
   <meta property="og:image" content="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=85">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://viewestate.co.il/">
+  <meta property="og:site_name" content="ViewEstate">
+  <meta property="og:locale" content="he_IL">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="robots" content="index, follow">
+  <meta name="keywords" content="מתווך נכסים, נדל&quot;ן, תיווך, נכסים למכירה, תל אביב, הרצליה, וילה, פנטהאוז, דירת גן, ViewEstate, דורון">
+  <link rel="canonical" href="https://viewestate.co.il/">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "RealEstateAgent",
+    "name": "ViewEstate — דורון",
+    "description": "מתווך נכסים מוסמך. שיווק חכם, וידאו מקצועי לכל נכס, והצגה איכותית ויוקרתית.",
+    "url": "https://viewestate.co.il/",
+    "image": "https://viewestate.co.il/doron.jpg",
+    "telephone": "+972-50-244-8682",
+    "priceRange": "₪₪₪",
+    "areaServed": ["תל אביב", "הרצליה", "גוש דן והמרכז"],
+    "knowsLanguage": ["he", "en"],
+    "address": { "@type": "PostalAddress", "addressCountry": "IL", "addressRegion": "מחוז תל אביב" }
+  }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700;900&family=Heebo:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Heebo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
     /* ===== RESET & VARIABLES ===== */
@@ -257,6 +281,14 @@
       background: radial-gradient(circle, rgba(184,128,48,0.46), rgba(154,114,48,0.14) 40%, transparent 66%);
       animation: heroDrift2 19s ease-in-out infinite alternate;
     }
+    .hero__glow-orb {
+      position: absolute; border-radius: 50%;
+      width: 42vmax; height: 42vmax;
+      top: 22%; left: 36%;
+      background: radial-gradient(circle, rgba(201,163,90,0.30), rgba(201,163,90,0.10) 42%, transparent 64%);
+      will-change: transform;
+      animation: heroDrift3 24s ease-in-out infinite alternate;
+    }
     @keyframes heroDrift1 {
       0%   { transform: translate3d(0, 0, 0) scale(1);          opacity: 0.7; }
       100% { transform: translate3d(-24%, 18%, 0) scale(1.28);  opacity: 1; }
@@ -265,8 +297,12 @@
       0%   { transform: translate3d(0, 0, 0) scale(1);          opacity: 1; }
       100% { transform: translate3d(26%, -18%, 0) scale(1.32);  opacity: 0.65; }
     }
+    @keyframes heroDrift3 {
+      0%   { transform: translate3d(0, 0, 0) scale(1);          opacity: 0.5; }
+      100% { transform: translate3d(-18%, -16%, 0) scale(1.22); opacity: 0.9; }
+    }
     @media (prefers-reduced-motion: reduce) {
-      .hero__glow::before, .hero__glow::after { animation: none; }
+      .hero__glow::before, .hero__glow::after, .hero__glow-orb { animation: none; }
       .logo-mark { animation: none; opacity: 1; transform: none; }
       .logo-word { animation: none; opacity: 1; transform: none; }
     }
@@ -1190,7 +1226,7 @@
     <div class="hero__bg"></div>
     <div class="hero__overlay"></div>
     <div class="hero__warm"></div>
-    <div class="hero__glow" aria-hidden="true"></div>
+    <div class="hero__glow" aria-hidden="true"><span class="hero__glow-orb"></span></div>
 
     <div class="hero__content">
       <p class="hero__eyebrow">מתווך נכסים מוסמך · שיווק חכם · viewestate.co.il</p>
