@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 250" fill="none" role="img" aria-label="ViewEstate VE">
+  <defs>
+    <linearGradient id="ve-gold" x1="0" y1="0" x2="0.2" y2="1">
+      <stop offset="0" stop-color="#D9BE78"/>
+      <stop offset=".5" stop-color="#C2A24E"/>
+      <stop offset="1" stop-color="#9C7A30"/>
+    </linearGradient>
+    <linearGradient id="ve-silver" x1="0" y1="0" x2="0.1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset=".55" stop-color="#EDEDED"/>
+      <stop offset="1" stop-color="#B9B9B9"/>
+    </linearGradient>
+  </defs>
+  <text x="150" y="205" text-anchor="middle" font-family="'Playfair Display', Didot, 'Bodoni 72', Georgia, serif" font-weight="700" font-size="180" fill="url(#ve-silver)">E</text>
+  <text x="96" y="172" text-anchor="middle" font-family="'Playfair Display', Didot, 'Bodoni 72', Georgia, serif" font-weight="700" font-size="215" fill="url(#ve-gold)">V</text>
+</svg>

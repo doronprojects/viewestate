@@ -112,23 +112,10 @@
       animation: logoOrbit 1s cubic-bezier(0.34, 1.15, 0.4, 1) 0.45s forwards;
     }
     .logo-mark {
-      position: relative;
-      width: 40px; height: 40px; flex-shrink: 0;
-      border: 1.5px solid var(--gold-light);
-      border-radius: 50%;
-      display: inline-flex; align-items: center; justify-content: center;
-      font-size: 14px; letter-spacing: 0.5px;
-      color: var(--gold-light);
+      height: 46px; width: auto; flex-shrink: 0; display: block;
       opacity: 0; transform: scale(0.7);
       animation: logoMarkIn 0.6s var(--ease) 0.1s forwards;
-      transition: border-color 0.3s, color 0.3s;
     }
-    .logo-mark::before {
-      content: ""; position: absolute; inset: 4px;
-      border: 1px solid currentColor; border-radius: 50%;
-      opacity: 0.32;
-    }
-    .nav:not(.nav--scrolled) .logo-mark { border-color: var(--gold); color: var(--gold); }
     @keyframes logoMarkIn { to { opacity: 1; transform: scale(1); } }
     @keyframes logoOrbit {
       0%   { opacity: 0; transform: rotate(-270deg) scale(0.18); }
@@ -1166,7 +1153,14 @@
   <!-- ===== NAV ===== -->
   <nav class="nav" id="nav">
     <a href="index.html" class="logo">
-      <span class="logo-mark" aria-hidden="true">VE</span>
+      <svg class="logo-mark" viewBox="0 0 256 224" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="navGold" x1="0" y1="0" x2="0.2" y2="1"><stop offset="0" stop-color="#D9BE78"/><stop offset=".5" stop-color="#C2A24E"/><stop offset="1" stop-color="#9C7A30"/></linearGradient>
+          <linearGradient id="navSilver" x1="0" y1="0" x2="0.1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#EDEDED"/><stop offset="1" stop-color="#B9B9B9"/></linearGradient>
+        </defs>
+        <text x="150" y="190" text-anchor="middle" font-family="'Playfair Display', Didot, Georgia, serif" font-weight="700" font-size="180" fill="url(#navSilver)">E</text>
+        <text x="96" y="157" text-anchor="middle" font-family="'Playfair Display', Didot, Georgia, serif" font-weight="700" font-size="215" fill="url(#navGold)">V</text>
+      </svg>
       <span class="logo-word"><span class="logo-v">VIEW</span><span class="logo-e">ESTATE</span></span>
     </a>
     <ul class="nav__links">

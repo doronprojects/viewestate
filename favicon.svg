@@ -1,7 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ViewEstate VE">
-  <rect width="64" height="64" rx="13" fill="#1C1008"/>
-  <circle cx="32" cy="32" r="25.5" fill="none" stroke="#C9A35A" stroke-width="1.6"/>
-  <text x="32" y="42.5" text-anchor="middle"
-        font-family="Georgia, 'Times New Roman', serif" font-weight="700"
-        font-size="27" letter-spacing="1" fill="#C9A35A">VE</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" role="img" aria-label="ViewEstate VE">
+  <defs>
+    <linearGradient id="fav-gold" x1="0" y1="0" x2="0.2" y2="1">
+      <stop offset="0" stop-color="#D9BE78"/><stop offset=".5" stop-color="#C2A24E"/><stop offset="1" stop-color="#9C7A30"/>
+    </linearGradient>
+    <linearGradient id="fav-silver" x1="0" y1="0" x2="0.1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#EDEDED"/><stop offset="1" stop-color="#B9B9B9"/>
+    </linearGradient>
+  </defs>
+  <rect width="72" height="72" rx="15" fill="#1C1008"/>
+  <text x="43" y="55" text-anchor="middle" font-family="Didot, 'Bodoni 72', Georgia, serif" font-weight="700" font-size="48" fill="url(#fav-silver)">E</text>
+  <text x="28" y="47" text-anchor="middle" font-family="Didot, 'Bodoni 72', Georgia, serif" font-weight="700" font-size="58" fill="url(#fav-gold)">V</text>
 </svg>
