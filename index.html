@@ -321,7 +321,7 @@
     @media (prefers-reduced-motion: reduce) {
       .hero__glow::before, .hero__glow::after, .hero__glow-orb { animation: none; }
       .hero__particles { display: none; }
-      .hero__scroll-arrow { animation: none; }
+      .hero__scroll-hand, .hero__scroll-arrow { animation: none; }
       .logo-mark { animation: none; opacity: 1; transform: none; }
       .logo-word { animation: none; opacity: 1; transform: none; }
     }
@@ -501,6 +501,11 @@
     .hero__scroll-hand {
       color: var(--gold-pale);
       transform: rotate(-20deg);
+      animation: handSwipe 1.8s ease-in-out infinite;
+    }
+    @keyframes handSwipe {
+      0%, 100% { transform: translateY(0)     rotate(-20deg); }
+      50%      { transform: translateY(-7px)  rotate(-20deg); }
     }
     .hero__scroll-hand svg { width: 28px; height: 30px; stroke: currentColor; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; display: block; }
     .hero__scroll-arrow {
