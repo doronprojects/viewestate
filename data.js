@@ -155,7 +155,7 @@ window.VIEWESTATE_DATA = {
       elevator:     "לא",
       storage:      "כן",
       condition:    "מצוין",
-      video:        "videos/hero.mp4",
+      video:        "videos/hero-hd.mp4",
       poster:       "videos/hero-poster.jpg",
       gallery: [
         "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1400&q=85",
