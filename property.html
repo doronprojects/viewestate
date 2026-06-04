@@ -50,10 +50,15 @@
     ═══════════════════════════════════════ */
     .vh {
       position: relative;
-      height: 100vh;
-      height: 100dvh;
-      background: #000;
+      background: var(--bg-dark);
+    }
+    .vh__media {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-height: 80vh;
       overflow: hidden;
+      background: #000;
     }
 
     .vh__video {
@@ -70,10 +75,9 @@
       z-index: 2;
       background: linear-gradient(
         to bottom,
-        rgba(20,10,4,0.52)  0%,
-        rgba(20,10,4,0.0)   28%,
-        rgba(20,10,4,0.0)   52%,
-        rgba(20,10,4,0.88) 100%
+        rgba(20,10,4,0.50)  0%,
+        rgba(20,10,4,0.0)   34%,
+        rgba(20,10,4,0.0)  100%
       );
     }
 
@@ -162,9 +166,9 @@
 
     /* ── Bottom info ── */
     .vh__info {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 32px 24px;
+      position: relative;
+      background: var(--bg-dark);
+      padding: 26px 24px 32px;
       z-index: 10;
     }
 
@@ -923,23 +927,24 @@
 
       app.innerHTML = `
       <div class="vh">
-        ${heroMedia}
-        <div class="vh__shade"></div>
-        <div class="vh__topbar">
-          <a href="index.html" class="logo-sm"><span class="v">VIEW</span><span class="e">ESTATE</span></a>
-          <div class="vh__topbar-actions">
-            <button class="vh__lang" onclick="toggleLang()" aria-label="${esc(t('aria_lang'))}">${t('langBtn')}</button>
-            <a href="index.html" class="back-link">${t('back')}</a>
+        <div class="vh__media">
+          ${heroMedia}
+          <div class="vh__shade"></div>
+          <div class="vh__topbar">
+            <a href="index.html" class="logo-sm"><span class="v">VIEW</span><span class="e">ESTATE</span></a>
+            <div class="vh__topbar-actions">
+              <button class="vh__lang" onclick="toggleLang()" aria-label="${esc(t('aria_lang'))}">${t('langBtn')}</button>
+              <a href="index.html" class="back-link">${t('back')}</a>
+            </div>
           </div>
+          ${p.video ? '<button class="vh__sound" id="soundBtn" onclick="toggleSound()" aria-label="' + esc(t('aria_sound')) + '"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z\"/><line x1=\"22\" x2=\"16\" y1=\"9\" y2=\"15\"/><line x1=\"16\" x2=\"22\" y1=\"9\" y2=\"15\"/></svg></button>' : ''}
         </div>
-        ${p.video ? '<button class="vh__sound" id="soundBtn" onclick="toggleSound()" aria-label="' + esc(t('aria_sound')) + '"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z\"/><line x1=\"22\" x2=\"16\" y1=\"9\" y2=\"15\"/><line x1=\"16\" x2=\"22\" y1=\"9\" y2=\"15\"/></svg></button>' : ''}
         <div class="vh__info">
           ${(function(){ var ss = saleStatusInfo(p.saleStatus); return `<div class="vh__badge ${ss.cls}">${ss.label}</div>`; })()}
           <h1 class="vh__title">${esc(nm)}</h1>
           <p class="vh__meta">${esc(metaLine)}</p>
           <div class="vh__price">${fmtPrice(p.price)}</div>
         </div>
-        <div class="vh__cue"><span class="vh__cue-label">${t('cuePhotos')}</span><div class="vh__cue-arrow"></div></div>
       </div>
 
       <div class="specs-strip">${stripHtml}</div>
