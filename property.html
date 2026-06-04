@@ -164,6 +164,29 @@
       fill: none; display: block;
     }
 
+    /* ── Fullscreen button ── */
+    .vh__fs {
+      position: absolute;
+      bottom: 14px; right: 14px;
+      z-index: 10;
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: rgba(20,10,4,0.38);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(248,244,238,0.18);
+      color: rgba(248,244,238,0.85);
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.3s;
+    }
+    .vh__fs:hover { border-color: var(--gold-light); }
+    .vh__fs svg {
+      width: 20px; height: 20px;
+      stroke: currentColor; stroke-width: 1.7;
+      stroke-linecap: round; stroke-linejoin: round;
+      fill: none; display: block;
+    }
+
     /* ── Bottom info ── */
     .vh__info {
       position: relative;
@@ -730,7 +753,7 @@
         u_sqm: 'מ"ר', u_rooms: 'חדרים', u_floorOf: 'מתוך', u_spots: 'מקומות',
         ss_sale: 'למכירה', ss_neg: 'במשא ומתן', ss_sold: 'נמכר',
         notfound_h: 'הנכס לא נמצא', notfound_p: 'ייתכן שהנכס הוסר או שהקישור שגוי.', notfound_a: '← חזרה לכל הנכסים',
-        aria_sound: 'הפעל צליל', aria_call: 'התקשר', aria_lang: 'switch to English'
+        aria_sound: 'הפעל צליל', aria_call: 'התקשר', aria_lang: 'switch to English', aria_fs: 'הגדל למסך מלא'
       },
       en: {
         dir: 'ltr', langBtn: 'עב',
@@ -746,7 +769,7 @@
         u_sqm: 'm²', u_rooms: 'rooms', u_floorOf: 'of', u_spots: 'spots',
         ss_sale: 'For Sale', ss_neg: 'Under Offer', ss_sold: 'Sold',
         notfound_h: 'Property not found', notfound_p: 'The property may have been removed or the link is incorrect.', notfound_a: '← Back to all properties',
-        aria_sound: 'Play sound', aria_call: 'Call', aria_lang: 'מעבר לעברית'
+        aria_sound: 'Play sound', aria_call: 'Call', aria_lang: 'מעבר לעברית', aria_fs: 'Fullscreen'
       }
     };
     function t(k) { return (STR[LANG] && STR[LANG][k] != null) ? STR[LANG][k] : STR.he[k]; }
@@ -938,6 +961,7 @@
             </div>
           </div>
           ${p.video ? '<button class="vh__sound" id="soundBtn" onclick="toggleSound()" aria-label="' + esc(t('aria_sound')) + '"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z\"/><line x1=\"22\" x2=\"16\" y1=\"9\" y2=\"15\"/><line x1=\"16\" x2=\"22\" y1=\"9\" y2=\"15\"/></svg></button>' : ''}
+          ${p.video ? '<button class="vh__fs" onclick="goFullscreen()" aria-label="' + esc(t('aria_fs')) + '"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M8 3H5a2 2 0 0 0-2 2v3\"/><path d="M21 8V5a2 2 0 0 0-2-2h-3\"/><path d="M3 16v3a2 2 0 0 0 2 2h3\"/><path d="M16 21h3a2 2 0 0 0 2-2v-3\"/></svg></button>' : ''}
         </div>
         <div class="vh__info">
           ${(function(){ var ss = saleStatusInfo(p.saleStatus); return `<div class="vh__badge ${ss.cls}">${ss.label}</div>`; })()}
@@ -1047,6 +1071,19 @@
       vid.muted = !vid.muted;
       if (!vid.muted) vid.play().catch(() => {});
       document.getElementById('soundBtn').innerHTML = vid.muted ? SND_OFF : SND_ON;
+    }
+
+    function goFullscreen() {
+      const vid = document.getElementById('propVid');
+      if (!vid) return;
+      const box = vid.closest('.vh__media') || vid;
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document);
+        return;
+      }
+      if (vid.webkitEnterFullscreen) { vid.webkitEnterFullscreen(); return; }   /* iOS: video only */
+      const el = box;
+      (el.requestFullscreen || el.webkitRequestFullscreen || function(){}).call(el);
     }
 
     function wireUp(p) {
