@@ -15,7 +15,6 @@
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
   <rect width="1200" height="630" fill="url(#glow)"/>
-  <rect x="20" y="20" width="1160" height="590" fill="none" stroke="#9A7230" stroke-opacity="0.35" stroke-width="2"/>
 
   <g transform="translate(431,46) scale(1.3)">
     <text x="150" y="205" text-anchor="middle" font-family="Didot, 'Bodoni 72', Georgia, serif" font-weight="700" font-size="180" fill="url(#silver)">E</text>
