@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#1C1008"/><stop offset="1" stop-color="#160E07"/>
     </linearGradient>
-    <radialGradient id="glow" cx="0.5" cy="0.46" r="0.6">
+    <radialGradient id="glow" cx="0.5" cy="0.44" r="0.62">
       <stop offset="0" stop-color="#C9A35A" stop-opacity="0.13"/><stop offset="1" stop-color="#C9A35A" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="gold" x1="0" y1="0" x2="0.2" y2="1">
@@ -13,15 +13,15 @@
       <stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#EDEDED"/><stop offset="1" stop-color="#B9B9B9"/>
     </linearGradient>
   </defs>
-  <rect width="1200" height="1200" fill="url(#bg)"/>
-  <rect width="1200" height="1200" fill="url(#glow)"/>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <rect width="1200" height="800" fill="url(#glow)"/>
 
-  <g transform="translate(408,332) scale(1.5)">
+  <g transform="translate(421,150) scale(1.4)">
     <text x="150" y="205" text-anchor="middle" font-family="Didot, 'Bodoni 72', Georgia, serif" font-weight="700" font-size="180" fill="url(#silver)">E</text>
     <text x="96" y="172" text-anchor="middle" font-family="Didot, 'Bodoni 72', Georgia, serif" font-weight="700" font-size="215" fill="url(#gold)">V</text>
   </g>
 
-  <text x="600" y="730" text-anchor="middle" font-family="Didot, 'Bodoni 72', Georgia, serif" font-weight="700" font-size="66" letter-spacing="10" fill="#FAF6F0">VIEWESTATE</text>
-  <text x="600" y="795" text-anchor="middle" font-family="Heebo, Arial, sans-serif" font-weight="500" font-size="28" letter-spacing="3" fill="#C9A35A">viewestate.co.il</text>
-  <text x="600" y="842" text-anchor="middle" font-family="Heebo, Arial, sans-serif" font-weight="400" font-size="24" letter-spacing="2" fill="#A98B52">Next-Generation Real Estate</text>
+  <text x="600" y="560" text-anchor="middle" font-family="Didot, 'Bodoni 72', Georgia, serif" font-weight="700" font-size="62" letter-spacing="9" fill="#FAF6F0">VIEWESTATE</text>
+  <text x="600" y="618" text-anchor="middle" font-family="Heebo, Arial, sans-serif" font-weight="500" font-size="26" letter-spacing="3" fill="#C9A35A">viewestate.co.il</text>
+  <text x="600" y="660" text-anchor="middle" font-family="Heebo, Arial, sans-serif" font-weight="400" font-size="23" letter-spacing="2" fill="#A98B52">Next-Generation Real Estate</text>
 </svg>
