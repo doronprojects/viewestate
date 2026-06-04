@@ -950,7 +950,45 @@
     .qr-step__desc { font-size: 14px; color: rgba(250,246,240,0.72); line-height: 1.65; }
 
     /* Phone mockup */
-    .phone-wrap { display: flex; justify-content: center; }
+    .phone-wrap { display: flex; align-items: center; justify-content: center; gap: 34px; position: relative; }
+
+    /* ── QR scan illustration ── */
+    .qr-scan { position: relative; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 13px; }
+    .qr-card {
+      position: relative;
+      width: 138px; height: 138px;
+      background: #F4ECD9;
+      border-radius: 12px;
+      padding: 13px;
+      box-shadow: 0 18px 44px rgba(0,0,0,0.45);
+    }
+    .qr-card svg { width: 100%; height: 100%; display: block; }
+    .qr-bracket { position: absolute; width: 20px; height: 20px; border: 2.5px solid var(--gold-light); }
+    .qr-bracket--tl { top: -7px; left: -7px; border-right: none; border-bottom: none; border-top-left-radius: 4px; }
+    .qr-bracket--tr { top: -7px; right: -7px; border-left: none; border-bottom: none; border-top-right-radius: 4px; }
+    .qr-bracket--bl { bottom: -7px; left: -7px; border-right: none; border-top: none; border-bottom-left-radius: 4px; }
+    .qr-bracket--br { bottom: -7px; right: -7px; border-left: none; border-top: none; border-bottom-right-radius: 4px; }
+    .qr-scanline {
+      position: absolute; left: 10px; right: 10px; top: 12px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+      box-shadow: 0 0 12px 2px rgba(201,163,90,0.65);
+      will-change: transform;
+      animation: qrScan 2.4s ease-in-out infinite;
+    }
+    @keyframes qrScan {
+      0%, 100% { transform: translateY(0);     opacity: 0.45; }
+      50%      { transform: translateY(114px); opacity: 1; }
+    }
+    .qr-scan__label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold-light); font-weight: 600; }
+    /* beam from the phone (left, in RTL) toward the QR */
+    .qr-scan::before {
+      content: ""; position: absolute; top: 62px; right: 100%; width: 34px; height: 2px;
+      background: repeating-linear-gradient(90deg, var(--gold-light) 0 5px, transparent 5px 11px);
+      opacity: 0.55;
+      animation: beamPulse 2.4s ease-in-out infinite;
+    }
+    @keyframes beamPulse { 0%,100% { opacity: 0.25; } 50% { opacity: 0.8; } }
+    @media (max-width: 700px) { .qr-scan { display: none; } }
 
     .phone {
       width: 272px;
@@ -1360,6 +1398,16 @@
       </div>
 
       <div class="phone-wrap reveal delay-2">
+        <div class="qr-scan" aria-hidden="true">
+          <div class="qr-card" id="qrCard">
+            <span class="qr-bracket qr-bracket--tl"></span>
+            <span class="qr-bracket qr-bracket--tr"></span>
+            <span class="qr-bracket qr-bracket--bl"></span>
+            <span class="qr-bracket qr-bracket--br"></span>
+            <span class="qr-scanline"></span>
+          </div>
+          <div class="qr-scan__label">סרקו אותי</div>
+        </div>
         <div class="phone">
           <div class="phone__screen">
             <video autoplay muted loop playsinline
@@ -1680,6 +1728,29 @@
         html += '<i style="left:' + left + '%;width:' + size + 'px;height:' + size + 'px;--dx:' + dx + 'px;animation-duration:' + dur + 's;animation-delay:' + delay + 's"></i>';
       }
       box.innerHTML = html;
+    })();
+
+    // ── Decorative QR code (concept illustration) ──
+    (function () {
+      const card = document.getElementById('qrCard');
+      if (!card) return;
+      const N = 25, cell = 4;
+      const isFinder = (r, c) => (r < 7 && c < 7) || (r < 7 && c >= N - 7) || (r >= N - 7 && c < 7);
+      let seed = 0x5eed;
+      const bit = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return (seed >> 18) & 1; };
+      let rects = '';
+      for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+        if (isFinder(r, c)) continue;
+        if (bit()) rects += '<rect x="' + (c * cell) + '" y="' + (r * cell) + '" width="' + cell + '" height="' + cell + '"/>';
+      }
+      const fp = (ox, oy) =>
+        '<rect x="' + ox + '" y="' + oy + '" width="' + (7 * cell) + '" height="' + (7 * cell) + '" rx="2"/>' +
+        '<rect x="' + (ox + cell) + '" y="' + (oy + cell) + '" width="' + (5 * cell) + '" height="' + (5 * cell) + '" rx="1.5" fill="#F4ECD9"/>' +
+        '<rect x="' + (ox + 2 * cell) + '" y="' + (oy + 2 * cell) + '" width="' + (3 * cell) + '" height="' + (3 * cell) + '" rx="1"/>';
+      const S = N * cell;
+      card.insertAdjacentHTML('afterbegin',
+        '<svg viewBox="0 0 ' + S + ' ' + S + '" fill="#1C1008" shape-rendering="crispEdges">' +
+        rects + fp(0, 0) + fp((N - 7) * cell, 0) + fp(0, (N - 7) * cell) + '</svg>');
     })();
 
     // ── Mobile menu ──
