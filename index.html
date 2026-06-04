@@ -950,7 +950,7 @@
     .qr-step__desc { font-size: 14px; color: rgba(250,246,240,0.72); line-height: 1.65; }
 
     /* Phone mockup */
-    .phone-wrap { display: flex; align-items: center; justify-content: center; gap: 34px; position: relative; }
+    .phone-wrap { display: flex; align-items: center; justify-content: center; gap: 64px; position: relative; }
 
     /* ── QR scan illustration ── */
     .qr-scan { position: relative; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 13px; }
@@ -980,14 +980,23 @@
       50%      { transform: translateY(114px); opacity: 1; }
     }
     .qr-scan__label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold-light); font-weight: 600; }
-    /* beam from the phone (left, in RTL) toward the QR */
-    .qr-scan::before {
-      content: ""; position: absolute; top: 62px; right: 100%; width: 34px; height: 2px;
-      background: repeating-linear-gradient(90deg, var(--gold-light) 0 5px, transparent 5px 11px);
-      opacity: 0.55;
-      animation: beamPulse 2.4s ease-in-out infinite;
+    /* scan cone: two lines from one point on the phone, opening to both sides of the QR */
+    .scan-cone {
+      position: absolute;
+      right: 100%;
+      top: 0;
+      width: 64px;
+      height: 138px;
+      pointer-events: none;
     }
-    @keyframes beamPulse { 0%,100% { opacity: 0.25; } 50% { opacity: 0.8; } }
+    .scan-cone svg { width: 100%; height: 100%; display: block; overflow: visible; }
+    .scan-cone line {
+      stroke: var(--gold-light);
+      stroke-width: 1.6;
+      vector-effect: non-scaling-stroke;
+      animation: conePulse 2.4s ease-in-out infinite;
+    }
+    @keyframes conePulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.85; } }
     @media (max-width: 700px) { .qr-scan { display: none; } }
 
     .phone {
@@ -1399,6 +1408,7 @@
 
       <div class="phone-wrap reveal delay-2">
         <div class="qr-scan" aria-hidden="true">
+          <span class="scan-cone"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="2" y1="50" x2="98" y2="3"/><line x1="2" y1="50" x2="98" y2="97"/></svg></span>
           <div class="qr-card" id="qrCard">
             <span class="qr-bracket qr-bracket--tl"></span>
             <span class="qr-bracket qr-bracket--tr"></span>
