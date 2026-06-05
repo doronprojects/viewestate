@@ -525,13 +525,21 @@
       background: #160C05;
       padding: 24px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 28px;
-      flex-wrap: wrap;
+      gap: 14px;
     }
+    .prop-footer__links { display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap; }
     .prop-footer a { font-size: 13px; color: rgba(248,244,238,0.7); transition: color 0.3s; }
     .prop-footer a:hover { color: var(--gold-light); }
+    .prop-footer__disclaimer {
+      text-align: center;
+      font-size: 11.5px;
+      line-height: 1.7;
+      color: rgba(248,244,238,0.34);
+      max-width: 680px;
+      margin: 0;
+    }
 
     /* ═══════════════════════════════════════
        STICKY CTA BAR — mobile-first WhatsApp
@@ -784,7 +792,8 @@
         u_sqm: 'מ"ר', u_rooms: 'חדרים', u_floorOf: 'מתוך', u_spots: 'מקומות',
         ss_sale: 'למכירה', ss_neg: 'במשא ומתן', ss_sold: 'נמכר',
         notfound_h: 'הנכס לא נמצא', notfound_p: 'ייתכן שהנכס הוסר או שהקישור שגוי.', notfound_a: '← חזרה לכל הנכסים',
-        aria_sound: 'הפעל צליל', aria_call: 'התקשר', aria_lang: 'switch to English', aria_fs: 'הגדל למסך מלא'
+        aria_sound: 'הפעל צליל', aria_call: 'התקשר', aria_lang: 'switch to English', aria_fs: 'הגדל למסך מלא',
+        foot_disclaimer: 'האתר נמצא בהקמה. הנכסים והפרטים המוצגים הם להמחשה בלבד, אינם מהווים מידע עדכני או מחייב, ואין לראות בהם הצעה לרכישה או למכירה.'
       },
       en: {
         dir: 'ltr', langBtn: 'עב',
@@ -800,7 +809,8 @@
         u_sqm: 'm²', u_rooms: 'rooms', u_floorOf: 'of', u_spots: 'spots',
         ss_sale: 'For Sale', ss_neg: 'Under Offer', ss_sold: 'Sold',
         notfound_h: 'Property not found', notfound_p: 'The property may have been removed or the link is incorrect.', notfound_a: '← Back to all properties',
-        aria_sound: 'Play sound', aria_call: 'Call', aria_lang: 'מעבר לעברית', aria_fs: 'Fullscreen'
+        aria_sound: 'Play sound', aria_call: 'Call', aria_lang: 'מעבר לעברית', aria_fs: 'Fullscreen',
+        foot_disclaimer: 'This site is under construction. All properties and details shown are for illustration only — they are not current or binding information and do not constitute an offer to buy or sell.'
       }
     };
     function t(k) { return (STR[LANG] && STR[LANG][k] != null) ? STR[LANG][k] : STR.he[k]; }
@@ -1071,9 +1081,12 @@
         </div>
 
         <footer class="prop-footer">
-          <a href="index.html">${t('back')}</a>
-          <a href="accessibility.html">${t('foot_acc')}</a>
-          <a href="privacy.html">${t('foot_privacy')}</a>
+          <div class="prop-footer__links">
+            <a href="index.html">${t('back')}</a>
+            <a href="accessibility.html">${t('foot_acc')}</a>
+            <a href="privacy.html">${t('foot_privacy')}</a>
+          </div>
+          <p class="prop-footer__disclaimer">${t('foot_disclaimer')}</p>
         </footer>
       </main>
 
