@@ -578,6 +578,38 @@
     }
 
     /* 2-col grid: featured 2/3, side 1/3 */
+    /* ===== Coverflow gallery ===== */
+    .coverflow { position: relative; max-width: 1080px; margin: 0 auto; height: 500px; perspective: 1700px; }
+    .cf-stage { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; }
+    .cf-item {
+      position: absolute; top: 50%; left: 50%;
+      width: 360px; height: 470px; margin: -235px 0 0 -180px;
+      transition: transform 0.65s var(--ease), opacity 0.5s var(--ease);
+      will-change: transform, opacity;
+    }
+    .cf-item .prop-card { width: 100%; height: 100%; border-radius: 8px; box-shadow: 0 30px 70px rgba(0,0,0,0.55); }
+    .cf-item .prop-card:hover { transform: none; }
+    .cf-item.is-active .prop-card { box-shadow: 0 36px 90px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,163,90,0.32); }
+    .cf-nav {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 50;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(20,10,4,0.5); border: 1px solid rgba(201,163,90,0.4);
+      color: var(--gold-light); font-size: 26px; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background 0.3s, border-color 0.3s, color 0.3s;
+    }
+    .cf-nav:hover { background: var(--gold); color: #1C1008; border-color: var(--gold); }
+    .cf-nav--prev { left: 4px; }
+    .cf-nav--next { right: 4px; }
+    .cf-dots { display: flex; justify-content: center; gap: 10px; margin-top: 32px; }
+    .cf-dots button { width: 9px; height: 9px; border-radius: 50%; border: none; background: rgba(201,163,90,0.3); cursor: pointer; padding: 0; transition: background 0.3s, transform 0.3s; }
+    .cf-dots button.is-on { background: var(--gold-light); transform: scale(1.3); }
+    @media (max-width: 760px) {
+      .coverflow { height: 440px; perspective: 1200px; }
+      .cf-item { width: 268px; height: 372px; margin: -186px 0 0 -134px; }
+      .cf-nav { width: 44px; height: 44px; font-size: 22px; }
+    }
+
     .props-grid {
       display: grid;
       grid-template-columns: 2fr 1fr;
@@ -1401,7 +1433,12 @@
       </a>
     </div>
 
-    <div class="props-grid" id="propsGrid"><!-- נטען דינמית מ-data.js --></div>
+    <div class="coverflow reveal delay-1" id="coverflow">
+      <button class="cf-nav cf-nav--prev" id="cfPrev" aria-label="הנכס הקודם">‹</button>
+      <div class="cf-stage" id="cfStage"><!-- נטען דינמית מ-data.js --></div>
+      <button class="cf-nav cf-nav--next" id="cfNext" aria-label="הנכס הבא">›</button>
+    </div>
+    <div class="cf-dots" id="cfDots" role="tablist" aria-label="ניווט נכסים"></div>
   </section>
 
   <!-- ===== STATS ===== -->
@@ -1678,11 +1715,10 @@
 
     /* -- properties grid (featured first) -- */
     (function renderProps() {
-      const grid = document.getElementById('propsGrid');
-      if (!grid) return;
-      const props = (DATA.properties || []).slice().sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
-      grid.innerHTML = props.map((p, i) => {
-        const feat = i === 0; // largest card = first (featured)
+      const stage = document.getElementById('cfStage');
+      if (!stage) return;
+      const props = (DATA.properties || []).slice();
+      stage.innerHTML = props.map((p, i) => {
         const heroImg = (p.gallery && p.gallery[0]) || p.poster || '';
         const info = [fmtPrice(p.price), p.rooms ? p.rooms + ' חדרים' : '', p.area ? p.area + ' מ"ר' : '',
                       p.floor ? 'קומה ' + p.floor : ''].filter(Boolean).join('  ·  ');
@@ -1696,7 +1732,7 @@
         const ss = saleStatusInfo(p.saleStatus);
         const label = [esc(p.name), esc(p.type || ''), esc(p.city || ''), ss.label, info].filter(Boolean).join(', ');
         return `
-          <a class="prop-card ${feat ? 'prop-card--feat' : 'prop-card--sm'}${p.saleStatus === 'sold' ? ' prop-card--sold' : ''}" href="property.html?id=${encodeURIComponent(p.id)}" aria-label="פתח דף נכס: ${label}">
+          <div class="cf-item" data-idx="${i}"><a class="prop-card${p.saleStatus === 'sold' ? ' prop-card--sold' : ''}" href="property.html?id=${encodeURIComponent(p.id)}" aria-label="פתח דף נכס: ${label}">
             ${media}
             <div class="prop-card__shade"></div>
             <div class="prop-card__status" aria-label="סטטוס: ${ss.label}">
@@ -1711,8 +1747,59 @@
               <h3 class="prop-card__name">${esc(p.name)}</h3>
               <p class="prop-card__info">${info}</p>
             </div>
-          </a>`;
+          </a></div>`;
       }).join('');
+
+      /* ── coverflow controller ── */
+      const items = [...stage.querySelectorAll('.cf-item')];
+      const n = items.length;
+      if (!n) return;
+      let active = 0;
+      const dotsBox = document.getElementById('cfDots');
+      dotsBox.innerHTML = items.map((_, i) => '<button role="tab" aria-label="נכס ' + (i + 1) + '"></button>').join('');
+      const dots = [...dotsBox.children];
+
+      function layout() {
+        const sm = window.innerWidth < 760;
+        const SP = sm ? 128 : 232, DZ = sm ? 140 : 230, RY = sm ? 32 : 40, SC = sm ? 0.72 : 0.82;
+        items.forEach((it, i) => {
+          let off = i - active;
+          if (off >  n / 2) off -= n;
+          if (off < -n / 2) off += n;
+          const abs = Math.abs(off);
+          const sign = off === 0 ? 0 : (off > 0 ? 1 : -1);
+          const x  = off * SP;
+          const z  = -abs * DZ;
+          const ry = -sign * RY;
+          const sc = abs === 0 ? 1 : SC;
+          it.style.transform = 'translateX(' + x + 'px) translateZ(' + z + 'px) rotateY(' + ry + 'deg) scale(' + sc + ')';
+          it.style.opacity = abs > 2 ? '0' : (abs === 0 ? '1' : (sm ? '0.45' : '0.6'));
+          it.style.zIndex = String(100 - abs);
+          it.style.pointerEvents = abs > 2 ? 'none' : 'auto';
+          it.classList.toggle('is-active', abs === 0);
+        });
+        dots.forEach((d, i) => d.classList.toggle('is-on', i === active));
+      }
+      function setActive(i) { active = ((i % n) + n) % n; layout(); }
+      function go(d) { setActive(active + d); }
+
+      items.forEach((it, i) => it.addEventListener('click', e => { if (i !== active) { e.preventDefault(); setActive(i); } }));
+      dots.forEach((d, i) => d.addEventListener('click', () => setActive(i)));
+      const prev = document.getElementById('cfPrev'), next = document.getElementById('cfNext');
+      if (prev) prev.addEventListener('click', () => go(-1));
+      if (next) next.addEventListener('click', () => go(1));
+
+      let timer = setInterval(() => go(1), 5000);
+      const cf = document.getElementById('coverflow');
+      cf.addEventListener('mouseenter', () => clearInterval(timer));
+      cf.addEventListener('mouseleave', () => { clearInterval(timer); timer = setInterval(() => go(1), 5000); });
+
+      let sx = null;
+      stage.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
+      stage.addEventListener('touchend', e => { if (sx == null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) go(dx > 0 ? -1 : 1); sx = null; }, { passive: true });
+      window.addEventListener('resize', layout, { passive: true });
+
+      layout();
     })();
 
     /* -- stats -- */
