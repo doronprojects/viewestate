@@ -614,6 +614,10 @@
       .coverflow { height: 440px; perspective: 1200px; }
       .cf-item { width: 268px; height: 372px; margin: -186px 0 0 -134px; }
       .cf-nav { width: 44px; height: 44px; font-size: 22px; }
+      .cf-item .prop-card__body { padding: 18px 20px; }
+      .cf-item .prop-card__type { font-size: 9px; letter-spacing: 2px; margin-bottom: 6px; }
+      .cf-item .prop-card__name { font-size: 19px; margin-bottom: 5px; line-height: 1.15; }
+      .cf-item .prop-card__info { font-size: 12px; line-height: 1.45; }
     }
 
     .props-grid {
@@ -1728,7 +1732,7 @@
       stage.innerHTML = props.map((p, i) => {
         const heroImg = (p.gallery && p.gallery[0]) || p.poster || '';
         const info = [fmtPrice(p.price), p.rooms ? p.rooms + ' חדרים' : '', p.area ? p.area + ' מ"ר' : '',
-                      p.floor ? 'קומה ' + p.floor : ''].filter(Boolean).join('  ·  ');
+                      p.floor ? 'קומה ' + p.floor : ''].filter(Boolean).map(s => s.replace(/ /g, ' ')).join('  ·  ');
         const cardSrcs = p.video
           ? (/^videos\/.*\.mp4$/i.test(p.video) ? `<source src="${esc(p.video.replace(/\.mp4$/i, '.webm'))}" type="video/webm">` : '')
             + `<source src="${esc(p.video)}" type="video/mp4">`
