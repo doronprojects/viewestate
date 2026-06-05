@@ -710,9 +710,40 @@
       .cta-bar { padding: 20px 64px; }
       .vh__info { padding: 56px 64px; }
     }
+
+    /* ════════════ DARK THEME — site-wide animated background ════════════ */
+    :root {
+      --text:       #F4ECD9;
+      --text-mid:   rgba(244,236,217,0.80);
+      --text-muted: rgba(244,236,217,0.55);
+      --bg-alt:     rgba(255,255,255,0.05);
+      --bg-card:    rgba(255,255,255,0.07);
+      --border:     rgba(201,163,90,0.22);
+      --border-md:  rgba(201,163,90,0.36);
+    }
+    body { background: #160E07; }
+    .site-bg {
+      position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+      background: linear-gradient(160deg, #1C1008 0%, #241407 50%, #130C06 100%);
+    }
+    .site-bg span { position: absolute; border-radius: 50%; will-change: transform; }
+    .site-bg .o1 { width: 60vmax; height: 60vmax; top: -18%; right: -10%; background: radial-gradient(circle, rgba(216,176,98,0.22), transparent 64%); animation: heroDrift1 18s ease-in-out infinite alternate; }
+    .site-bg .o2 { width: 52vmax; height: 52vmax; bottom: -20%; left: -12%; background: radial-gradient(circle, rgba(184,128,48,0.20), transparent 64%); animation: heroDrift2 23s ease-in-out infinite alternate; }
+    @keyframes heroDrift1 { 0% { transform: translate3d(0,0,0) scale(1); } 100% { transform: translate3d(-20%,16%,0) scale(1.22); } }
+    @keyframes heroDrift2 { 0% { transform: translate3d(0,0,0) scale(1); } 100% { transform: translate3d(22%,-16%,0) scale(1.26); } }
+
+    #app { position: relative; z-index: 1; }
+    .specs-strip, .sec-gallery, .sec-desc, .sec-specs, .sec-agent, .sec-lead, .prop-footer, .vh__info { background: transparent; }
+    .specs-tbl { background: rgba(201,163,90,0.18); border-color: rgba(201,163,90,0.22); }
+    .spec-row { background: rgba(255,255,255,0.04); }
+    .sec-agent { border-top-color: rgba(201,163,90,0.20); }
+    .agent-brand { color: var(--gold-light); }
+    .cta-bar { background: rgba(20,10,4,0.92) !important; border-top-color: rgba(201,163,90,0.30); backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+    .cta-call { background: rgba(255,255,255,0.06); border-color: rgba(201,163,90,0.4); color: var(--gold-light); }
   </style>
 </head>
 <body>
+  <div class="site-bg" aria-hidden="true"><span class="o1"></span><span class="o2"></span></div>
 
   <!-- Rendered dynamically from data.js based on ?id= -->
   <div id="app"></div>
