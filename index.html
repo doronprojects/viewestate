@@ -1268,9 +1268,64 @@
       .contact-btns { flex-direction: column; align-items: center; }
       .footer-links { gap: 20px; }
     }
+    /* ════════════ DARK THEME — site-wide animated background ════════════ */
+    :root {
+      --text:       #F4ECD9;
+      --text-mid:   rgba(244,236,217,0.80);
+      --text-muted: rgba(244,236,217,0.55);
+      --bg-alt:     rgba(255,255,255,0.045);
+      --bg-card:    rgba(255,255,255,0.07);
+      --border:     rgba(201,163,90,0.20);
+      --border-md:  rgba(201,163,90,0.36);
+    }
+    body { background: #160E07; }
+
+    .site-bg {
+      position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+      background: linear-gradient(160deg, #1C1008 0%, #241407 50%, #130C06 100%);
+    }
+    .site-bg span { position: absolute; border-radius: 50%; will-change: transform; }
+    .site-bg .o1 { width: 55vmax; height: 55vmax; top: -16%; right: -8%; background: radial-gradient(circle, rgba(216,176,98,0.24), rgba(201,163,90,0.08) 42%, transparent 66%); animation: heroDrift1 17s ease-in-out infinite alternate; }
+    .site-bg .o2 { width: 50vmax; height: 50vmax; bottom: -18%; left: -10%; background: radial-gradient(circle, rgba(184,128,48,0.22), transparent 64%); animation: heroDrift2 21s ease-in-out infinite alternate; }
+    .site-bg .o3 { width: 42vmax; height: 42vmax; top: 33%; left: 34%; background: radial-gradient(circle, rgba(201,163,90,0.16), transparent 64%); animation: heroDrift3 25s ease-in-out infinite alternate; }
+    .site-bg__particles { position: absolute; inset: 0; overflow: hidden; }
+    .site-bg__particles i {
+      position: absolute; bottom: -14px; border-radius: 50%;
+      background: var(--gold-light); box-shadow: 0 0 6px rgba(201,163,90,0.5);
+      will-change: transform, opacity; animation: floatUp linear infinite;
+    }
+
+    /* keep all content above the fixed background */
+    .nav, .nav__mobile, .hero, section, footer, .to-top { position: relative; z-index: 1; }
+
+    /* hero now uses the global background */
+    .hero { background: transparent; }
+    .hero__bg, .hero__glow, .hero__particles { display: none; }
+
+    /* sections transparent so the animated background shows through */
+    .sec-props, .sec-about, .sec-service, .sec-qr, .sec-testi, .sec-contact, footer { background: transparent; }
+
+    /* surfaces → translucent dark */
+    .testi-card, .service-col { background: rgba(255,255,255,0.045); border-color: rgba(201,163,90,0.20); }
+    .service-col { border-top: 3px solid var(--gold); }
+    .feat-icon { background: rgba(255,255,255,0.06); }
+    .stat__num { color: var(--gold-light); }
+    .section-h2--dark { color: var(--text); }
+    .section-eyebrow { color: var(--gold-light); }
+
+    /* nav over the dark background (un-scrolled) */
+    .nav:not(.nav--scrolled) .logo-e { color: rgba(244,236,217,0.5); }
+    .nav:not(.nav--scrolled) .nav__links a { color: rgba(244,236,217,0.7); }
+    .nav:not(.nav--scrolled) .logo-mark { color: var(--gold-light); }
+    .nav:not(.nav--scrolled) .nav__cta { border-color: var(--gold-light); color: var(--gold-light) !important; }
+    .nav:not(.nav--scrolled) .nav__ham span { background: var(--gold-light); }
   </style>
 </head>
 <body>
+  <div class="site-bg" aria-hidden="true">
+    <span class="o1"></span><span class="o2"></span><span class="o3"></span>
+    <div class="site-bg__particles" id="siteParticles"></div>
+  </div>
 
   <!-- ===== NAV ===== -->
   <nav class="nav" id="nav">
@@ -1725,7 +1780,7 @@
 
     // ── Hero floating particles ──
     (function () {
-      const box = document.getElementById('heroParticles');
+      const box = document.getElementById('siteParticles');
       if (!box) return;
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       let html = '';
