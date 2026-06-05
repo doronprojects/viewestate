@@ -467,8 +467,6 @@
       left: 64px;
       z-index: 4;
       background: rgba(28,16,8,0.32);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
       border: 1px solid rgba(250,246,240,0.16);
       color: rgba(250,246,240,0.78);
       padding: 10px 18px;
@@ -672,7 +670,6 @@
       z-index: 4;
       opacity: 0;
       transition: var(--t);
-      backdrop-filter: blur(8px);
       background: rgba(28,16,8,0.18);
     }
 
@@ -692,7 +689,6 @@
       left: 20px;
       z-index: 4;
       background: rgba(154,114,48,0.88);
-      backdrop-filter: blur(8px);
       color: #FAF6F0;
       padding: 6px 12px;
       font-size: 11px;
@@ -717,8 +713,6 @@
       padding: 12px 14px;
       border-radius: 14px;
       background: rgba(14,8,3,0.52);
-      backdrop-filter: blur(9px);
-      -webkit-backdrop-filter: blur(9px);
       box-shadow: 0 6px 18px rgba(0,0,0,0.22);
     }
     .ps-row {
@@ -1291,7 +1285,7 @@
     .site-bg__particles { position: absolute; inset: 0; overflow: hidden; }
     .site-bg__particles i {
       position: absolute; bottom: -14px; border-radius: 50%;
-      background: var(--gold-light); box-shadow: 0 0 6px rgba(201,163,90,0.5);
+      background: var(--gold-light); opacity: 0.6;
       will-change: transform, opacity; animation: floatUp linear infinite;
     }
 
@@ -1300,7 +1294,7 @@
 
     /* hero now uses the global background */
     .hero { background: transparent; }
-    .hero__bg, .hero__glow, .hero__particles { display: none; }
+    .hero__bg, .hero__glow, .hero__particles, .hero__overlay, .hero__warm { display: none; }
 
     /* sections transparent so the animated background shows through */
     .sec-props, .sec-about, .sec-service, .sec-qr, .sec-testi, .sec-contact, footer { background: transparent; }
@@ -1784,7 +1778,7 @@
       if (!box) return;
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       let html = '';
-      for (let i = 0; i < 18; i++) {
+      for (let i = 0; i < 12; i++) {
         const size = (Math.random() * 3 + 1.5).toFixed(1);
         const left = (Math.random() * 100).toFixed(1);
         const dur = (Math.random() * 12 + 11).toFixed(1);
