@@ -1065,48 +1065,97 @@
       overflow: hidden;
       aspect-ratio: 9/20;
       position: relative;
-      background: #000;
-    }
-
-    .phone__screen video { width: 100%; height: 100%; object-fit: cover; }
-
-    .phone__ui {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 50%);
+      background: var(--bg-dark, #160E07);
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
-      padding: 22px 18px 20px;
     }
 
-    .phone__badge {
-      background: var(--gold);
-      color: #FAF6F0;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      padding: 4px 9px;
-      margin-bottom: 10px;
-      width: fit-content;
-      border-radius: 1px;
+    /* ── media at top — 16:9 like the real property hero ── */
+    .phone__media {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/10;
+      overflow: hidden;
+      flex-shrink: 0;
     }
+    .phone__media video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .phone__media::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(8,5,2,0.6) 0%, rgba(8,5,2,0) 40%);
+    }
+    .phone__topbar {
+      position: absolute; top: 30px; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px; z-index: 3;
+    }
+    .phone__back { font-size: 10px; color: rgba(255,255,255,0.92); font-weight: 500; }
+    .phone__logo { font-family: 'Playfair Display', serif; font-size: 12px; letter-spacing: 1px; color: #fff; }
+    .phone__logo b { color: var(--gold-light); font-weight: 700; }
 
-    .phone__prop-name { font-family: var(--serif); font-size: 21px; color: white; line-height: 1.2; margin-bottom: 4px; }
-    .phone__prop-meta { font-size: 12px; color: rgba(255,255,255,0.52); margin-bottom: 14px; }
+    /* ── info block ── */
+    .phone__info { padding: 15px 16px 13px; }
+    .phone__status {
+      display: inline-block; background: #1F9D4D; color: #fff;
+      font-size: 8px; font-weight: 700; letter-spacing: 1.5px;
+      padding: 3px 9px; border-radius: 3px; margin-bottom: 9px;
+    }
+    .phone__prop-name { font-family: var(--serif); font-size: 20px; color: #FAF6F0; line-height: 1.15; margin-bottom: 5px; font-weight: 700; }
+    .phone__prop-meta { font-size: 11px; color: rgba(248,244,238,0.7); margin-bottom: 11px; }
+    .phone__price { font-family: var(--serif); font-size: 19px; color: #FAF6F0; font-weight: 700; }
 
+    /* ── specs strip ── */
+    .phone__specs {
+      display: flex;
+      border-top: 1px solid rgba(154,114,48,0.2);
+      border-bottom: 1px solid rgba(154,114,48,0.2);
+    }
+    .phone__spec {
+      flex: 1; text-align: center; padding: 11px 4px;
+      border-left: 1px solid rgba(154,114,48,0.12);
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .phone__spec:first-child { border-left: none; }
+    .phone__spec b { font-family: var(--serif); font-size: 15px; color: var(--gold-light); font-weight: 700; }
+    .phone__spec span { font-size: 8.5px; color: rgba(248,244,238,0.55); letter-spacing: 0.5px; }
+
+    /* ── body hint (suggests the page continues) ── */
+    .phone__body { padding: 14px 16px 0; }
+    .phone__sec-label { font-size: 9px; letter-spacing: 2px; color: var(--gold-light); text-transform: uppercase; margin-bottom: 9px; font-weight: 600; }
+    .phone__lines { display: flex; flex-direction: column; gap: 7px; margin: 0; }
+    .phone__lines span { height: 5px; border-radius: 3px; background: rgba(248,244,238,0.1); display: block; }
+    .phone__lines span:nth-child(1) { width: 100%; }
+    .phone__lines span:nth-child(2) { width: 90%; }
+    .phone__lines span:nth-child(3) { width: 68%; }
+
+    /* ── sticky CTA at bottom ── */
+    .phone__cta {
+      margin-top: auto;
+      padding: 12px 14px 16px;
+      background: rgba(20,10,4,0.92);
+      border-top: 1px solid rgba(154,114,48,0.18);
+      display: flex; gap: 8px;
+    }
     .phone__wa {
+      flex: 1;
       background: #25D366;
       color: white;
       border: none;
-      padding: 13px;
-      border-radius: 6px;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      font-size: 14px; font-weight: 700;
+      padding: 11px;
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      font-size: 12px; font-weight: 700;
       cursor: pointer;
       font-family: var(--sans);
-      width: 100%;
+    }
+    .phone__call {
+      width: 42px; flex-shrink: 0;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(201,163,90,0.4);
+      border-radius: 7px;
+      color: var(--gold-light);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
     }
 
     /* ===== TESTIMONIALS ===== */
@@ -1527,24 +1576,45 @@
           </div>
           <div class="qr-scan__label">סרקו אותי</div>
         </div>
-        <div class="phone">
+        <div class="phone" aria-hidden="true">
           <div class="phone__screen">
-            <video autoplay muted loop playsinline
-                   poster="videos/hero-fhd-poster.jpg">
-              <source src="videos/hero-fhd.webm" type="video/webm">
-              <source src="videos/hero-fhd.mp4" type="video/mp4">
-            </video>
-            <div class="phone__ui">
-              <div class="phone__badge">VIEWESTATE</div>
-              <div class="phone__prop-name">פנטהאוז<br>רוטשילד 22</div>
-              <div class="phone__prop-meta">5 חדרים · 160 מ"ר · תל אביב</div>
+            <div class="phone__media">
+              <video autoplay muted loop playsinline
+                     poster="videos/hero-fhd-poster.jpg">
+                <source src="videos/hero-fhd.webm" type="video/webm">
+                <source src="videos/hero-fhd.mp4" type="video/mp4">
+              </video>
+              <div class="phone__topbar">
+                <span class="phone__back">‹ הנכסים</span>
+                <span class="phone__logo"><b>VIEW</b>ESTATE</span>
+              </div>
+            </div>
+            <div class="phone__info">
+              <span class="phone__status">למכירה</span>
+              <div class="phone__prop-name">פנטהאוז רוטשילד 22</div>
+              <div class="phone__prop-meta">רוטשילד 22 · תל אביב</div>
+              <div class="phone__price">4,800,000 ₪</div>
+            </div>
+            <div class="phone__specs">
+              <div class="phone__spec"><b>5</b><span>חדרים</span></div>
+              <div class="phone__spec"><b>160</b><span>מ"ר</span></div>
+              <div class="phone__spec"><b>12</b><span>קומה</span></div>
+            </div>
+            <div class="phone__body">
+              <div class="phone__sec-label">תיאור הנכס</div>
+              <p class="phone__lines"><span></span><span></span><span></span></p>
+            </div>
+            <div class="phone__cta">
               <button class="phone__wa">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/>
                   <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.944-1.418A9.953 9.953 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
                 </svg>
-                שלח הודעה בוואצאפ
+                שלח הודעה לדורון
               </button>
+              <span class="phone__call">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </span>
             </div>
           </div>
         </div>
