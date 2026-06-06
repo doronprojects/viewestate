@@ -579,7 +579,7 @@
 
     /* 2-col grid: featured 2/3, side 1/3 */
     /* ===== Coverflow gallery ===== */
-    .coverflow { position: relative; max-width: 1080px; margin: 0 auto; height: 500px; perspective: 1700px; overflow: hidden; }
+    .coverflow { position: relative; max-width: 1280px; margin: 0 auto; height: 500px; perspective: 1700px; overflow: hidden; }
     .cf-stage { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; }
     .cf-item {
       position: absolute; top: 50%; left: 50%;
@@ -1848,7 +1848,7 @@
 
       function layout() {
         const sm = window.innerWidth < 760;
-        const SP = sm ? 146 : 300, DZ = sm ? 150 : 215, RY = sm ? 34 : 48, SC = sm ? 0.72 : 0.8;
+        const SP = sm ? 165 : 380, DZ = sm ? 150 : 215, RY = sm ? 34 : 46, SC = sm ? 0.72 : 0.82;
         items.forEach((it, i) => {
           let off = i - active;
           if (off >  n / 2) off -= n;
