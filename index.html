@@ -368,6 +368,31 @@
       opacity: 0.9;
     }
 
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 22px;
+      padding: 6px 16px 6px 7px;
+      border: 1px solid rgba(201,163,90,0.45);
+      border-radius: 100px;
+      background: rgba(201,163,90,0.08);
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: var(--gold-pale);
+      font-weight: 500;
+    }
+    .hero__badge b {
+      font-family: var(--serif);
+      font-weight: 700;
+      font-size: 13px;
+      color: #1C1008;
+      letter-spacing: 1px;
+      background: var(--gold-light);
+      padding: 3px 9px;
+      border-radius: 100px;
+    }
+
     .hero__h1 {
       font-family: var(--serif);
       font-size: clamp(60px, 10vw, 112px);
@@ -1324,7 +1349,8 @@
 
     /* hero content — staggered entrance on load */
     @keyframes heroIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-    .hero__eyebrow, .hero__h1, .hero__sub, .hero__actions { opacity: 0; animation: heroIn 0.9s var(--ease) forwards; }
+    .hero__badge, .hero__eyebrow, .hero__h1, .hero__sub, .hero__actions { opacity: 0; animation: heroIn 0.9s var(--ease) forwards; }
+    .hero__badge   { animation-delay: 0.05s; }
     .hero__eyebrow { animation-delay: 0.15s; }
     .hero__h1      { animation-delay: 0.30s; }
     .hero__sub     { animation-delay: 0.48s; }
@@ -1332,7 +1358,7 @@
 
     @media (prefers-reduced-motion: reduce) {
       .reveal { opacity: 1; transform: none; transition: none; }
-      .hero__eyebrow, .hero__h1, .hero__sub, .hero__actions { animation: none; opacity: 1; }
+      .hero__badge, .hero__eyebrow, .hero__h1, .hero__sub, .hero__actions { animation: none; opacity: 1; }
     }
 
     /* ===== RESPONSIVE ===== */
@@ -1475,6 +1501,7 @@
     <div class="hero__particles" id="heroParticles" aria-hidden="true"></div>
 
     <div class="hero__content">
+      <span class="hero__badge"><b>4K</b> וידאו נכסים באיכות קולנועית</span>
       <p class="hero__eyebrow">מתווך נכסים מוסמך · שיווק חכם · viewestate.co.il</p>
       <h1 class="hero__h1">
         נדל"ן הדור הבא
