@@ -992,9 +992,15 @@
       margin: 18px 0 30px;
     }
 
-    .qr-steps { display: flex; flex-direction: column; gap: 22px; }
+    .qr-steps {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      grid-auto-flow: column;
+      gap: 26px 36px;
+    }
 
-    .qr-step { display: flex; gap: 28px; align-items: flex-start; }
+    .qr-step { display: flex; gap: 20px; align-items: flex-start; }
 
     .qr-step__n {
       font-family: 'Playfair Display', serif;
@@ -1454,6 +1460,7 @@
       .about-grid { grid-template-columns: 1fr; gap: 72px; }
       .about-badge { bottom: -16px; right: -16px; }
       .qr-inner { grid-template-columns: 1fr; gap: 72px; }
+      .qr-steps { grid-template-columns: 1fr 1fr; }
       .props-grid { grid-template-columns: 1fr 1fr; }
       .prop-card--feat { grid-column: span 2; min-height: 500px; grid-row: span 1; }
       .stats-grid { grid-template-columns: repeat(2,1fr); }
@@ -1464,6 +1471,7 @@
       .nav, .nav--scrolled { padding-left: 20px; padding-right: 20px; }
       .nav__links { display: none; }
       .nav__ham { display: flex; }
+      .qr-steps { grid-template-columns: 1fr; grid-template-rows: auto; grid-auto-flow: row; }
       .sec-props, .sec-about, .sec-service, .sec-qr, .sec-testi, .sec-contact { padding: 52px 20px; }
       .sec-stats { padding: 40px 20px; }
       footer { padding: 36px 20px; flex-direction: column; text-align: center; }
