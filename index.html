@@ -1272,6 +1272,12 @@
     .phone__scan-pop__t { font-size: 13px; font-weight: 700; color: #1C1008; line-height: 1.2; }
     .phone__scan-pop__u { font-size: 11px; color: #1F9D4D; font-weight: 500; margin-top: 2px; }
 
+    /* hold the scan animation until the section scrolls into view */
+    .phone__scan, .phone__scan-line, .phone__scan-pop { animation-play-state: paused; }
+    .phone-wrap.visible .phone__scan,
+    .phone-wrap.visible .phone__scan-line,
+    .phone-wrap.visible .phone__scan-pop { animation-play-state: running; }
+
     @keyframes phoneScanFade {
       0%, 27% { opacity: 1; }
       30%     { opacity: 0; }
