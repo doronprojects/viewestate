@@ -1189,6 +1189,89 @@
       cursor: pointer;
     }
 
+    /* ── Scan animation overlay (scan QR → link pops → property page) ── */
+    .phone__scan {
+      position: absolute; inset: 0; z-index: 20;
+      background: radial-gradient(circle at 50% 42%, #15100B 0%, #080605 100%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 22px;
+      animation: phoneScanFade 7s ease-in-out infinite;
+    }
+    .phone__scan-cam {
+      position: relative;
+      width: 62%; aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .phone__scan-qr {
+      width: 100%; height: 100%;
+      background: #fff; border-radius: 10px; padding: 11%;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+    }
+    .phone__scan-qr svg { width: 100%; height: 100%; display: block; }
+    .phone__scan-corner {
+      position: absolute; width: 22px; height: 22px;
+      border: 3px solid var(--gold-light);
+    }
+    .phone__scan-corner.tl { top: -10px; left: -10px; border-right: none; border-bottom: none; border-radius: 5px 0 0 0; }
+    .phone__scan-corner.tr { top: -10px; right: -10px; border-left: none; border-bottom: none; border-radius: 0 5px 0 0; }
+    .phone__scan-corner.bl { bottom: -10px; left: -10px; border-right: none; border-top: none; border-radius: 0 0 0 5px; }
+    .phone__scan-corner.br { bottom: -10px; right: -10px; border-left: none; border-top: none; border-radius: 0 0 5px 0; }
+    .phone__scan-line {
+      position: absolute; left: 3%; right: 3%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+      box-shadow: 0 0 14px 2px rgba(201,163,90,0.75);
+      top: 8%;
+      animation: phoneScanLine 7s ease-in-out infinite;
+    }
+    .phone__scan-hint {
+      font-size: 12px; letter-spacing: 2px; color: var(--gold-pale);
+      font-weight: 500; text-transform: uppercase;
+    }
+    .phone__scan-pop {
+      position: absolute; left: 14px; right: 14px; bottom: 78px; z-index: 22;
+      display: flex; align-items: center; gap: 11px;
+      background: #fff; border-radius: 13px; padding: 11px 13px;
+      box-shadow: 0 14px 36px rgba(0,0,0,0.45);
+      opacity: 0; transform: translateY(18px);
+      animation: phoneScanPop 7s ease-in-out infinite;
+    }
+    .phone__scan-pop__ico {
+      width: 34px; height: 34px; flex-shrink: 0; border-radius: 9px;
+      background: var(--gold-light); color: #1C1008;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .phone__scan-pop__t { font-size: 13px; font-weight: 700; color: #1C1008; line-height: 1.2; }
+    .phone__scan-pop__u { font-size: 11px; color: #1F9D4D; font-weight: 500; margin-top: 2px; }
+
+    @keyframes phoneScanFade {
+      0%, 48% { opacity: 1; }
+      60%     { opacity: 0; }
+      90%     { opacity: 0; }
+      97%     { opacity: 1; }
+      100%    { opacity: 1; }
+    }
+    @keyframes phoneScanLine {
+      0%   { top: 8%;  opacity: 0; }
+      6%   { opacity: 1; }
+      24%  { top: 90%; }
+      44%  { top: 8%; }
+      48%  { opacity: 1; }
+      52%  { opacity: 0; }
+      100% { opacity: 0; }
+    }
+    @keyframes phoneScanPop {
+      0%, 47% { opacity: 0; transform: translateY(18px); }
+      55%     { opacity: 1; transform: translateY(0); }
+      74%     { opacity: 1; transform: translateY(0); }
+      82%, 100% { opacity: 0; transform: translateY(-8px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .phone__scan { animation: none; opacity: 0; }
+      .phone__scan-line, .phone__scan-pop { animation: none; }
+      .phone__scan-pop { opacity: 0; }
+    }
+
     /* ===== TESTIMONIALS ===== */
     .sec-testi {
       background: var(--bg-alt);
@@ -1621,6 +1704,27 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
               </span>
             </div>
+
+            <div class="phone__scan" aria-hidden="true">
+              <div class="phone__scan-cam">
+                <div class="phone__scan-qr" id="phoneScanQR"></div>
+                <span class="phone__scan-corner tl"></span>
+                <span class="phone__scan-corner tr"></span>
+                <span class="phone__scan-corner bl"></span>
+                <span class="phone__scan-corner br"></span>
+                <span class="phone__scan-line"></span>
+              </div>
+              <div class="phone__scan-hint">סורק קוד…</div>
+            </div>
+            <div class="phone__scan-pop" aria-hidden="true">
+              <span class="phone__scan-pop__ico">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              </span>
+              <div class="phone__scan-pop__txt">
+                <div class="phone__scan-pop__t">פנטהאוז רוטשילד 22</div>
+                <div class="phone__scan-pop__u">viewestate.co.il/property</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1977,12 +2081,11 @@
     })();
 
     // ── Decorative QR code (concept illustration) ──
-    (function () {
-      const card = document.getElementById('qrCard');
-      if (!card) return;
+    function buildQR(el, seedVal) {
+      if (!el) return;
       const N = 25, cell = 4;
       const isFinder = (r, c) => (r < 7 && c < 7) || (r < 7 && c >= N - 7) || (r >= N - 7 && c < 7);
-      let seed = 0x5eed;
+      let seed = seedVal || 0x5eed;
       const bit = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return (seed >> 18) & 1; };
       let rects = '';
       for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
@@ -1994,10 +2097,12 @@
         '<rect x="' + (ox + cell) + '" y="' + (oy + cell) + '" width="' + (5 * cell) + '" height="' + (5 * cell) + '" rx="1.5" fill="#F4ECD9"/>' +
         '<rect x="' + (ox + 2 * cell) + '" y="' + (oy + 2 * cell) + '" width="' + (3 * cell) + '" height="' + (3 * cell) + '" rx="1"/>';
       const S = N * cell;
-      card.insertAdjacentHTML('afterbegin',
+      el.insertAdjacentHTML('afterbegin',
         '<svg viewBox="0 0 ' + S + ' ' + S + '" fill="#1C1008" shape-rendering="crispEdges">' +
         rects + fp(0, 0) + fp((N - 7) * cell, 0) + fp(0, (N - 7) * cell) + '</svg>');
-    })();
+    }
+    buildQR(document.getElementById('qrCard'));
+    buildQR(document.getElementById('phoneScanQR'), 0x1d3a);
 
     // ── Mobile menu ──
     document.getElementById('navHam').addEventListener('click', () => {
