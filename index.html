@@ -295,7 +295,7 @@
     }
     @keyframes heroDrift1 {
       0%   { transform: translate3d(0, 0, 0) scale(1);          opacity: 0.7; }
-      100% { transform: translate3d(-24%, 18%, 0) scale(1.28);  opacity: 1; }
+      100% { transform: translate3d(-24%, -16%, 0) scale(1.28); opacity: 1; }
     }
     @keyframes heroDrift2 {
       0%   { transform: translate3d(0, 0, 0) scale(1);          opacity: 1; }
@@ -368,12 +368,20 @@
       color: rgba(201,163,90,0.42);
       letter-spacing: 0.3px;
       white-space: nowrap;
+      --rot: 0deg;
       opacity: 0;
-      animation: heroIn 1.1s var(--ease) 0.8s forwards;
+      transform: rotate(var(--rot));
+      animation: hqFloat var(--fdur, 8s) ease-in-out infinite, hqIn 1.2s var(--ease) 0.8s forwards;
     }
     .hq--blk { white-space: normal; text-align: center; }
     .hq::before { content: "\201D"; margin-inline-end: 2px; color: var(--gold-light); opacity: 0.7; }
     .hq::after  { content: "\201C"; margin-inline-start: 2px; color: var(--gold-light); opacity: 0.7; }
+    @keyframes hqFloat {
+      0%   { transform: rotate(var(--rot)) translateY(0); }
+      50%  { transform: rotate(var(--rot)) translateY(-13px); }
+      100% { transform: rotate(var(--rot)) translateY(0); }
+    }
+    @keyframes hqIn { from { opacity: 0; } to { opacity: 1; } }
     @media (max-width: 1180px) { .hero__quotes { display: none; } }
     @media (prefers-reduced-motion: reduce) { .hq { animation: none; opacity: 1; } }
 
@@ -387,6 +395,18 @@
       font-family: var(--sans);
       opacity: 0.9;
     }
+
+    .hero__motto {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(15px, 1.55vw, 19px);
+      color: var(--gold-light);
+      letter-spacing: 0.4px;
+      margin: 2px 0 20px;
+      opacity: 0.92;
+    }
+    .hero__motto::before { content: "\201D"; margin-inline-end: 3px; opacity: 0.65; }
+    .hero__motto::after  { content: "\201C"; margin-inline-start: 3px; opacity: 0.65; }
 
     .hero__badge {
       display: inline-flex;
@@ -1488,16 +1508,17 @@
 
     /* hero content — staggered entrance on load */
     @keyframes heroIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-    .hero__badge, .hero__eyebrow, .hero__h1, .hero__sub, .hero__actions { opacity: 0; animation: heroIn 0.9s var(--ease) forwards; }
+    .hero__badge, .hero__motto, .hero__eyebrow, .hero__h1, .hero__sub, .hero__actions { opacity: 0; animation: heroIn 0.9s var(--ease) forwards; }
     .hero__badge   { animation-delay: 0.05s; }
-    .hero__eyebrow { animation-delay: 0.15s; }
+    .hero__motto   { animation-delay: 0.12s; }
+    .hero__eyebrow { animation-delay: 0.2s; }
     .hero__h1      { animation-delay: 0.30s; }
     .hero__sub     { animation-delay: 0.48s; }
     .hero__actions { animation-delay: 0.64s; }
 
     @media (prefers-reduced-motion: reduce) {
       .reveal { opacity: 1; transform: none; transition: none; }
-      .hero__badge, .hero__eyebrow, .hero__h1, .hero__sub, .hero__actions { animation: none; opacity: 1; }
+      .hero__badge, .hero__motto, .hero__eyebrow, .hero__h1, .hero__sub, .hero__actions { animation: none; opacity: 1; }
     }
 
     /* ===== RESPONSIVE ===== */
@@ -1646,17 +1667,18 @@
     <div class="hero__particles" id="heroParticles" aria-hidden="true"></div>
 
     <div class="hero__quotes" aria-hidden="true">
-      <span class="hq" style="top:15%; right:3.5%; transform:rotate(-7deg)">דבקות במטרה</span>
-      <span class="hq" style="top:31%; right:6%; transform:rotate(5deg)">אמונה</span>
-      <span class="hq hq--blk" style="top:53%; right:2.5%; transform:rotate(-3deg); max-width:155px">חכמה אמיתית בולטת בדרך כלל מבעד צניעות ושתיקה</span>
-      <span class="hq hq--blk" style="top:78%; right:7%; transform:rotate(4deg); max-width:175px">איכות השירות, כמות השירות ורוח השירות</span>
-      <span class="hq" style="top:15%; left:4%; transform:rotate(6deg)">כוח רצון</span>
-      <span class="hq" style="top:31%; left:6.5%; transform:rotate(-5deg)">שאיפה</span>
-      <span class="hq hq--blk" style="top:55%; left:3%; transform:rotate(3deg); max-width:170px">אמור לעולם מה אתה הולך לעשות אולם תחילה הראה זאת</span>
+      <span class="hq" style="top:15%; right:3.5%; --rot:-7deg; --fdur:7.5s">דבקות במטרה</span>
+      <span class="hq" style="top:31%; right:6%; --rot:5deg; --fdur:9s">אמונה</span>
+      <span class="hq hq--blk" style="top:53%; right:2.5%; --rot:-3deg; --fdur:10.5s; max-width:155px">חכמה אמיתית בולטת בדרך כלל מבעד צניעות ושתיקה</span>
+      <span class="hq hq--blk" style="top:78%; right:7%; --rot:4deg; --fdur:8.5s; max-width:175px">איכות השירות, כמות השירות ורוח השירות</span>
+      <span class="hq" style="top:15%; left:4%; --rot:6deg; --fdur:8s">כוח רצון</span>
+      <span class="hq" style="top:31%; left:6.5%; --rot:-5deg; --fdur:9.5s">שאיפה</span>
+      <span class="hq hq--blk" style="top:55%; left:3%; --rot:3deg; --fdur:11s; max-width:170px">אמור לעולם מה אתה הולך לעשות אולם תחילה הראה זאת</span>
     </div>
 
     <div class="hero__content">
       <span class="hero__badge"><b>4K</b> וידאו נכסים באיכות קולנועית</span>
+      <p class="hero__motto">מתייאש אינו מנצח אף פעם · ומנצח אינו מתייאש לעולם</p>
       <p class="hero__eyebrow">מתווך נכסים מוסמך · שיווק חכם · viewestate.co.il</p>
       <h1 class="hero__h1">
         נדל"ן הדור הבא
