@@ -1196,7 +1196,7 @@
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       gap: 22px;
-      animation: phoneScanFade 7s ease-in-out infinite;
+      animation: phoneScanFade 13s ease-in-out infinite;
     }
     .phone__scan-cam {
       position: relative;
@@ -1222,7 +1222,7 @@
       background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
       box-shadow: 0 0 14px 2px rgba(201,163,90,0.75);
       top: 8%;
-      animation: phoneScanLine 7s ease-in-out infinite;
+      animation: phoneScanLine 13s ease-in-out infinite;
     }
     .phone__scan-hint {
       font-size: 12px; letter-spacing: 2px; color: var(--gold-pale);
@@ -1234,7 +1234,7 @@
       background: #fff; border-radius: 13px; padding: 11px 13px;
       box-shadow: 0 14px 36px rgba(0,0,0,0.45);
       opacity: 0; transform: translateY(18px);
-      animation: phoneScanPop 7s ease-in-out infinite;
+      animation: phoneScanPop 13s ease-in-out infinite;
     }
     .phone__scan-pop__ico {
       width: 34px; height: 34px; flex-shrink: 0; border-radius: 9px;
@@ -1245,26 +1245,26 @@
     .phone__scan-pop__u { font-size: 11px; color: #1F9D4D; font-weight: 500; margin-top: 2px; }
 
     @keyframes phoneScanFade {
-      0%, 48% { opacity: 1; }
-      60%     { opacity: 0; }
-      90%     { opacity: 0; }
+      0%, 27% { opacity: 1; }
+      34%     { opacity: 0; }
+      91%     { opacity: 0; }
       97%     { opacity: 1; }
       100%    { opacity: 1; }
     }
     @keyframes phoneScanLine {
       0%   { top: 8%;  opacity: 0; }
-      6%   { opacity: 1; }
-      24%  { top: 90%; }
-      44%  { top: 8%; }
-      48%  { opacity: 1; }
-      52%  { opacity: 0; }
+      3%   { opacity: 1; }
+      13%  { top: 90%; }
+      24%  { top: 8%; }
+      27%  { opacity: 1; }
+      30%  { opacity: 0; }
       100% { opacity: 0; }
     }
     @keyframes phoneScanPop {
-      0%, 47% { opacity: 0; transform: translateY(18px); }
-      55%     { opacity: 1; transform: translateY(0); }
-      74%     { opacity: 1; transform: translateY(0); }
-      82%, 100% { opacity: 0; transform: translateY(-8px); }
+      0%, 27% { opacity: 0; transform: translateY(18px); }
+      33%     { opacity: 1; transform: translateY(0); }
+      45%     { opacity: 1; transform: translateY(0); }
+      52%, 100% { opacity: 0; transform: translateY(-8px); }
     }
     @media (prefers-reduced-motion: reduce) {
       .phone__scan { animation: none; opacity: 0; }
