@@ -2178,7 +2178,6 @@
               <span class="prop-tl ${ss.cls}"><i class="tl-dot tl-sale"></i><i class="tl-dot tl-neg"></i><i class="tl-dot tl-sold"></i><em>${ss.label}</em></span>
               <p class="prop-card__type">${esc(p.type || '')}${p.city ? ' · ' + esc(p.city) : ''}</p>
               <h3 class="prop-card__name">${esc(p.name)}</h3>
-              <p class="prop-card__info">${info}</p>
             </div>
           </a></div>`;
       }).join('');
@@ -2203,6 +2202,10 @@
              to the desktop size if the CSS media query misfires on iOS */
           it.style.width = CW + 'px'; it.style.height = CH + 'px';
           it.style.margin = (-CH / 2) + 'px 0 0 ' + (-CW / 2) + 'px';
+          /* pin the body to an explicit px width too — an absolute length can't
+             shrink-wrap the way left:0;right:0 does inside iOS Safari's 3D context */
+          const body = it.querySelector('.prop-card__body');
+          if (body) body.style.width = CW + 'px';
           let off = i - active;
           if (off >  n / 2) off -= n;
           if (off < -n / 2) off += n;
