@@ -2319,13 +2319,12 @@
         if (window.innerWidth < 1180) { box.innerHTML = ''; box.style.height = '0'; return; }
         const H = document.documentElement.scrollHeight;
         box.style.height = H + 'px';
-        let html = '', side = Math.random() < 0.5 ? 0 : 1;
-        for (let y = rnd(120, 260); y < H - 160; y += rnd(300, 470)) {
+        let html = '';
+        function add(y, onLeft) {
           const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
           const long = q.length > 16;
-          const onLeft = side % 2 === 0; side++;
-          const edge = rnd(1.4, 3.6).toFixed(2);
-          const rot = rnd(-8, 8).toFixed(1);
+          const edge = rnd(1.2, 4).toFixed(2);
+          const rot = rnd(-9, 9).toFixed(1);
           const dur = rnd(7, 12).toFixed(1);
           const delay = (-rnd(0, 6)).toFixed(1);
           const cls = long ? 'hq hq--blk' : 'hq';
@@ -2333,6 +2332,17 @@
           const mw = long ? 'max-width:165px;' : '';
           const anim = reduce ? '' : '--fdur:' + dur + 's;animation-delay:' + delay + 's,0.8s;';
           html += '<span class="' + cls + '" style="top:' + Math.round(y) + 'px;' + pos + ';--rot:' + rot + 'deg;' + mw + anim + '">' + q + '</span>';
+        }
+        // dense top (start of the site) — more quotes on both sides
+        const topEnd = Math.min(H - 160, Math.round(window.innerHeight * 1.15));
+        for (let y = rnd(70, 150); y < topEnd; y += rnd(150, 230)) {
+          add(y, true);
+          add(y + rnd(50, 120), false);
+        }
+        // rest of the page — sparser, alternating sides
+        let side = 0;
+        for (let y = topEnd + rnd(60, 180); y < H - 160; y += rnd(300, 460)) {
+          add(y, side % 2 === 0); side++;
         }
         box.innerHTML = html;
       }
