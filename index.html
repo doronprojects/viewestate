@@ -1160,10 +1160,36 @@
       stroke: var(--gold-light);
       stroke-width: 1.6;
       vector-effect: non-scaling-stroke;
-      animation: conePulse 2.4s ease-in-out infinite;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      animation: coneScan 13s ease-in-out infinite;
+      animation-play-state: paused;
     }
-    .scan-cone__dot { fill: var(--gold-light); filter: drop-shadow(0 0 4px rgba(201,163,90,0.9)); animation: conePulse 2.4s ease-in-out infinite; }
-    @keyframes conePulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.85; } }
+    .scan-cone__dot {
+      fill: var(--gold-light);
+      filter: drop-shadow(0 0 4px rgba(201,163,90,0.9));
+      opacity: 0;
+      animation: coneDot 13s ease-in-out infinite;
+      animation-play-state: paused;
+    }
+    /* lines draw out only while the section (and phone scan) is in view */
+    .phone-wrap.visible .scan-cone line,
+    .phone-wrap.visible .scan-cone__dot { animation-play-state: running; }
+    @keyframes coneScan {
+      0%   { stroke-dashoffset: 100; opacity: 0.85; }
+      9%   { stroke-dashoffset: 0;   opacity: 0.85; }
+      27%  { stroke-dashoffset: 0;   opacity: 0.85; }
+      32%  { stroke-dashoffset: 0;   opacity: 0; }
+      95%  { stroke-dashoffset: 0;   opacity: 0; }
+      96%  { stroke-dashoffset: 100; opacity: 0; }
+      100% { stroke-dashoffset: 100; opacity: 0.85; }
+    }
+    @keyframes coneDot {
+      0%, 27% { opacity: 0.9; }
+      32%     { opacity: 0; }
+      95%     { opacity: 0; }
+      100%    { opacity: 0.9; }
+    }
     @media (max-width: 700px) { .qr-scan { display: none; } }
 
     .phone {
@@ -1771,7 +1797,7 @@
 
       <div class="phone-wrap reveal delay-2">
         <div class="qr-scan" aria-hidden="true">
-          <span class="scan-cone"><svg viewBox="0 0 118 222" preserveAspectRatio="none"><line x1="-12" y1="10" x2="136" y2="60"/><line x1="-12" y1="10" x2="136" y2="198"/><line x1="-12" y1="10" x2="274" y2="60"/><line x1="-12" y1="10" x2="274" y2="198"/><circle class="scan-cone__dot" cx="-12" cy="10" r="3"/></svg></span>
+          <span class="scan-cone"><svg viewBox="0 0 118 222" preserveAspectRatio="none"><line x1="-12" y1="10" x2="136" y2="60" pathLength="100"/><line x1="-12" y1="10" x2="136" y2="198" pathLength="100"/><line x1="-12" y1="10" x2="274" y2="60" pathLength="100"/><line x1="-12" y1="10" x2="274" y2="198" pathLength="100"/><circle class="scan-cone__dot" cx="-12" cy="10" r="3"/></svg></span>
           <div class="qr-card" id="qrCard">
             <span class="qr-bracket qr-bracket--tl"></span>
             <span class="qr-bracket qr-bracket--tr"></span>
