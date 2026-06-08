@@ -710,10 +710,6 @@
       width: 100%; height: 100%; border-radius: 16px;
       box-shadow: 0 30px 70px rgba(0,0,0,0.55);
       transition: none; backface-visibility: hidden;
-      /* own compositing layer so the absolutely-positioned status (which has
-         its own transform) doesn't vanish under the inline video on iOS */
-      -webkit-transform: translateZ(0); transform: translateZ(0);
-      isolation: isolate;
     }
     .cf-item .prop-card:hover { transform: none; }
     .cf-item.is-active .prop-card { box-shadow: 0 36px 90px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,163,90,0.32); }
@@ -797,27 +793,31 @@
       transition: transform 0.5s var(--ease);
     }
 
-    /* in-flow status chip (shows reliably on iOS, unlike the floating overlay) */
-    .prop-status-chip {
+    /* in-flow traffic-light status (renders reliably on iOS, unlike a floating
+       absolutely-positioned overlay inside the clipped rounded card) */
+    .prop-tl {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      color: #fff;
-      padding: 5px 13px 5px 11px;
-      border-radius: 100px;
+      gap: 6px;
+      padding: 5px 12px 5px 9px;
       margin-bottom: 12px;
+      border-radius: 100px;
+      background: rgba(14,8,3,0.55);
+      border: 1px solid rgba(201,163,90,0.22);
       box-shadow: 0 4px 14px rgba(0,0,0,0.3);
     }
-    .prop-status-chip i { width: 9px; height: 9px; border-radius: 50%; flex: none; }
-    .prop-status-chip.st-sale  { background: #1F9D4D; }
-    .prop-status-chip.st-sale i  { background: #c8ffdd; box-shadow: 0 0 8px rgba(255,255,255,0.55); }
-    .prop-status-chip.st-neg   { background: #D9871C; }
-    .prop-status-chip.st-neg i   { background: #ffeccd; }
-    .prop-status-chip.st-sold  { background: #C0392B; }
-    .prop-status-chip.st-sold i  { background: #ffd9d3; }
+    .prop-tl .tl-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex: none;
+      background: rgba(250,246,240,0.20);
+    }
+    .prop-tl em {
+      font-style: normal; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.4px; color: #FFFFFF; margin-inline-start: 3px;
+    }
+    /* light only the active lamp + tint the label */
+    .prop-tl.st-sale .tl-sale { background: #25B25A; box-shadow: 0 0 9px rgba(37,178,90,0.9); }
+    .prop-tl.st-neg  .tl-neg  { background: #E89321; box-shadow: 0 0 9px rgba(232,147,33,0.9); }
+    .prop-tl.st-sold .tl-sold { background: #D33F2E; box-shadow: 0 0 9px rgba(211,63,46,0.9); }
 
     .prop-card:hover .prop-card__body { transform: translateY(0); }
 
@@ -2162,12 +2162,8 @@
             <div class="prop-card__shade"></div>
             ${p.video ? '<div class="prop-card__video-tag" aria-hidden="true">▶ &nbsp;וידאו</div>' : ''}
             <div class="prop-card__play-cue" aria-hidden="true"><div class="play-tri"></div></div>
-            <div class="prop-card__status" aria-hidden="true">
-              <span class="ps-row ps-sale${p.saleStatus === 'sale' ? ' is-on' : ''}"><i class="ps-dot"></i>למכירה</span>
-              <span class="ps-row ps-neg${p.saleStatus === 'negotiation' ? ' is-on' : ''}"><i class="ps-dot"></i>במשא ומתן</span>
-              <span class="ps-row ps-sold${p.saleStatus === 'sold' ? ' is-on' : ''}"><i class="ps-dot"></i>נמכר</span>
-            </div>
             <div class="prop-card__body">
+              <span class="prop-tl ${ss.cls}"><i class="tl-dot tl-sale"></i><i class="tl-dot tl-neg"></i><i class="tl-dot tl-sold"></i><em>${ss.label}</em></span>
               <p class="prop-card__type">${esc(p.type || '')}${p.city ? ' · ' + esc(p.city) : ''}</p>
               <h3 class="prop-card__name">${esc(p.name)}</h3>
               <p class="prop-card__info">${info}</p>
@@ -2188,7 +2184,12 @@
         const vw = Math.min(window.innerWidth, (window.screen && window.screen.width) || 9999);
         const sm = vw < 760;
         const SP = sm ? 165 : 380, DZ = sm ? 150 : 215, RY = sm ? 34 : 46, SC = sm ? 0.72 : 0.82;
+        const CW = sm ? 268 : 360, CH = sm ? 372 : 470;
         items.forEach((it, i) => {
+          /* pin the card size from JS (screen.width based) so it can't fall back
+             to the desktop size if the CSS media query misfires on iOS */
+          it.style.width = CW + 'px'; it.style.height = CH + 'px';
+          it.style.margin = (-CH / 2) + 'px 0 0 ' + (-CW / 2) + 'px';
           let off = i - active;
           if (off >  n / 2) off -= n;
           if (off < -n / 2) off += n;
