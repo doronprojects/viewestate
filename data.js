@@ -199,9 +199,9 @@ window.VIEWESTATE_DATA = {
       storage:      "כן",
       condition:    "משופץ",
       video:        "",
-      poster:       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&q=85",
+      poster:       "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=1400&q=85",
       gallery: [
-        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&q=85",
+        "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=1400&q=85",
         "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=900&q=80",
         "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=900&q=80",
         "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=900&q=80"
