@@ -67,7 +67,7 @@
       --t:           0.45s var(--ease);
     }
 
-    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
     body {
       background: var(--bg);
@@ -76,6 +76,8 @@
       font-weight: 300;
       line-height: 1.7;
       overflow-x: hidden;
+      max-width: 100%;
+      position: relative;
     }
 
     a { text-decoration: none; color: inherit; }
@@ -1677,7 +1679,13 @@
       .prop-card--feat { grid-column: span 1; min-height: 420px; }
       .prop-card--sm { min-height: 280px; }
       .stat__num { font-size: 48px; }
-      .sec-props__header { flex-direction: column; align-items: flex-start; gap: 24px; }
+      .sec-props__header { flex-direction: column; align-items: flex-start; gap: 24px; margin-bottom: 20px; }
+      .sec-props { padding-top: 40px; }
+      .coverflow { height: 400px; }
+      /* compact traffic light on the small mobile card */
+      .cf-item .prop-card__status { top: 12px; left: 12px; padding: 8px 10px; gap: 5px; border-radius: 11px; }
+      .cf-item .ps-row { font-size: 9.5px; gap: 6px; }
+      .cf-item .ps-dot { width: 9px; height: 9px; }
       .testi-grid { grid-template-columns: 1fr; }
       .contact-btns { flex-direction: column; align-items: center; }
       .footer-links { gap: 20px; }
@@ -2177,7 +2185,8 @@
       const dots = [...dotsBox.children];
 
       function layout() {
-        const sm = window.innerWidth < 760;
+        const vw = Math.min(window.innerWidth, (window.screen && window.screen.width) || 9999);
+        const sm = vw < 760;
         const SP = sm ? 165 : 380, DZ = sm ? 150 : 215, RY = sm ? 34 : 46, SC = sm ? 0.72 : 0.82;
         items.forEach((it, i) => {
           let off = i - active;
