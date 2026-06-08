@@ -135,20 +135,23 @@
     }
     .logo-word {
       display: inline-flex; align-items: baseline;
-      transform-origin: -30px 50%;
-      opacity: 0;
-      animation: logoOrbit 1s cubic-bezier(0.34, 1.15, 0.4, 1) 0.45s forwards;
+    }
+    .logo-word__inner {
+      display: inline-flex; align-items: baseline;
+      clip-path: inset(0 100% 0 0);
+      transform: translateX(-16px);
+      animation: logoReveal 0.95s cubic-bezier(0.42, 0.85, 0.25, 1) 0.62s forwards;
     }
     .logo-mark {
       height: 46px; width: auto; flex-shrink: 0; display: block;
       opacity: 0; transform: scale(0.7);
-      animation: logoMarkIn 0.6s var(--ease) 0.1s forwards;
+      animation: logoMarkIn 0.55s var(--ease) 0.1s forwards;
+      position: relative; z-index: 2;
     }
     @keyframes logoMarkIn { to { opacity: 1; transform: scale(1); } }
-    @keyframes logoOrbit {
-      0%   { opacity: 0; transform: rotate(-270deg) scale(0.18); }
-      45%  { opacity: 1; }
-      100% { opacity: 1; transform: rotate(0deg) scale(1); }
+    @keyframes logoReveal {
+      0%   { clip-path: inset(0 100% 0 0); transform: translateX(-16px); }
+      100% { clip-path: inset(0 0 0 0);    transform: translateX(0); }
     }
 
     .logo-v { color: var(--gold-light); }
@@ -343,7 +346,7 @@
       .hero__particles { display: none; }
       .hero__scroll-hand, .hero__scroll-arrow { animation: none; }
       .logo-mark { animation: none; opacity: 1; transform: none; }
-      .logo-word { animation: none; opacity: 1; transform: none; }
+      .logo-word__inner { animation: none; transform: none; clip-path: none; }
     }
 
     .hero__overlay {
@@ -1653,7 +1656,7 @@
         <text x="150" y="190" text-anchor="middle" font-family="'Playfair Display', Didot, Georgia, serif" font-weight="700" font-size="180" fill="url(#navSilver)">E</text>
         <text x="96" y="157" text-anchor="middle" font-family="'Playfair Display', Didot, Georgia, serif" font-weight="700" font-size="215" fill="url(#navGold)">V</text>
       </svg>
-      <span class="logo-word"><span class="logo-v">VIEW</span><span class="logo-e">ESTATE</span></span>
+      <span class="logo-word"><span class="logo-word__inner"><span class="logo-v">VIEW</span><span class="logo-e">ESTATE</span></span></span>
     </a>
     <ul class="nav__links">
       <li><a href="#properties">נכסים</a></li>
