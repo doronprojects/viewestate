@@ -827,6 +827,28 @@
       transition: transform 0.5s var(--ease);
     }
 
+    /* in-flow status chip (shows reliably on iOS, unlike the floating overlay) */
+    .prop-status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #fff;
+      padding: 5px 13px 5px 11px;
+      border-radius: 100px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+    }
+    .prop-status-chip i { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+    .prop-status-chip.st-sale  { background: #1F9D4D; }
+    .prop-status-chip.st-sale i  { background: #c8ffdd; box-shadow: 0 0 8px rgba(255,255,255,0.55); }
+    .prop-status-chip.st-neg   { background: #D9871C; }
+    .prop-status-chip.st-neg i   { background: #ffeccd; }
+    .prop-status-chip.st-sold  { background: #C0392B; }
+    .prop-status-chip.st-sold i  { background: #ffd9d3; }
+
     .prop-card:hover .prop-card__body { transform: translateY(0); }
 
     .prop-card__type {
@@ -2169,14 +2191,11 @@
             + '<source src="' + esc(p.video) + '" type="video/mp4"></video>'
           : '<img class="prop-card__media" src="' + esc(heroImg) + '" alt="' + esc(p.name) + '">';
         const ss = saleStatusInfo(p.saleStatus);
-        const status = '<div class="prop-card__status" aria-label="\u05e1\u05d8\u05d8\u05d5\u05e1: ' + ss.label + '">'
-          + '<span class="ps-row ps-sale' + ((p.saleStatus || 'sale') === 'sale' ? ' is-on' : '') + '"><i class="ps-dot"></i><b>\u05dc\u05de\u05db\u05d9\u05e8\u05d4</b></span>'
-          + '<span class="ps-row ps-neg' + (p.saleStatus === 'negotiation' ? ' is-on' : '') + '"><i class="ps-dot"></i><b>\u05d1\u05de\u05e9\u05d0 \u05d5\u05de\u05ea\u05df</b></span>'
-          + '<span class="ps-row ps-sold' + (p.saleStatus === 'sold' ? ' is-on' : '') + '"><i class="ps-dot"></i><b>\u05e0\u05de\u05db\u05e8</b></span></div>';
         return '<a class="prop-card' + (p.saleStatus === 'sold' ? ' prop-card--sold' : '') + '" href="property.html?id=' + encodeURIComponent(p.id) + '">'
-          + media + '<div class="prop-card__shade"></div>' + status
+          + media + '<div class="prop-card__shade"></div>'
           + (p.video ? '<div class="prop-card__video-tag" aria-hidden="true">\u25b6 &nbsp;\u05d5\u05d9\u05d3\u05d0\u05d5</div>' : '')
-          + '<div class="prop-card__body"><p class="prop-card__type">' + esc(p.type || '') + (p.city ? ' \u00b7 ' + esc(p.city) : '')
+          + '<div class="prop-card__body"><span class="prop-status-chip ' + ss.cls + '"><i></i>' + ss.label + '</span>'
+          + '<p class="prop-card__type">' + esc(p.type || '') + (p.city ? ' \u00b7 ' + esc(p.city) : '')
           + '</p><h3 class="prop-card__name">' + esc(p.name) + '</h3><p class="prop-card__info">' + info + '</p></div></a>';
       }
 
