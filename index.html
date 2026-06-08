@@ -1586,9 +1586,15 @@
     .site-bg .o3 { width: 42vmax; height: 42vmax; top: 33%; left: 34%; background: radial-gradient(circle, rgba(201,163,90,0.16), transparent 64%); animation: heroDrift3 25s ease-in-out infinite alternate; }
     .site-bg__particles { position: absolute; inset: 0; overflow: hidden; }
     .site-bg__particles i {
-      position: absolute; bottom: -14px; border-radius: 50%;
+      position: absolute; top: -14px; border-radius: 50%;
       background: var(--gold-light); opacity: 0.6;
-      will-change: transform, opacity; animation: floatUp linear infinite;
+      will-change: transform, opacity; animation: floatDown linear infinite;
+    }
+    @keyframes floatDown {
+      0%   { transform: translate3d(0, 0, 0);                  opacity: 0; }
+      12%  { opacity: 0.85; }
+      85%  { opacity: 0.4; }
+      100% { transform: translate3d(var(--dx, 0px), 110vh, 0); opacity: 0; }
     }
 
     /* keep all content above the fixed background */
