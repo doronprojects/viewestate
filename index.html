@@ -808,6 +808,8 @@
       background: linear-gradient(to top, rgba(14,8,3,0.94) 0%, rgba(14,8,3,0) 55%);
       z-index: 2;
       transition: var(--t);
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
     }
 
     .prop-card:hover .prop-card__shade {
@@ -912,6 +914,9 @@
       background: rgba(14,8,3,0.74);
       border: 1px solid rgba(201,163,90,0.28);
       box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+      /* force a compositing layer so it stays above inline video on iOS */
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
     }
     .ps-row {
       display: flex;
