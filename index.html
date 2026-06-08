@@ -460,8 +460,8 @@
       margin-left: calc(50% - 50vw);
       margin-right: calc(50% - 50vw);
       margin-top: 30px;
-      margin-bottom: 30px;
-      height: clamp(190px, 23vw, 300px);
+      margin-bottom: 34px;
+      height: clamp(300px, 28vw, 380px);
       overflow: hidden;
       border-top: 1px solid rgba(201,163,90,0.28);
       border-bottom: 1px solid rgba(201,163,90,0.28);
@@ -469,20 +469,26 @@
     }
     .hero__videostrip video,
     .hero__videostrip img {
+      position: absolute; inset: 0;
       width: 100%; height: 100%;
       object-fit: cover;
       display: block;
     }
-
-    .hero__stats {
-      width: 100vw;
-      margin-left: calc(50% - 50vw);
-      margin-right: calc(50% - 50vw);
-      margin-top: 0;
-      margin-bottom: 34px;
-      padding: 30px 64px 32px;
-      border-bottom: 1px solid rgba(154,114,48,0.18);
+    .hero__videostrip-scrim {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,5,2,0.92) 0%, rgba(8,5,2,0.55) 34%, rgba(8,5,2,0) 64%);
+      pointer-events: none;
     }
+
+    /* stats overlaid on the bottom of the video strip */
+    .hero__stats {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      z-index: 2;
+      padding: 0 clamp(20px, 5vw, 64px) clamp(20px, 2.6vw, 30px);
+    }
+    .hero__videostrip .stat__num { font-size: clamp(34px, 4.2vw, 50px); text-shadow: 0 2px 14px rgba(0,0,0,0.55); }
+    .hero__videostrip .stat__label { text-shadow: 0 1px 7px rgba(0,0,0,0.65); }
 
     .hero__actions {
       display: flex;
@@ -1700,8 +1706,10 @@
       .hero__scroll { display: none; }
       .hero__h1 { font-size: clamp(50px, 14vw, 80px); margin-bottom: 16px; }
       .hero__motto { margin-bottom: 14px; }
-      .hero__videostrip { height: clamp(150px, 38vw, 190px); margin-top: 20px; margin-bottom: 18px; }
-      .hero__stats { padding: 16px 18px 18px; margin-bottom: 22px; }
+      .hero__videostrip { height: clamp(290px, 76vw, 350px); margin-top: 18px; margin-bottom: 24px; }
+      .hero__stats { padding: 0 18px 18px; }
+      .hero__videostrip .stat__num { font-size: clamp(30px, 9vw, 40px); }
+      .stats-grid { gap: 14px 24px; }
       .props-grid { grid-template-columns: 1fr; }
       .prop-card--feat { grid-column: span 1; min-height: 420px; }
       .prop-card--sm { min-height: 280px; }
@@ -1819,17 +1827,17 @@
       <p class="hero__motto">מתייאש אינו מנצח אף פעם · ומנצח אינו מתייאש לעולם</p>
       <h1 class="hero__h1">נדל"ן הדור הבא</h1>
 
-      <!-- ▼▼ רצועת וידאו רוחבית ▼▼ -->
-      <div class="hero__videostrip" aria-hidden="true">
-        <video autoplay muted loop playsinline preload="metadata" poster="videos/bg-poster.jpg">
+      <!-- ▼▼ רצועת וידאו רוחבית עם הסטטיסטיקות עליה ▼▼ -->
+      <div class="hero__videostrip">
+        <video autoplay muted loop playsinline preload="metadata" poster="videos/bg-poster.jpg" aria-hidden="true">
           <source src="videos/bg.mp4" type="video/mp4">
         </video>
+        <div class="hero__videostrip-scrim" aria-hidden="true"></div>
+        <div class="hero__stats">
+          <div class="stats-grid" id="statsGrid"><!-- נטען דינמית מ-data.js --></div>
+        </div>
       </div>
       <!-- ▲▲ סוף רצועת הווידאו ▲▲ -->
-
-      <div class="hero__stats">
-        <div class="stats-grid" id="statsGrid"><!-- נטען דינמית מ-data.js --></div>
-      </div>
 
       <p class="hero__sub">
         כי הרושם הראשון נוצר לפני שפותחים את הדלת.
