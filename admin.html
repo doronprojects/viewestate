@@ -139,20 +139,24 @@
       <div class="topbar__logo"><span class="v">VIEW</span><span class="e">ESTATE</span> · ניהול</div>
       <div class="topbar__actions">
         <a href="index.html" target="_blank" class="btn btn-dark">צפה באתר ↗</a>
-        <button class="btn btn-gold" onclick="exportData()">⬇ ייצא data.js</button>
+        <button class="btn btn-dark" onclick="exportData()">⬇ ייצא data.js</button>
+        <button class="btn btn-gold" id="publishBtn" onclick="publishToSite()">↑ פרסם לאתר</button>
       </div>
     </div>
 
     <div class="wrap">
       <div class="banner">
         <strong>איך זה עובד:</strong> ערוך נכסים ופרטים כאן (נשמר אוטומטית בדפדפן). בסיום לחץ
-        <strong>"ייצא data.js"</strong> — יורד קובץ <code>data.js</code>, החלף בו את הקובץ הקיים והעלה לאתר.
-        <span id="dirtyNote" style="color:var(--red);font-weight:600;display:none"> · יש שינויים שלא יוצאו עדיין</span>
+        <strong>"↑ פרסם לאתר"</strong> — והשינויים עולים לאתר החי לבד תוך כדקה. (אם עוד לא חיברת את האתר —
+        לחץ על לשונית <strong>"חיבור ופרסום"</strong>.)
+        <span id="dirtyNote" style="color:var(--red);font-weight:600;display:none"> · יש שינויים שלא פורסמו עדיין</span>
       </div>
 
       <div class="tabs">
         <button class="tab active" data-tab="props" onclick="switchTab('props')">נכסים</button>
         <button class="tab" data-tab="settings" onclick="switchTab('settings')">פרטי קשר וסטטיסטיקות</button>
+        <button class="tab" data-tab="media" onclick="switchTab('media')">מדיה ווידאו רקע</button>
+        <button class="tab" data-tab="connect" onclick="switchTab('connect')">חיבור ופרסום</button>
       </div>
 
       <!-- PROPERTIES PANEL -->
@@ -195,6 +199,64 @@
           <button class="btn btn-gold" onclick="saveSettings()">שמור פרטים</button>
         </div>
       </div>
+
+      <!-- MEDIA / BG VIDEO PANEL -->
+      <div class="panel" id="panel-media">
+        <div class="section-title">וידאו רקע (פס הכותרת)</div>
+        <div class="section-sub">הסרטון הקולנועי בראש דף הבית. לאיכות הגבוהה ביותר — העלה ל-CDN וידאו והדבק כאן את הקישור (HLS .m3u8 או mp4).</div>
+        <div class="form-grid">
+          <div class="field field--full">
+            <label>קישור וידאו רקע<span class="hint"> — CDN (mp4 / m3u8) או נתיב בקובץ כמו videos/bg.mp4</span></label>
+            <input id="hero-video" dir="ltr" placeholder="https://… .m3u8  או  videos/bg.mp4">
+          </div>
+          <div class="field field--full">
+            <label>תמונת poster לרקע<span class="hint"> — מוצגת עד שהוידאו נטען</span></label>
+            <input id="hero-poster" dir="ltr" placeholder="videos/bg-poster.jpg">
+          </div>
+          <div class="field field--full">
+            <label>או — העלה קובץ וידאו ל-repo<span class="hint"> — מתאים לקבצים קטנים; לאיכות מקסימלית עדיף CDN</span></label>
+            <input type="file" id="hero-video-file" accept="video/*" onchange="uploadHeroVideo(this)">
+            <div class="hint" id="hero-video-status"></div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-gold" onclick="saveMedia()">שמור מדיה</button>
+        </div>
+        <div class="banner" style="margin-top:24px">
+          <strong>למה CDN לוידאו?</strong> וידאו באיכות 4K הוא קובץ כבד. שירות וידאו ייעודי (Cloudflare Stream / Bunny Stream)
+          מאחסן את הוידאו, מייצר ממנו אוטומטית כמה רמות איכות, ומגיש לכל צופה את האיכות הכי גבוהה שהמכשיר והאינטרנט שלו תומכים בה —
+          בלי להכביד על טעינת האתר. אחרי שתעלה וידאו לשירות כזה, הדבק כאן את קישור ה-HLS.
+        </div>
+      </div>
+
+      <!-- CONNECT / PUBLISH PANEL -->
+      <div class="panel" id="panel-connect">
+        <div class="section-title">חיבור האתר לפרסום אוטומטי</div>
+        <div class="section-sub">חיבור חד-פעמי. אחרי זה כל "פרסם לאתר" מעלה את השינויים לבד.</div>
+        <div class="form-grid">
+          <div class="field"><label>בעלים / ארגון (owner)</label><input id="gh-owner" dir="ltr" placeholder="doronprojects"></div>
+          <div class="field"><label>שם המאגר (repo)</label><input id="gh-repo" dir="ltr" placeholder="viewestate"></div>
+          <div class="field"><label>ענף (branch)</label><input id="gh-branch" dir="ltr" placeholder="main"></div>
+          <div class="field"><label>תיקיית מדיה<span class="hint"> — לאן יישמרו קבצים שמועלים</span></label><input id="gh-mediadir" dir="ltr" placeholder="media"></div>
+          <div class="field field--full">
+            <label>טוקן גישה אישי (GitHub Token)<span class="hint"> — נשמר רק בדפדפן הזה, לא נשלח לאף אחד חוץ מ-GitHub</span></label>
+            <input id="gh-token" type="password" dir="ltr" placeholder="github_pat_…">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-gold" onclick="saveGitHub()">שמור חיבור</button>
+          <button class="btn btn-ghost" onclick="testGitHub()">בדוק חיבור</button>
+          <span id="gh-status" style="align-self:center;font-size:14px;font-weight:600"></span>
+        </div>
+        <div class="banner" style="margin-top:24px">
+          <strong>איך יוצרים טוקן (פעם אחת):</strong>
+          <ol style="margin:8px 22px 0;line-height:1.9">
+            <li>היכנס ל-GitHub ← Settings ← Developer settings ← <strong>Fine-grained tokens</strong> ← Generate new token.</li>
+            <li>תן שם, בחר את המאגר <code>viewestate</code>, ותחת Permissions ← Repository ← <strong>Contents = Read and write</strong>.</li>
+            <li>Generate, העתק את הטוקן (מתחיל ב-<code>github_pat_</code>), הדבק כאן ולחץ "שמור חיבור".</li>
+          </ol>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -232,9 +294,18 @@
           <div class="field"><label>מעלית</label><input id="f-elevator" placeholder="כן / לא"></div>
           <div class="field"><label>מחסן</label><input id="f-storage" placeholder="כן / לא"></div>
           <div class="field"><label>מצב הנכס</label><input id="f-condition" placeholder="מחודש 2024"></div>
-          <div class="field field--full"><label>וידאו (URL mp4)<span class="hint"> — אופציונלי. ריק = תמונה בלבד</span></label><input id="f-video" dir="ltr"></div>
-          <div class="field field--full"><label>תמונת רקע / poster (URL)</label><input id="f-poster" dir="ltr"></div>
-          <div class="field field--full"><label>גלריית תמונות<span class="hint"> — קישור אחד בכל שורה. הראשונה = ראשית</span></label><textarea id="f-gallery" dir="ltr" style="min-height:120px"></textarea></div>
+          <div class="field field--full"><label>וידאו (URL mp4 / m3u8)<span class="hint"> — אופציונלי. CDN לאיכות גבוהה, או ריק = תמונה בלבד</span></label><input id="f-video" dir="ltr"></div>
+          <div class="field field--full">
+            <label>תמונת רקע / poster<span class="hint"> — הדבק URL או העלה קובץ</span></label>
+            <input id="f-poster" dir="ltr">
+            <input type="file" id="f-poster-file" accept="image/*" style="margin-top:6px" onchange="uploadPropImage(this,'poster')">
+          </div>
+          <div class="field field--full">
+            <label>גלריית תמונות<span class="hint"> — קישור אחד בכל שורה. הראשונה = ראשית. אפשר גם להעלות קבצים</span></label>
+            <textarea id="f-gallery" dir="ltr" style="min-height:120px"></textarea>
+            <input type="file" id="f-gallery-file" accept="image/*" multiple style="margin-top:6px" onchange="uploadPropImage(this,'gallery')">
+            <div class="hint" id="f-upload-status"></div>
+          </div>
           <div class="field field--full"><label>תיאור הנכס<span class="hint"> — שורה ריקה = פסקה חדשה</span></label><textarea id="f-description" style="min-height:120px"></textarea></div>
         </div>
         <div class="form-actions">
@@ -273,8 +344,10 @@
     const ADMIN_PASSCODE = "viewestate2025";
 
     const LS_KEY = "viewestate_admin_data";
+    const GH_KEY = "viewestate_gh_cfg";
     let data = null;       // working copy
     let dirty = false;
+    let gh = { owner: 'doronprojects', repo: 'viewestate', branch: 'main', mediaDir: 'media', token: '' };
 
     /* ---- gate ---- */
     function tryUnlock() {
@@ -293,6 +366,7 @@
       document.getElementById('gate').style.display = 'none';
       document.getElementById('adminApp').style.display = 'block';
       loadData();
+      loadGitHub();
       renderAll();
     }
 
@@ -334,7 +408,7 @@
     /* ════════════════════════════════════════════
        RENDER
     ════════════════════════════════════════════ */
-    function renderAll() { renderProps(); renderSettings(); }
+    function renderAll() { renderProps(); renderSettings(); renderMedia(); renderGitHub(); }
 
     function renderProps() {
       const list = document.getElementById('plist');
@@ -553,27 +627,167 @@
     }
 
     /* ════════════════════════════════════════════
-       EXPORT data.js
+       BUILD / EXPORT data.js
     ════════════════════════════════════════════ */
-    function exportData() {
+    function buildDataJs() {
       const header =
 `/* ============================================================
    ViewEstate — מקור הנתונים המרכזי של האתר
    נוצר מדף הניהול (admin.html) בתאריך ${new Date().toLocaleString('he-IL')}
-   החלף את הקובץ data.js הקיים בקובץ זה והעלה לאתר.
    ============================================================ */
 
 window.VIEWESTATE_DATA = `;
-      const body = JSON.stringify(data, null, 2);
-      const content = header + body + ';\n';
-      const blob = new Blob([content], { type: 'application/javascript;charset=utf-8' });
+      return header + JSON.stringify(data, null, 2) + ';\n';
+    }
+    function exportData() {
+      const blob = new Blob([buildDataJs()], { type: 'application/javascript;charset=utf-8' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       a.download = 'data.js';
       a.click();
       URL.revokeObjectURL(a.href);
-      dirty = false;
-      document.getElementById('dirtyNote').style.display = 'none';
+    }
+
+    /* ════════════════════════════════════════════
+       MEDIA (background video)
+    ════════════════════════════════════════════ */
+    function renderMedia() {
+      document.getElementById('hero-video').value = data.heroVideo || '';
+      document.getElementById('hero-poster').value = data.heroPoster || '';
+    }
+    function saveMedia() {
+      data.heroVideo = document.getElementById('hero-video').value.trim();
+      data.heroPoster = document.getElementById('hero-poster').value.trim();
+      persist();
+      alert('המדיה נשמרה בדפדפן. לחץ "↑ פרסם לאתר" כדי להעלות לאתר החי.');
+    }
+
+    /* ════════════════════════════════════════════
+       GITHUB CONNECTION + PUBLISH + UPLOAD
+    ════════════════════════════════════════════ */
+    function loadGitHub() {
+      try { const s = JSON.parse(localStorage.getItem(GH_KEY)); if (s) gh = Object.assign(gh, s); } catch (e) {}
+    }
+    function renderGitHub() {
+      document.getElementById('gh-owner').value = gh.owner || '';
+      document.getElementById('gh-repo').value = gh.repo || '';
+      document.getElementById('gh-branch').value = gh.branch || 'main';
+      document.getElementById('gh-mediadir').value = gh.mediaDir || 'media';
+      document.getElementById('gh-token').value = gh.token || '';
+      updatePublishState();
+    }
+    function saveGitHub() {
+      gh.owner = document.getElementById('gh-owner').value.trim();
+      gh.repo = document.getElementById('gh-repo').value.trim();
+      gh.branch = document.getElementById('gh-branch').value.trim() || 'main';
+      gh.mediaDir = (document.getElementById('gh-mediadir').value.trim() || 'media').replace(/^\/+|\/+$/g, '');
+      gh.token = document.getElementById('gh-token').value.trim();
+      localStorage.setItem(GH_KEY, JSON.stringify(gh));
+      updatePublishState();
+      const st = document.getElementById('gh-status');
+      st.textContent = 'נשמר ✓'; st.style.color = 'var(--green)';
+    }
+    function ghConnected() { return !!(gh.token && gh.owner && gh.repo); }
+    function updatePublishState() {
+      const b = document.getElementById('publishBtn');
+      if (b) b.title = ghConnected() ? 'פרסם את כל השינויים לאתר' : 'צריך לחבר את האתר קודם (לשונית חיבור ופרסום)';
+    }
+
+    function b64Unicode(str) { return btoa(unescape(encodeURIComponent(str))); }
+    function bufToB64(buf) {
+      let bin = ''; const bytes = new Uint8Array(buf); const chunk = 0x8000;
+      for (let i = 0; i < bytes.length; i += chunk) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+      return btoa(bin);
+    }
+    async function ghReq(path, opts) {
+      const url = 'https://api.github.com/repos/' + gh.owner + '/' + gh.repo + '/contents/' + path;
+      return fetch(url, Object.assign({}, opts, {
+        headers: Object.assign({ 'Authorization': 'Bearer ' + gh.token, 'Accept': 'application/vnd.github+json' }, (opts && opts.headers) || {})
+      }));
+    }
+    async function ghGetSha(path) {
+      const res = await ghReq(path + '?ref=' + encodeURIComponent(gh.branch));
+      if (res.status === 200) { const j = await res.json(); return j.sha; }
+      if (res.status === 404) return null;
+      throw new Error('GitHub ' + res.status + ' — ' + (await res.text()).slice(0, 140));
+    }
+    async function ghPut(path, contentB64, message) {
+      const sha = await ghGetSha(path);
+      const body = { message: message, content: contentB64, branch: gh.branch };
+      if (sha) body.sha = sha;
+      const res = await ghReq(path, { method: 'PUT', body: JSON.stringify(body) });
+      if (!res.ok) throw new Error('GitHub ' + res.status + ' — ' + (await res.text()).slice(0, 200));
+      return res.json();
+    }
+
+    async function testGitHub() {
+      saveGitHub();
+      const st = document.getElementById('gh-status');
+      if (!ghConnected()) { st.textContent = 'חסרים פרטים'; st.style.color = 'var(--red)'; return; }
+      st.textContent = 'בודק…'; st.style.color = 'var(--text-muted)';
+      try {
+        const res = await ghReq('data.js?ref=' + encodeURIComponent(gh.branch));
+        if (res.ok) { st.textContent = '✓ מחובר! מוכן לפרסום'; st.style.color = 'var(--green)'; }
+        else if (res.status === 404) { st.textContent = '✓ מחובר (data.js ייווצר בפרסום)'; st.style.color = 'var(--green)'; }
+        else if (res.status === 401) { st.textContent = '✗ טוקן שגוי או חסר הרשאה'; st.style.color = 'var(--red)'; }
+        else st.textContent = '✗ שגיאה ' + res.status, st.style.color = 'var(--red)';
+      } catch (e) { st.textContent = '✗ ' + e.message; st.style.color = 'var(--red)'; }
+    }
+
+    async function publishToSite() {
+      if (!ghConnected()) { switchTab('connect'); alert('קודם חבר את האתר — מלא את הפרטים בלשונית "חיבור ופרסום".'); return; }
+      const btn = document.getElementById('publishBtn');
+      const orig = btn.textContent;
+      btn.disabled = true; btn.textContent = 'מפרסם…';
+      try {
+        await ghPut('data.js', b64Unicode(buildDataJs()), 'Update data.js from dashboard');
+        dirty = false; document.getElementById('dirtyNote').style.display = 'none';
+        btn.textContent = '✓ פורסם';
+        setTimeout(() => { btn.textContent = orig; }, 2500);
+        alert('פורסם בהצלחה! האתר החי יתעדכן תוך כדקה.');
+      } catch (e) {
+        alert('הפרסום נכשל: ' + e.message);
+        btn.textContent = orig;
+      } finally { btn.disabled = false; }
+    }
+
+    async function uploadFileToRepo(file, subdir, statusEl) {
+      if (!ghConnected()) { switchTab('connect'); throw new Error('האתר לא מחובר — עבור ללשונית "חיבור ופרסום".'); }
+      const ext = (file.name.split('.').pop() || 'bin').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const sub = (subdir || 'misc').toString().toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-|-$/g, '') || 'misc';
+      const name = Date.now() + '-' + Math.random().toString(36).slice(2, 7) + '.' + ext;
+      const path = gh.mediaDir + '/' + sub + '/' + name;
+      if (statusEl) statusEl.textContent = 'מעלה ' + Math.round(file.size / 1024) + 'KB…';
+      const buf = await file.arrayBuffer();
+      await ghPut(path, bufToB64(buf), 'Upload media ' + path);
+      return path;
+    }
+
+    async function uploadPropImage(input, target) {
+      const files = [...input.files]; if (!files.length) return;
+      const st = document.getElementById('f-upload-status');
+      const sub = (document.getElementById('f-id').value || document.getElementById('f-name').value || 'misc');
+      try {
+        for (let i = 0; i < files.length; i++) {
+          if (st) st.textContent = 'מעלה תמונה ' + (i + 1) + ' מתוך ' + files.length + '…';
+          const path = await uploadFileToRepo(files[i], sub, st);
+          if (target === 'poster') { document.getElementById('f-poster').value = path; }
+          else { const ta = document.getElementById('f-gallery'); ta.value = (ta.value.trim() ? ta.value.trim() + '\n' : '') + path; }
+        }
+        if (st) { st.textContent = '✓ הועלה'; st.style.color = 'var(--green)'; }
+      } catch (e) { if (st) { st.textContent = '✗ ' + e.message; st.style.color = 'var(--red)'; } }
+      input.value = '';
+    }
+
+    async function uploadHeroVideo(input) {
+      const file = input.files[0]; if (!file) return;
+      const st = document.getElementById('hero-video-status');
+      try {
+        const path = await uploadFileToRepo(file, 'hero', st);
+        document.getElementById('hero-video').value = path;
+        st.textContent = '✓ הועלה — לחץ "שמור מדיה" ואז "פרסם לאתר"'; st.style.color = 'var(--green)';
+      } catch (e) { st.textContent = '✗ ' + e.message; st.style.color = 'var(--red)'; }
+      input.value = '';
     }
 
     /* close modals on backdrop click */

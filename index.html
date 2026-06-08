@@ -1811,7 +1811,7 @@
 
       <!-- ▼▼ רצועת וידאו רוחבית עם הסטטיסטיקות עליה ▼▼ -->
       <div class="hero__videostrip">
-        <video autoplay muted loop playsinline preload="metadata" poster="videos/bg-poster.jpg" aria-hidden="true">
+        <video id="heroBgVideo" autoplay muted loop playsinline preload="metadata" poster="videos/bg-poster.jpg" aria-hidden="true">
           <source src="videos/bg.mp4" type="video/mp4">
         </video>
         <div class="hero__videostrip-scrim" aria-hidden="true"></div>
@@ -2127,6 +2127,30 @@
     /* ═══════════ DYNAMIC RENDER FROM data.js ═══════════ */
     const DATA = window.VIEWESTATE_DATA || { agent: {}, stats: [], testimonials: [], properties: [] };
     const AGENT = DATA.agent || {};
+
+    /* ---- data-driven hero background video (supports CDN HLS .m3u8) ---- */
+    (function heroVideoFromData() {
+      const v = document.getElementById('heroBgVideo');
+      const src = (DATA.heroVideo || '').trim();
+      if (!v || !src) return;
+      if (DATA.heroPoster) v.setAttribute('poster', DATA.heroPoster.trim());
+      const isHls = /\.m3u8(\?|$)/i.test(src);
+      if (isHls && !v.canPlayType('application/vnd.apple.mpegurl')) {
+        // non-Safari: load hls.js on demand
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/hls.js@1';
+        s.onload = function () {
+          if (window.Hls && window.Hls.isSupported()) {
+            const hls = new window.Hls({ capLevelToPlayerSize: true });
+            hls.loadSource(src); hls.attachMedia(v); v.play().catch(() => {});
+          }
+        };
+        document.head.appendChild(s);
+      } else {
+        v.innerHTML = '<source src="' + src + (isHls ? '" type="application/vnd.apple.mpegurl">' : '">');
+        v.load(); v.play().catch(() => {});
+      }
+    })();
 
     function esc(s) {
       return String(s == null ? '' : s)
