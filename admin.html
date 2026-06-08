@@ -119,6 +119,22 @@
     .repeat-item .remove { position:absolute; top:10px; left:10px; }
 
     .empty { text-align:center; padding:50px 20px; color:var(--text-muted); }
+
+    /* ---- guide ---- */
+    .guide { max-width:760px; }
+    .guide__step { display:flex; gap:16px; padding:18px 0; border-bottom:1px solid var(--border); }
+    .guide__step:last-child { border-bottom:none; }
+    .guide__num { flex:none; width:34px; height:34px; border-radius:50%; background:var(--gold); color:#fff;
+                  font-weight:700; font-size:16px; display:flex; align-items:center; justify-content:center; }
+    .guide__body { flex:1; }
+    .guide__title { font-family:var(--serif); font-size:18px; font-weight:700; margin-bottom:6px; }
+    .guide__body p { color:var(--text-mid); font-size:14.5px; margin-bottom:6px; }
+    .guide__body ol, .guide__body ul { margin:6px 22px; color:var(--text-mid); font-size:14px; line-height:1.85; }
+    .guide__body code { background:var(--bg-alt); padding:1px 6px; border-radius:4px; font-size:13px; }
+    .guide__body strong { color:var(--gold); }
+    .guide-flow { background:var(--bg-dark); color:#FAF6F0; border-radius:10px; padding:18px 22px; margin-top:8px;
+                  font-size:16px; text-align:center; font-weight:600; letter-spacing:0.3px; }
+    .guide-flow span { color:var(--gold-light); }
     @media (max-width:640px){ .form-grid{ grid-template-columns:1fr; } .pcard{ flex-wrap:wrap; } }
   </style>
 </head>
@@ -157,6 +173,7 @@
         <button class="tab" data-tab="settings" onclick="switchTab('settings')">פרטי קשר וסטטיסטיקות</button>
         <button class="tab" data-tab="media" onclick="switchTab('media')">מדיה ווידאו רקע</button>
         <button class="tab" data-tab="connect" onclick="switchTab('connect')">חיבור ופרסום</button>
+        <button class="tab" data-tab="help" onclick="switchTab('help')">מדריך</button>
       </div>
 
       <!-- PROPERTIES PANEL -->
@@ -256,6 +273,83 @@
             <li>Generate, העתק את הטוקן (מתחיל ב-<code>github_pat_</code>), הדבק כאן ולחץ "שמור חיבור".</li>
           </ol>
         </div>
+      </div>
+
+      <!-- HELP / GUIDE PANEL -->
+      <div class="panel" id="panel-help">
+        <div class="section-title">מדריך שימוש</div>
+        <div class="section-sub">כל מה שצריך לדעת כדי לעדכן את האתר. הזרימה תמיד אותה אחת: עורכים → שומרים → מפרסמים.</div>
+        <div class="guide">
+
+          <div class="guide__step">
+            <div class="guide__num">1</div>
+            <div class="guide__body">
+              <div class="guide__title">כניסה</div>
+              <p>נכנסים ל-<code>viewestate.co.il/admin.html</code> ומקלידים את קוד הכניסה (<code>viewestate2026</code>).</p>
+            </div>
+          </div>
+
+          <div class="guide__step">
+            <div class="guide__num">2</div>
+            <div class="guide__body">
+              <div class="guide__title">חיבור לאתר — פעם אחת בלבד</div>
+              <p>זה מה שמאפשר לשינויים לעלות לאתר החי לבד. בלשונית <strong>"חיבור ופרסום"</strong>:</p>
+              <ol>
+                <li>ב-GitHub: Settings ← Developer settings ← <strong>Fine-grained tokens</strong> ← Generate new token.</li>
+                <li>בוחרים את המאגר <code>viewestate</code>, ותחת Permissions ← Repository ← <strong>Contents = Read and write</strong>.</li>
+                <li>מעתיקים את הטוקן (מתחיל ב-<code>github_pat_</code>), מדביקים, ולוחצים "שמור חיבור" ← "בדוק חיבור".</li>
+                <li>מופיע <strong>"✓ מחובר"</strong> — סיימת. הטוקן נשמר רק בדפדפן שלך.</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="guide__step">
+            <div class="guide__num">3</div>
+            <div class="guide__body">
+              <div class="guide__title">להוסיף או לערוך נכס</div>
+              <p>בלשונית <strong>"נכסים"</strong> ← <strong>"+ נכס חדש"</strong> (או "ערוך" על נכס קיים). ממלאים את השדות ולוחצים "שמור נכס".</p>
+            </div>
+          </div>
+
+          <div class="guide__step">
+            <div class="guide__num">4</div>
+            <div class="guide__body">
+              <div class="guide__title">תמונות וּוידאו של נכס</div>
+              <p>בתוך טופס הנכס:</p>
+              <ul>
+                <li><strong>גלריה:</strong> "בחר קובץ" מתחת לתיבה ← בוחרים תמונה אחת או כמה ← הן עולות לבד והקישור נכנס. התמונה הראשונה = הראשית בכרטיס.</li>
+                <li><strong>poster:</strong> מעלים קובץ או מדביקים קישור.</li>
+                <li><strong>וידאו:</strong> מדביקים קישור (mp4 / CDN), או משאירים ריק לתמונה בלבד.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="guide__step">
+            <div class="guide__num">5</div>
+            <div class="guide__body">
+              <div class="guide__title">וידאו הרקע (הפס בראש הדף)</div>
+              <p>בלשונית <strong>"מדיה ווידאו רקע"</strong> — מדביקים קישור CDN או מעלים קובץ, ולוחצים "שמור מדיה".</p>
+            </div>
+          </div>
+
+          <div class="guide__step">
+            <div class="guide__num">6</div>
+            <div class="guide__body">
+              <div class="guide__title">לפרסם — הכי חשוב</div>
+              <p>כל עוד לא לחצת "פרסם", השינויים שמורים רק בדפדפן שלך ולא באתר. לוחצים <strong>"↑ פרסם לאתר"</strong> למעלה ← מופיע "✓ פורסם" ← האתר החי מתעדכן תוך כדקה.</p>
+            </div>
+          </div>
+
+          <div class="guide__step">
+            <div class="guide__num">★</div>
+            <div class="guide__body">
+              <div class="guide__title">וידאו באיכות מקסימלית (לעתיד)</div>
+              <p>כשתצלם באיכות גבוהה: פותחים חשבון בשירות וידאו (Cloudflare Stream / Bunny), מעלים לשם, מעתיקים את קישור ה-HLS ומדביקים בשדה הוידאו. האתר מנגן את זה אוטומטית באיכות שמתאימה לכל מכשיר.</p>
+            </div>
+          </div>
+
+        </div>
+        <div class="guide-flow">הזרימה תמיד: <span>עורכים</span> → <span>שומרים</span> → <span>פרסם לאתר</span></div>
       </div>
     </div>
   </div>
