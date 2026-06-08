@@ -1465,16 +1465,16 @@
     .lead-field select option { background: var(--bg-dark); color: #FAF6F0; }
     .lead-submit {
       grid-column: 1 / -1;
-      background: #25D366;
-      color: white;
+      background: var(--gold);
+      color: #FAF6F0;
       padding: 16px;
       font-size: 16px;
       font-weight: 700;
-      border-radius: 4px;
+      border-radius: 10px;
       display: flex; align-items: center; justify-content: center; gap: 10px;
-      transition: background 0.3s, transform 0.3s;
+      transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
     }
-    .lead-submit:hover { background: #1ebe5d; transform: translateY(-2px); }
+    .lead-submit:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 16px 40px rgba(154,114,48,0.28); }
     .lead-privacy { grid-column: 1 / -1; text-align: center; font-size: 12.5px; color: rgba(250,246,240,0.6); margin-top: 6px; line-height: 1.6; }
     .lead-privacy a { color: var(--gold-light); text-decoration: underline; text-underline-offset: 2px; }
     @media (max-width: 560px) { .lead-form { grid-template-columns: 1fr; } }
