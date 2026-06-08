@@ -384,9 +384,9 @@
       position: absolute;
       font-family: var(--serif);
       font-style: italic;
-      font-size: 13px;
+      font-size: 14.5px;
       line-height: 1.55;
-      color: rgba(201,163,90,0.42);
+      color: rgba(212,176,104,0.66);
       letter-spacing: 0.3px;
       white-space: nowrap;
       --rot: 0deg;
@@ -1806,7 +1806,6 @@
 
     <div class="hero__content">
       <p class="hero__eyebrow">מתווך נכסים מוסמך · שיווק חכם · viewestate.co.il</p>
-      <p class="hero__motto">מתייאש אינו מנצח אף פעם · ומנצח אינו מתייאש לעולם</p>
       <h1 class="hero__h1">נדל"ן הדור הבא</h1>
 
       <!-- ▼▼ רצועת וידאו רוחבית עם הסטטיסטיקות עליה ▼▼ -->
@@ -2338,10 +2337,13 @@
       if (!box) return;
       const QUOTES = [
         'דבקות במטרה', 'כוח רצון', 'אמונה', 'שאיפה', 'התמדה', 'חזון',
+        'מתייאש אינו מנצח אף פעם · ומנצח אינו מתייאש לעולם',
         'חכמה אמיתית בולטת בדרך כלל מבעד צניעות ושתיקה',
         'אמור לעולם מה אתה הולך לעשות אולם תחילה הראה זאת',
         'איכות השירות, כמות השירות ורוח השירות'
       ];
+      // הציטוט הזה לא יופיע בראש האתר — רק אקראית בהמשך העמוד כמו השאר
+      const TOP_QUOTES = QUOTES.filter(q => q !== 'מתייאש אינו מנצח אף פעם · ומנצח אינו מתייאש לעולם');
       const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const rnd = (a, b) => a + Math.random() * (b - a);
       function build() {
@@ -2349,8 +2351,9 @@
         const H = document.documentElement.scrollHeight;
         box.style.height = H + 'px';
         let html = '';
-        function add(y, onLeft) {
-          const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+        function add(y, onLeft, pool) {
+          pool = pool || QUOTES;
+          const q = pool[Math.floor(Math.random() * pool.length)];
           const long = q.length > 16;
           const edge = rnd(1.2, 4).toFixed(2);
           const rot = rnd(-9, 9).toFixed(1);
@@ -2365,8 +2368,8 @@
         // dense top (start of the site) — more quotes on both sides
         const topEnd = Math.min(H - 160, Math.round(window.innerHeight * 1.15));
         for (let y = rnd(70, 150); y < topEnd; y += rnd(150, 230)) {
-          add(y, true);
-          add(y + rnd(50, 120), false);
+          add(y, true, TOP_QUOTES);
+          add(y + rnd(50, 120), false, TOP_QUOTES);
         }
         // rest of the page — sparser, alternating sides
         let side = 0;
