@@ -694,92 +694,46 @@
     }
 
     /* 2-col grid: featured 2/3, side 1/3 */
-    /* ===== Radial property dial ===== */
-    .radial {
-      position: relative;
-      --size: min(88vw, 600px);
-      --orbit-r: calc(var(--size) * 0.44);
-      width: var(--size);
-      margin: 8px auto 0;
-    }
-    .radial__stage { position: relative; width: var(--size); height: var(--size); margin: 0 auto; }
-    .radial__orbit {
+    /* ===== Coverflow gallery ===== */
+    .coverflow { position: relative; max-width: 1280px; margin: 0 auto; height: 500px; perspective: 1700px; overflow: hidden; }
+    .cf-stage { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; }
+    .cf-item {
       position: absolute; top: 50%; left: 50%;
-      width: calc(var(--orbit-r) * 2 + 14px); height: calc(var(--orbit-r) * 2 + 14px);
-      transform: translate(-50%, -50%);
-      border-radius: 50%; border: 1px solid rgba(201,163,90,0.22);
-      pointer-events: none;
+      width: 360px; height: 470px; margin: -235px 0 0 -180px;
+      transition: transform 0.6s var(--ease), opacity 0.5s var(--ease);
+      will-change: transform, opacity;
+      backface-visibility: hidden;
     }
-    .radial__ring {
-      position: absolute; inset: 0; --rot: 0deg;
-      transform: rotate(var(--rot));
-      transition: transform 0.95s cubic-bezier(0.5, 0.05, 0.2, 1);
+    .cf-item .prop-card {
+      width: 100%; height: 100%; border-radius: 8px;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.55);
+      transition: none; backface-visibility: hidden;
     }
-    .rad-thumb {
-      position: absolute; top: 50%; left: 50%;
-      width: 80px; height: 80px; margin: -40px;
-      border-radius: 50%; overflow: hidden; padding: 0; cursor: pointer;
-      border: 2px solid rgba(201,163,90,0.4); background: #0D0806;
-      box-shadow: 0 8px 22px rgba(0,0,0,0.42);
-      transform: rotate(var(--ang)) translateY(calc(-1 * var(--orbit-r)));
-      transition: width 0.4s var(--ease), height 0.4s var(--ease), margin 0.4s var(--ease), border-color 0.4s, box-shadow 0.4s;
-      z-index: 2;
-    }
-    .rad-thumb img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
-      transform: rotate(calc(-1 * (var(--rot) + var(--ang))));
-      transition: transform 0.95s cubic-bezier(0.5, 0.05, 0.2, 1);
-    }
-    .rad-thumb.is-active {
-      border-color: var(--gold-light);
-      width: 96px; height: 96px; margin: -48px;
-      box-shadow: 0 0 0 4px rgba(201,163,90,0.18), 0 14px 34px rgba(0,0,0,0.55);
-    }
-    .radial__center {
-      position: absolute; top: 50%; left: 50%;
-      width: min(56vw, 312px); height: min(72vw, 400px);
-      transform: translate(-50%, -50%);
-      border-radius: 16px; overflow: hidden; z-index: 3;
-      box-shadow: 0 30px 72px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,163,90,0.32);
-    }
-    .radial__card { position: absolute; inset: 0; opacity: 0; transition: opacity 0.6s ease; }
-    .radial__card.is-in { opacity: 1; }
-    .radial__card .prop-card { width: 100%; height: 100%; }
-    .radial__card .prop-card:hover { transform: none; }
-    .radial__nav {
-      position: absolute; top: 50%; transform: translateY(-50%); z-index: 6;
-      width: 50px; height: 50px; border-radius: 50%;
-      background: rgba(20,10,4,0.55); border: 1px solid rgba(201,163,90,0.4);
-      color: var(--gold-light); font-size: 25px; line-height: 1; cursor: pointer;
+    .cf-item .prop-card:hover { transform: none; }
+    .cf-item.is-active .prop-card { box-shadow: 0 36px 90px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,163,90,0.32); }
+    .cf-item .prop-card__media { transition: none; }
+    .cf-nav {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 50;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(20,10,4,0.5); border: 1px solid rgba(201,163,90,0.4);
+      color: var(--gold-light); font-size: 26px; line-height: 1;
       display: flex; align-items: center; justify-content: center;
-      transition: background 0.3s, border-color 0.3s, color 0.3s;
+      cursor: pointer; transition: background 0.3s, border-color 0.3s, color 0.3s;
     }
-    .radial__nav:hover { background: var(--gold); color: #1C1008; border-color: var(--gold); }
-    .radial__nav--prev { left: -6px; }
-    .radial__nav--next { right: -6px; }
-
+    .cf-nav:hover { background: var(--gold); color: #1C1008; border-color: var(--gold); }
+    .cf-nav--prev { left: 4px; }
+    .cf-nav--next { right: 4px; }
+    .cf-dots { display: flex; justify-content: center; gap: 10px; margin-top: 32px; }
+    .cf-dots button { width: 9px; height: 9px; border-radius: 50%; border: none; background: rgba(201,163,90,0.3); cursor: pointer; padding: 0; transition: background 0.3s, transform 0.3s; }
+    .cf-dots button.is-on { background: var(--gold-light); transform: scale(1.3); }
     @media (max-width: 760px) {
-      .radial { --size: 92vw; }
-      .radial__stage { display: flex; flex-direction: column; align-items: center; width: 100%; height: auto; }
-      .radial__orbit { display: none; }
-      .radial__center {
-        position: relative; top: auto; left: auto; order: 1;
-        transform: translateZ(0); -webkit-transform: translateZ(0);
-        width: min(78vw, 320px); height: min(102vw, 410px);
-      }
-      .radial__ring {
-        position: static; inset: auto; transform: none !important; order: 2;
-        display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 20px;
-      }
-      .rad-thumb {
-        position: relative; top: auto; left: auto; margin: 0;
-        transform: none !important; width: 58px; height: 58px;
-      }
-      .rad-thumb.is-active { width: 66px; height: 66px; margin: 0; }
-      .rad-thumb img { transform: none !important; }
-      .radial__nav { display: none; }
-      .radial__card .prop-card__body { padding: 18px 20px; }
-      .radial__card .prop-card__name { font-size: 21px; }
+      .coverflow { height: 440px; perspective: 1200px; }
+      .cf-item { width: 268px; height: 372px; margin: -186px 0 0 -134px; }
+      .cf-nav { width: 44px; height: 44px; font-size: 22px; }
+      .cf-item .prop-card__body { padding: 18px 20px; }
+      .cf-item .prop-card__type { font-size: 9px; letter-spacing: 2px; margin-bottom: 6px; }
+      .cf-item .prop-card__name { font-size: 19px; margin-bottom: 5px; line-height: 1.15; }
+      .cf-item .prop-card__info { font-size: 12px; line-height: 1.45; }
     }
 
     .props-grid {
@@ -1983,15 +1937,12 @@
       </div>
     </div>
 
-    <div class="radial reveal delay-1" id="radial">
-      <button class="radial__nav radial__nav--prev" id="radPrev" aria-label="הנכס הקודם">‹</button>
-      <div class="radial__stage">
-        <div class="radial__orbit" aria-hidden="true"></div>
-        <div class="radial__ring" id="radialRing"><!-- ממוזערות מ-data.js --></div>
-        <div class="radial__center" id="radialCenter"><!-- תצוגה מרכזית --></div>
-      </div>
-      <button class="radial__nav radial__nav--next" id="radNext" aria-label="הנכס הבא">›</button>
+    <div class="coverflow reveal delay-1" id="coverflow">
+      <button class="cf-nav cf-nav--prev" id="cfPrev" aria-label="הנכס הקודם">‹</button>
+      <div class="cf-stage" id="cfStage"><!-- נטען דינמית מ-data.js --></div>
+      <button class="cf-nav cf-nav--next" id="cfNext" aria-label="הנכס הבא">›</button>
     </div>
+    <div class="cf-dots" id="cfDots" role="tablist" aria-label="ניווט נכסים"></div>
   </section>
 
   <!-- ===== SERVICE (buyers & sellers) ===== -->
@@ -2172,74 +2123,90 @@
     }
 
     /* -- properties grid (featured first) -- */
-    (function renderRadial() {
-      const ring = document.getElementById('radialRing');
-      const center = document.getElementById('radialCenter');
-      if (!ring || !center) return;
+    (function renderProps() {
+      const stage = document.getElementById('cfStage');
+      if (!stage) return;
       const props = (DATA.properties || []).slice();
-      const n = props.length;
-      if (!n) return;
-      const step = 360 / n;
-      let active = 0, rot = 0;
-
-      ring.innerHTML = props.map((p, i) => {
-        const img = (p.gallery && p.gallery[0]) || p.poster || '';
-        return '<button class="rad-thumb" data-idx="' + i + '" style="--ang:' + (i * step).toFixed(2) + 'deg" aria-label="' + esc(p.name) + '"><img src="' + esc(img) + '" alt="' + esc(p.name) + '" loading="lazy" decoding="async"></button>';
-      }).join('');
-      const thumbs = [...ring.querySelectorAll('.rad-thumb')];
-
-      function cardHtml(p) {
+      stage.innerHTML = props.map((p, i) => {
         const heroImg = (p.gallery && p.gallery[0]) || p.poster || '';
-        const info = [fmtPrice(p.price), p.rooms ? p.rooms + ' \u05d7\u05d3\u05e8\u05d9\u05dd' : '', p.area ? p.area + ' \u05de"\u05e8' : '',
-                      p.floor ? '\u05e7\u05d5\u05de\u05d4 ' + p.floor : ''].filter(Boolean).map(s => s.replace(/ /g, '\u00a0')).join('\u00a0\u00b7\u00a0');
+        const info = [fmtPrice(p.price), p.rooms ? p.rooms + ' חדרים' : '', p.area ? p.area + ' מ"ר' : '',
+                      p.floor ? 'קומה ' + p.floor : ''].filter(Boolean).map(s => s.replace(/ /g, ' ')).join('  ·  ');
+        const cardSrcs = p.video
+          ? (/^videos\/.*\.mp4$/i.test(p.video) ? `<source src="${esc(p.video.replace(/\.mp4$/i, '.webm'))}" type="video/webm">` : '')
+            + `<source src="${esc(p.video)}" type="video/mp4">`
+          : '';
         const media = p.video
-          ? '<video class="prop-card__media" autoplay muted loop playsinline preload="metadata" poster="' + esc(p.poster || heroImg) + '">'
-            + (/\.mp4$/i.test(p.video) ? '<source src="' + esc(p.video.replace(/\.mp4$/i, '.webm')) + '" type="video/webm">' : '')
-            + '<source src="' + esc(p.video) + '" type="video/mp4"></video>'
-          : '<img class="prop-card__media" src="' + esc(heroImg) + '" alt="' + esc(p.name) + '">';
+          ? `<video class="prop-card__media" autoplay muted loop playsinline preload="metadata" poster="${esc(p.poster || heroImg)}">${cardSrcs}</video>`
+          : `<img class="prop-card__media" src="${esc(heroImg)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`;
         const ss = saleStatusInfo(p.saleStatus);
-        return '<a class="prop-card' + (p.saleStatus === 'sold' ? ' prop-card--sold' : '') + '" href="property.html?id=' + encodeURIComponent(p.id) + '">'
-          + media + '<div class="prop-card__shade"></div>'
-          + (p.video ? '<div class="prop-card__video-tag" aria-hidden="true">\u25b6 &nbsp;\u05d5\u05d9\u05d3\u05d0\u05d5</div>' : '')
-          + '<div class="prop-card__body"><span class="prop-status-chip ' + ss.cls + '"><i></i>' + ss.label + '</span>'
-          + '<p class="prop-card__type">' + esc(p.type || '') + (p.city ? ' \u00b7 ' + esc(p.city) : '')
-          + '</p><h3 class="prop-card__name">' + esc(p.name) + '</h3><p class="prop-card__info">' + info + '</p></div></a>';
-      }
+        const label = [esc(p.name), esc(p.type || ''), esc(p.city || ''), ss.label, info].filter(Boolean).join(', ');
+        return `
+          <div class="cf-item" data-idx="${i}"><a class="prop-card${p.saleStatus === 'sold' ? ' prop-card--sold' : ''}" href="property.html?id=${encodeURIComponent(p.id)}" aria-label="פתח דף נכס: ${label}">
+            ${media}
+            <div class="prop-card__shade"></div>
+            ${p.video ? '<div class="prop-card__video-tag" aria-hidden="true">▶ &nbsp;וידאו</div>' : ''}
+            <div class="prop-card__play-cue" aria-hidden="true"><div class="play-tri"></div></div>
+            <div class="prop-card__body">
+              <span class="prop-status-chip ${ss.cls}"><i></i>${ss.label}</span>
+              <p class="prop-card__type">${esc(p.type || '')}${p.city ? ' · ' + esc(p.city) : ''}</p>
+              <h3 class="prop-card__name">${esc(p.name)}</h3>
+              <p class="prop-card__info">${info}</p>
+            </div>
+          </a></div>`;
+      }).join('');
 
-      function showCenter(i) {
-        const card = document.createElement('div');
-        card.className = 'radial__card';
-        card.innerHTML = cardHtml(props[i]);
-        center.appendChild(card);
-        requestAnimationFrame(() => card.classList.add('is-in'));
-        [...center.children].forEach(c => { if (c !== card) { c.style.opacity = '0'; setTimeout(() => c.remove(), 700); } });
-      }
+      /* ── coverflow controller ── */
+      const items = [...stage.querySelectorAll('.cf-item')];
+      const n = items.length;
+      if (!n) return;
+      let active = 0;
+      const dotsBox = document.getElementById('cfDots');
+      dotsBox.innerHTML = items.map((_, i) => '<button role="tab" aria-label="נכס ' + (i + 1) + '"></button>').join('');
+      const dots = [...dotsBox.children];
 
-      function setActive(i) {
-        const ni = ((i % n) + n) % n;
-        let d = ni - active;
-        if (d >  n / 2) d -= n;
-        if (d < -n / 2) d += n;
-        rot -= d * step;
-        active = ni;
-        ring.style.setProperty('--rot', rot + 'deg');
-        thumbs.forEach((t, k) => t.classList.toggle('is-active', k === active));
-        showCenter(active);
+      function layout() {
+        const sm = window.innerWidth < 760;
+        const SP = sm ? 165 : 380, DZ = sm ? 150 : 215, RY = sm ? 34 : 46, SC = sm ? 0.72 : 0.82;
+        items.forEach((it, i) => {
+          let off = i - active;
+          if (off >  n / 2) off -= n;
+          if (off < -n / 2) off += n;
+          const abs = Math.abs(off);
+          const sign = off === 0 ? 0 : (off > 0 ? 1 : -1);
+          const x  = off * SP;
+          const z  = -abs * DZ;
+          const ry = -sign * RY;
+          const sc = abs === 0 ? 1 : SC;
+          it.style.transform = 'translateX(' + x + 'px) translateZ(' + z + 'px) rotateY(' + ry + 'deg) scale(' + sc + ')';
+          it.style.opacity = abs > 2 ? '0' : (abs === 0 ? '1' : (sm ? '0.45' : '0.6'));
+          it.style.zIndex = String(100 - abs);
+          it.style.pointerEvents = abs > 2 ? 'none' : 'auto';
+          it.classList.toggle('is-active', abs === 0);
+          const vid = it.querySelector('video');
+          if (vid) { if (abs === 0) { vid.play().catch(() => {}); } else { vid.pause(); } }
+        });
+        dots.forEach((d, i) => d.classList.toggle('is-on', i === active));
       }
-      function go(dir) { setActive(active + dir); }
+      function setActive(i) { active = ((i % n) + n) % n; layout(); }
+      function go(d) { setActive(active + d); }
 
-      thumbs.forEach((t, i) => t.addEventListener('click', () => { if (i !== active) setActive(i); }));
-      const prev = document.getElementById('radPrev'), next = document.getElementById('radNext');
+      items.forEach((it, i) => it.addEventListener('click', e => { if (i !== active) { e.preventDefault(); setActive(i); } }));
+      dots.forEach((d, i) => d.addEventListener('click', () => setActive(i)));
+      const prev = document.getElementById('cfPrev'), next = document.getElementById('cfNext');
       if (prev) prev.addEventListener('click', () => go(-1));
       if (next) next.addEventListener('click', () => go(1));
 
-      let timer = setInterval(() => go(1), 5500);
-      const root = document.getElementById('radial');
-      root.addEventListener('mouseenter', () => clearInterval(timer));
-      root.addEventListener('mouseleave', () => { clearInterval(timer); timer = setInterval(() => go(1), 5500); });
+      let timer = setInterval(() => go(1), 5000);
+      const cf = document.getElementById('coverflow');
+      cf.addEventListener('mouseenter', () => clearInterval(timer));
+      cf.addEventListener('mouseleave', () => { clearInterval(timer); timer = setInterval(() => go(1), 5000); });
 
-      thumbs.forEach((t, k) => t.classList.toggle('is-active', k === 0));
-      showCenter(0);
+      let sx = null;
+      stage.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
+      stage.addEventListener('touchend', e => { if (sx == null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) go(dx > 0 ? -1 : 1); sx = null; }, { passive: true });
+      window.addEventListener('resize', layout, { passive: true });
+
+      layout();
     })();
 
     /* -- stats -- */
