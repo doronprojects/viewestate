@@ -430,16 +430,19 @@
     .hero__badge {
       display: inline-flex;
       align-items: center;
-      margin-top: 44px;
-      margin-bottom: 22px;
-      padding: 7px 22px;
-      border: 1px solid rgba(201,163,90,0.45);
-      border-radius: 100px;
-      background: rgba(201,163,90,0.08);
-      font-size: 12px;
-      letter-spacing: 2.5px;
-      color: var(--gold-pale);
-      font-weight: 500;
+      gap: 12px;
+      margin-top: 40px;
+      margin-bottom: 18px;
+      font-family: var(--serif);
+      font-size: 16px;
+      letter-spacing: 2px;
+      color: var(--gold-light);
+      font-weight: 600;
+    }
+    .hero__badge::before, .hero__badge::after {
+      content: "";
+      width: 26px; height: 1px;
+      background: rgba(201,163,90,0.55);
     }
     .hero__badge b {
       font-family: var(--serif);
