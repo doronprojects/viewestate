@@ -757,7 +757,8 @@
       .radial__stage { display: flex; flex-direction: column; align-items: center; width: 100%; height: auto; }
       .radial__orbit { display: none; }
       .radial__center {
-        position: relative; top: auto; left: auto; transform: none; order: 1;
+        position: relative; top: auto; left: auto; order: 1;
+        transform: translateZ(0); -webkit-transform: translateZ(0);
         width: min(78vw, 320px); height: min(102vw, 410px);
       }
       .radial__ring {
