@@ -708,6 +708,10 @@
       width: 100%; height: 100%; border-radius: 16px;
       box-shadow: 0 30px 70px rgba(0,0,0,0.55);
       transition: none; backface-visibility: hidden;
+      /* own compositing layer so the absolutely-positioned status (which has
+         its own transform) doesn't vanish under the inline video on iOS */
+      -webkit-transform: translateZ(0); transform: translateZ(0);
+      isolation: isolate;
     }
     .cf-item .prop-card:hover { transform: none; }
     .cf-item.is-active .prop-card { box-shadow: 0 36px 90px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,163,90,0.32); }
@@ -2150,8 +2154,12 @@
             <div class="prop-card__shade"></div>
             ${p.video ? '<div class="prop-card__video-tag" aria-hidden="true">▶ &nbsp;וידאו</div>' : ''}
             <div class="prop-card__play-cue" aria-hidden="true"><div class="play-tri"></div></div>
+            <div class="prop-card__status" aria-hidden="true">
+              <span class="ps-row ps-sale${p.saleStatus === 'sale' ? ' is-on' : ''}"><i class="ps-dot"></i>למכירה</span>
+              <span class="ps-row ps-neg${p.saleStatus === 'negotiation' ? ' is-on' : ''}"><i class="ps-dot"></i>במשא ומתן</span>
+              <span class="ps-row ps-sold${p.saleStatus === 'sold' ? ' is-on' : ''}"><i class="ps-dot"></i>נמכר</span>
+            </div>
             <div class="prop-card__body">
-              <span class="prop-status-chip ${ss.cls}"><i></i>${ss.label}</span>
               <p class="prop-card__type">${esc(p.type || '')}${p.city ? ' · ' + esc(p.city) : ''}</p>
               <h3 class="prop-card__name">${esc(p.name)}</h3>
               <p class="prop-card__info">${info}</p>
