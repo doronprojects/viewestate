@@ -377,7 +377,7 @@
     }
 
     /* decorative scattered quotes in the hero margins */
-    .hero__quotes { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+    .site-quotes { position: absolute; top: 0; left: 0; width: 100%; z-index: 0; pointer-events: none; overflow: hidden; }
     .hq {
       position: absolute;
       font-family: var(--serif);
@@ -401,7 +401,7 @@
       100% { transform: rotate(var(--rot)) translateY(0); }
     }
     @keyframes hqIn { from { opacity: 0; } to { opacity: 1; } }
-    @media (max-width: 1180px) { .hero__quotes { display: none; } }
+    @media (max-width: 1180px) { .site-quotes { display: none; } }
     @media (prefers-reduced-motion: reduce) { .hq { animation: none; opacity: 1; } }
 
     .hero__eyebrow {
@@ -1618,6 +1618,7 @@
     <span class="o1"></span><span class="o2"></span><span class="o3"></span>
     <div class="site-bg__particles" id="siteParticles"></div>
   </div>
+  <div class="site-quotes" id="siteQuotes" aria-hidden="true"></div>
 
   <!-- ===== NAV ===== -->
   <nav class="nav" id="nav">
@@ -1660,16 +1661,6 @@
     <div class="hero__warm"></div>
     <div class="hero__glow" aria-hidden="true"><span class="hero__glow-orb"></span></div>
     <div class="hero__particles" id="heroParticles" aria-hidden="true"></div>
-
-    <div class="hero__quotes" aria-hidden="true">
-      <span class="hq" style="top:15%; right:3.5%; --rot:-7deg; --fdur:7.5s">דבקות במטרה</span>
-      <span class="hq" style="top:31%; right:6%; --rot:5deg; --fdur:9s">אמונה</span>
-      <span class="hq hq--blk" style="top:53%; right:2.5%; --rot:-3deg; --fdur:10.5s; max-width:155px">חכמה אמיתית בולטת בדרך כלל מבעד צניעות ושתיקה</span>
-      <span class="hq hq--blk" style="top:78%; right:7%; --rot:4deg; --fdur:8.5s; max-width:175px">איכות השירות, כמות השירות ורוח השירות</span>
-      <span class="hq" style="top:15%; left:4%; --rot:6deg; --fdur:8s">כוח רצון</span>
-      <span class="hq" style="top:31%; left:6.5%; --rot:-5deg; --fdur:9.5s">שאיפה</span>
-      <span class="hq hq--blk" style="top:55%; left:3%; --rot:3deg; --fdur:11s; max-width:170px">אמור לעולם מה אתה הולך לעשות אולם תחילה הראה זאת</span>
-    </div>
 
     <div class="hero__content">
       <p class="hero__eyebrow">מתווך נכסים מוסמך · שיווק חכם · viewestate.co.il</p>
@@ -2165,6 +2156,45 @@
         html += '<i style="left:' + left + '%;width:' + size + 'px;height:' + size + 'px;--dx:' + dx + 'px;animation-duration:' + dur + 's;animation-delay:' + delay + 's"></i>';
       }
       box.innerHTML = html;
+    })();
+
+    // ── Scattered quotes down both margins of the whole site ──
+    (function () {
+      const box = document.getElementById('siteQuotes');
+      if (!box) return;
+      const QUOTES = [
+        'דבקות במטרה', 'כוח רצון', 'אמונה', 'שאיפה', 'התמדה', 'חזון',
+        'חכמה אמיתית בולטת בדרך כלל מבעד צניעות ושתיקה',
+        'אמור לעולם מה אתה הולך לעשות אולם תחילה הראה זאת',
+        'איכות השירות, כמות השירות ורוח השירות'
+      ];
+      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const rnd = (a, b) => a + Math.random() * (b - a);
+      function build() {
+        if (window.innerWidth < 1180) { box.innerHTML = ''; box.style.height = '0'; return; }
+        const H = document.documentElement.scrollHeight;
+        box.style.height = H + 'px';
+        let html = '', side = Math.random() < 0.5 ? 0 : 1;
+        for (let y = rnd(120, 260); y < H - 160; y += rnd(300, 470)) {
+          const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+          const long = q.length > 16;
+          const onLeft = side % 2 === 0; side++;
+          const edge = rnd(1.4, 3.6).toFixed(2);
+          const rot = rnd(-8, 8).toFixed(1);
+          const dur = rnd(7, 12).toFixed(1);
+          const delay = (-rnd(0, 6)).toFixed(1);
+          const cls = long ? 'hq hq--blk' : 'hq';
+          const pos = onLeft ? 'left:' + edge + '%' : 'right:' + edge + '%';
+          const mw = long ? 'max-width:165px;' : '';
+          const anim = reduce ? '' : '--fdur:' + dur + 's;animation-delay:' + delay + 's,0.8s;';
+          html += '<span class="' + cls + '" style="top:' + Math.round(y) + 'px;' + pos + ';--rot:' + rot + 'deg;' + mw + anim + '">' + q + '</span>';
+        }
+        box.innerHTML = html;
+      }
+      build();
+      let t;
+      window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(build, 350); }, { passive: true });
+      window.addEventListener('load', () => setTimeout(build, 400));
     })();
 
     // ── Decorative QR code (concept illustration) ──
