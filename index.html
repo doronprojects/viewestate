@@ -741,6 +741,15 @@
       .cf-item .prop-card__name { font-size: 19px; margin-bottom: 5px; line-height: 1.15; }
       .cf-item .prop-card__info { font-size: 12px; line-height: 1.45; }
     }
+    /* Same coverflow mobile sizing keyed off a JS class (screen.width based),
+       so it still applies even when iOS reports a wide viewport and the
+       max-width media query above fails to match. */
+    html.vw-sm .coverflow { height: 400px; perspective: 1200px; }
+    html.vw-sm .cf-nav { width: 44px; height: 44px; font-size: 22px; }
+    html.vw-sm .cf-item .prop-card__body { padding: 18px 20px; }
+    html.vw-sm .cf-item .prop-card__type { font-size: 9px; letter-spacing: 2px; margin-bottom: 6px; }
+    html.vw-sm .cf-item .prop-card__name { font-size: 19px; margin-bottom: 5px; line-height: 1.15; }
+    html.vw-sm .cf-item .prop-card__info { font-size: 12px; line-height: 1.45; }
 
     .props-grid {
       display: grid;
@@ -2183,6 +2192,7 @@
       function layout() {
         const vw = Math.min(window.innerWidth, (window.screen && window.screen.width) || 9999);
         const sm = vw < 760;
+        document.documentElement.classList.toggle('vw-sm', sm);
         const SP = sm ? 165 : 380, DZ = sm ? 150 : 215, RY = sm ? 34 : 46, SC = sm ? 0.72 : 0.82;
         const CW = sm ? 268 : 360, CH = sm ? 372 : 470;
         items.forEach((it, i) => {
