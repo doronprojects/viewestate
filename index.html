@@ -2427,5 +2427,26 @@
       }, { threshold: 0.08 }).observe(gridEl);
     }
   </script>
+  <script>
+    /* TEMP DEBUG — remove after diagnosing iPhone layout */
+    (function () {
+      var d = document.createElement('div');
+      d.style.cssText = 'position:fixed;top:0;left:0;z-index:99999;background:#000;color:#0f0;font:12px/1.4 monospace;padding:6px 8px;direction:ltr;text-align:left;white-space:pre;pointer-events:none;';
+      function upd() {
+        var cw = (document.querySelector('#coverflow .cf-item') || {}).style;
+        d.textContent =
+          'innerW=' + window.innerWidth +
+          ' screenW=' + (window.screen && window.screen.width) +
+          ' dpr=' + window.devicePixelRatio + '\n' +
+          'docClientW=' + document.documentElement.clientWidth +
+          ' visualVP=' + (window.visualViewport ? Math.round(window.visualViewport.width) + '@' + window.visualViewport.scale.toFixed(2) : 'n/a') + '\n' +
+          'vw-sm=' + document.documentElement.classList.contains('vw-sm') +
+          ' cardW=' + (cw ? cw.width : '?') +
+          ' mq760=' + window.matchMedia('(max-width:760px)').matches;
+      }
+      upd(); setInterval(upd, 500);
+      document.body.appendChild(d);
+    })();
+  </script>
 </body>
 </html>
