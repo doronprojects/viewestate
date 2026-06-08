@@ -796,11 +796,14 @@
       position: absolute;
       bottom: 0;
       left: 0; right: 0;
+      width: 100%;
       padding: 32px;
       z-index: 3;
       transform: translateY(5px);
       transition: transform 0.5s var(--ease);
     }
+    /* belt-and-suspenders: never let the text shrink-wrap to one word */
+    .prop-card__name, .prop-card__info, .prop-card__type { width: 100%; }
 
     /* in-flow traffic-light status (renders reliably on iOS, unlike a floating
        absolutely-positioned overlay inside the clipped rounded card) */
@@ -2426,27 +2429,6 @@
         });
       }, { threshold: 0.08 }).observe(gridEl);
     }
-  </script>
-  <script>
-    /* TEMP DEBUG — remove after diagnosing iPhone layout */
-    (function () {
-      var d = document.createElement('div');
-      d.style.cssText = 'position:fixed;top:0;left:0;z-index:99999;background:#000;color:#0f0;font:12px/1.4 monospace;padding:6px 8px;direction:ltr;text-align:left;white-space:pre;pointer-events:none;';
-      function upd() {
-        var cw = (document.querySelector('#coverflow .cf-item') || {}).style;
-        d.textContent =
-          'innerW=' + window.innerWidth +
-          ' screenW=' + (window.screen && window.screen.width) +
-          ' dpr=' + window.devicePixelRatio + '\n' +
-          'docClientW=' + document.documentElement.clientWidth +
-          ' visualVP=' + (window.visualViewport ? Math.round(window.visualViewport.width) + '@' + window.visualViewport.scale.toFixed(2) : 'n/a') + '\n' +
-          'vw-sm=' + document.documentElement.classList.contains('vw-sm') +
-          ' cardW=' + (cw ? cw.width : '?') +
-          ' mq760=' + window.matchMedia('(max-width:760px)').matches;
-      }
-      upd(); setInterval(upd, 500);
-      document.body.appendChild(d);
-    })();
   </script>
 </body>
 </html>
