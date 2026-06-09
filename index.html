@@ -435,7 +435,11 @@
       font-size: clamp(48px, 8vw, 92px);
       font-weight: 700;
       line-height: 1.0;
-      color: #FAF6F0;
+      color: var(--gold-light); /* fallback */
+      background: linear-gradient(165deg, #ECD08A 0%, #D6B266 32%, #C9A35A 58%, #B58F44 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
       margin-bottom: 28px;
       letter-spacing: -1px;
     }
