@@ -435,13 +435,24 @@
       font-size: clamp(48px, 8vw, 92px);
       font-weight: 700;
       line-height: 1.0;
-      color: var(--gold-light); /* fallback */
-      background: linear-gradient(165deg, #ECD08A 0%, #D6B266 32%, #C9A35A 58%, #B58F44 100%);
+      color: #FAF6F0;
+      margin-bottom: 28px;
+      letter-spacing: -1px;
+    }
+    /* two-tone like the logo: gold V + silver E */
+    .hero__h1 .h1-gold,
+    .hero__h1 .h1-silver {
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 28px;
-      letter-spacing: -1px;
+    }
+    .hero__h1 .h1-gold {
+      color: var(--gold-light); /* fallback */
+      background-image: linear-gradient(165deg, #ECD08A 0%, #D6B266 32%, #C9A35A 60%, #B58F44 100%);
+    }
+    .hero__h1 .h1-silver {
+      color: #F3EEE6; /* fallback */
+      background-image: linear-gradient(165deg, #FFFFFF 0%, #F1EEE8 45%, #CFC8BC 100%);
     }
 
     .hero__h1 em {
@@ -1810,7 +1821,7 @@
 
     <div class="hero__content">
       <p class="hero__eyebrow">מתווך נכסים מוסמך · שיווק חכם · viewestate.co.il</p>
-      <h1 class="hero__h1">נדל"ן הדור הבא</h1>
+      <h1 class="hero__h1"><span class="h1-gold">נדל"ן</span> <span class="h1-silver">הדור הבא</span></h1>
 
       <!-- ▼▼ רצועת וידאו רוחבית עם הסטטיסטיקות עליה ▼▼ -->
       <div class="hero__videostrip">
