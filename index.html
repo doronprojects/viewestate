@@ -465,9 +465,34 @@
       font-size: clamp(16px, 2vw, 19px);
       color: rgba(250,246,240,0.72);
       font-weight: 300;
-      max-width: 520px;
+      max-width: 820px;
       margin: 0 auto 52px;
       line-height: 1.8;
+    }
+    /* prominent tagline with a shifting gold→silver sheen, like the logo */
+    .hero__tagline {
+      display: inline-block;
+      font-family: var(--serif);
+      font-size: clamp(21px, 3vw, 32px);
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      line-height: 1.45;
+      color: var(--gold-light); /* fallback */
+      background-image: linear-gradient(100deg,
+        #B58F44 0%, #ECD08A 18%, #FFFFFF 36%, #F1EEE8 50%,
+        #ECD08A 66%, #C9A35A 82%, #B58F44 100%);
+      background-size: 220% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: taglineShimmer 7s linear infinite;
+    }
+    .hero__tagline .tl-part { white-space: nowrap; }
+    @keyframes taglineShimmer {
+      to { background-position: 220% center; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero__tagline { animation: none; }
     }
 
     /* full-width edge-to-edge video strip in the hero */
@@ -1858,7 +1883,7 @@
       <!-- ▲▲ סוף רצועת הווידאו ▲▲ -->
 
       <p class="hero__sub">
-        כי הרושם הראשון נוצר לפני שפותחים את הדלת.
+        <span class="hero__tagline"><span class="tl-part">תיווך נכסים</span> · <span class="tl-part">שיווק מתקדם</span> · <span class="tl-part">שירות אישי</span></span>
       </p>
       <div class="hero__actions">
         <a href="#properties" class="btn btn-gold">צפה בנכסים</a>
