@@ -403,7 +403,7 @@
       100% { transform: rotate(var(--rot)) translateY(0); }
     }
     @keyframes hqIn { from { opacity: 0; } to { opacity: 1; } }
-    @media (max-width: 1180px) { .site-quotes { display: none; } }
+    /* site-quotes now show on mobile too — sized down & dimmed via JS */
     @media (prefers-reduced-motion: reduce) { .hq { animation: none; opacity: 1; } }
 
     .hero__eyebrow {
@@ -1855,7 +1855,7 @@
           <em style="color:var(--gold-light)">עובר אורח</em>
         </h2>
         <p class="qr-desc">
-          שלט מקצועי עם QR code ייחודי במרפסת.<br>
+          QR code ייחודי לכל נכס.<br>
           סורקים — רואים וידאו מקצועי מיידית.<br>
           גוללים — תמונות, פרטים, ו-WhatsApp ישיר.
         </p>
@@ -1863,8 +1863,8 @@
           <div class="qr-step">
             <div class="qr-step__n">01</div>
             <div>
-              <div class="qr-step__title">שלט + QR code במרפסת</div>
-              <div class="qr-step__desc">שלט מקצועי עם קיוארקוד ייחודי לנכס שלך מותקן בכניסה</div>
+              <div class="qr-step__title">QR code ייחודי לכל נכס</div>
+              <div class="qr-step__desc">קוד ייחודי לנכס שלך שמוביל ישירות לעמוד הנכס הדיגיטלי</div>
             </div>
           </div>
           <div class="qr-step">
@@ -2361,35 +2361,51 @@
       const TOP_QUOTES = QUOTES.filter(q => q !== 'מתייאש אינו מנצח אף פעם · ומנצח אינו מתייאש לעולם');
       const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const rnd = (a, b) => a + Math.random() * (b - a);
+      const SHORT_QUOTES = QUOTES.filter(q => q.length <= 16);
+      // שקית ערבוב: כל ציטוט מוגרל פעם אחת לפני שחוזר — פריסה אחידה בלי כפילויות באותו אזור
+      function bagFrom(pool) {
+        let bag = [];
+        return function () {
+          if (!bag.length) {
+            bag = pool.slice();
+            for (let i = bag.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; const t = bag[i]; bag[i] = bag[j]; bag[j] = t; }
+          }
+          return bag.pop();
+        };
+      }
       function build() {
-        if (window.innerWidth < 1180) { box.innerHTML = ''; box.style.height = '0'; return; }
+        const mobile = window.innerWidth < 760;
         const H = document.documentElement.scrollHeight;
         box.style.height = H + 'px';
         let html = '';
-        function add(y, onLeft, pool) {
-          pool = pool || QUOTES;
-          const q = pool[Math.floor(Math.random() * pool.length)];
+        const drawTop = bagFrom(mobile ? SHORT_QUOTES : TOP_QUOTES);
+        const drawAll = bagFrom(mobile ? SHORT_QUOTES : QUOTES);
+        function add(y, onLeft, draw) {
+          const q = draw();
           const long = q.length > 16;
-          const edge = rnd(1.2, 4).toFixed(2);
+          const edge = (mobile ? rnd(0.5, 3) : rnd(1.2, 4)).toFixed(2);
           const rot = rnd(-9, 9).toFixed(1);
           const dur = rnd(7, 12).toFixed(1);
           const delay = (-rnd(0, 6)).toFixed(1);
           const cls = long ? 'hq hq--blk' : 'hq';
           const pos = onLeft ? 'left:' + edge + '%' : 'right:' + edge + '%';
           const mw = long ? 'max-width:165px;' : '';
+          const sz = mobile ? 'font-size:10.5px;color:rgba(212,176,104,0.42);' : '';
           const anim = reduce ? '' : '--fdur:' + dur + 's;animation-delay:' + delay + 's,0.8s;';
-          html += '<span class="' + cls + '" style="top:' + Math.round(y) + 'px;' + pos + ';--rot:' + rot + 'deg;' + mw + anim + '">' + q + '</span>';
+          html += '<span class="' + cls + '" style="top:' + Math.round(y) + 'px;' + pos + ';--rot:' + rot + 'deg;' + mw + sz + anim + '">' + q + '</span>';
         }
-        // dense top (start of the site) — more quotes on both sides
+        // dense top (start of the site) — quotes on both sides
         const topEnd = Math.min(H - 160, Math.round(window.innerHeight * 1.15));
-        for (let y = rnd(70, 150); y < topEnd; y += rnd(150, 230)) {
-          add(y, true, TOP_QUOTES);
-          add(y + rnd(50, 120), false, TOP_QUOTES);
+        const topA = mobile ? 120 : 110, topB = mobile ? 185 : 165;
+        for (let y = rnd(60, 130); y < topEnd; y += rnd(topA, topB)) {
+          add(y, true, drawTop);
+          add(y + rnd(40, 110), false, drawTop);
         }
-        // rest of the page — sparser, alternating sides
-        let side = 0;
-        for (let y = topEnd + rnd(60, 180); y < H - 160; y += rnd(300, 460)) {
-          add(y, side % 2 === 0); side++;
+        // rest of the page — denser fill of the free margins, both sides
+        const restA = mobile ? 230 : 175, restB = mobile ? 360 : 285;
+        for (let y = topEnd + rnd(50, 140); y < H - 160; y += rnd(restA, restB)) {
+          add(y, true, drawAll);
+          add(y + rnd(60, 150), false, drawAll);
         }
         box.innerHTML = html;
       }
