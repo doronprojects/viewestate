@@ -1277,7 +1277,18 @@
       95%     { opacity: 0; }
       100%    { opacity: 0.9; }
     }
-    @media (max-width: 700px) { .qr-scan { display: none; } }
+    /* ── mobile: shrink the whole scan scene so phone + QR fit, then zoom the
+       phone back to full size once the scan completes (synced to the 13s cycle) ── */
+    @keyframes phoneZoomMobile {
+      0%, 27%   { transform: scale(0.68); }
+      36%, 91%  { transform: translateX(101px) scale(1); }
+      96%, 100% { transform: scale(0.68); }
+    }
+    @keyframes qrScanFadeMobile {
+      0%, 27%   { opacity: 1; }
+      33%, 91%  { opacity: 0; }
+      96%, 100% { opacity: 1; }
+    }
 
     .phone {
       width: 272px;
@@ -1488,6 +1499,8 @@
       .phone__scan { animation: none; opacity: 0; }
       .phone__scan-line, .phone__scan-pop { animation: none; }
       .phone__scan-pop { opacity: 0; }
+      .phone-wrap { animation: none !important; transform: none !important; }
+      .qr-scan { animation: none !important; display: none !important; }
     }
 
     /* ===== TESTIMONIALS ===== */
@@ -1684,6 +1697,15 @@
       .nav, .nav--scrolled { padding-left: 20px; padding-right: 20px; }
       .nav__links { display: none; }
       .nav__ham { display: flex; }
+      /* QR scan scene — match the desktop composition (phone + QR + cone),
+         scaled to fit the phone; the phone zooms back to full size after the scan */
+      .sec-qr { overflow: hidden; }
+      .qr-inner { grid-template-columns: minmax(0, 1fr); }
+      .phone-wrap { justify-self: center; transform-origin: center center;
+        animation: phoneZoomMobile 13s ease-in-out infinite; animation-play-state: paused; }
+      .phone-wrap.visible { animation-play-state: running; }
+      .qr-scan { display: flex; animation: qrScanFadeMobile 13s ease-in-out infinite; animation-play-state: paused; }
+      .phone-wrap.visible .qr-scan { animation-play-state: running; }
       .qr-steps { grid-template-columns: 1fr; grid-template-rows: auto; grid-auto-flow: row; gap: 20px; }
       .qr-step { gap: 14px; }
       .qr-step__n { font-size: 36px; min-width: 42px; }
@@ -1692,7 +1714,7 @@
       .sec-props, .sec-about, .sec-service, .sec-qr, .sec-testi, .sec-contact { padding: 52px 20px; }
       .sec-stats { padding: 40px 20px; }
       footer { padding: 36px 20px; flex-direction: column; text-align: center; }
-      .hero { min-height: 100dvh; padding: 90px 0 34px; }
+      .hero { min-height: auto; padding: 90px 0 40px; }
       .hero__sound { left: 20px; bottom: 28px; }
       .hero__scroll { display: none; }
       .hero__h1 { font-size: clamp(50px, 14vw, 80px); margin-bottom: 16px; }
