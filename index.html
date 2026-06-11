@@ -1848,7 +1848,7 @@
       <!-- ▼▼ רצועת וידאו רוחבית עם הסטטיסטיקות עליה ▼▼ -->
       <div class="hero__videostrip">
         <video id="heroBgVideo" autoplay muted loop playsinline preload="metadata" poster="videos/bg-poster.jpg" aria-hidden="true">
-          <source src="videos/bg.mp4#t=6" type="video/mp4">
+          <source src="videos/bg.mp4" type="video/mp4">
         </video>
         <div class="hero__videostrip-scrim" aria-hidden="true"></div>
         <div class="hero__stats">
@@ -2188,18 +2188,20 @@
       }
     })();
 
-    /* ---- hero video: begin on the aerial skyline shot and loop from there ---- */
+    /* ---- hero video: begin on the aerial skyline shot (~6s) on first play,
+       then loop the whole clip normally (0 → end → 0 …) ---- */
     (function heroVideoStartOffset() {
       const v = document.getElementById('heroBgVideo');
       if (!v) return;
       const START = 6.0; // seconds — where the aerial cityscape comes into view
-      const seekToStart = () => { try { v.currentTime = START; } catch (e) {} };
+      let jumped = false;
+      const seekToStart = () => {
+        if (jumped) return;
+        jumped = true;
+        try { v.currentTime = START; } catch (e) {}
+      };
       if (v.readyState >= 1) seekToStart();
       v.addEventListener('loadedmetadata', seekToStart);
-      // loop back to START (instead of 0) just before the clip ends
-      v.addEventListener('timeupdate', () => {
-        if (!v.seeking && v.duration && v.currentTime > v.duration - 0.25) seekToStart();
-      });
     })();
 
     function esc(s) {
