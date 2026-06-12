@@ -1314,17 +1314,22 @@
       .rm-step__node, .rm-step__node::after, .rm-step__body { animation: none; }
     }
     @media (max-width: 1080px) {
-      .sec-roadmap { padding: 64px 24px; }
+      .sec-roadmap { padding: 40px 20px; }
+      .roadmap-head { margin: 0 auto 24px; }
+      .roadmap-head .section-h2 { font-size: clamp(25px, 7vw, 34px); }
       .roadmap { grid-template-columns: 1fr; gap: 0; max-width: 480px; }
       .roadmap__path { display: none; }
-      .roadmap__line { display: block; position: absolute; top: 12px; bottom: 12px; left: auto; right: 38px; width: 2px; height: auto; z-index: 0;
+      .roadmap__line { display: block; position: absolute; top: 9px; bottom: 9px; left: auto; right: 27px; width: 2px; height: auto; z-index: 0;
         background: linear-gradient(180deg, rgba(201,163,90,0.12), var(--gold-light) 12%, var(--gold-light) 88%, rgba(201,163,90,0.12)); }
       .rm-step, .rm-step:nth-child(odd), .rm-step:nth-child(even) { margin-top: 0; }
-      .rm-step { flex-direction: row; align-items: flex-start; text-align: right; gap: 22px; padding-bottom: 38px; }
+      .rm-step { flex-direction: row; align-items: flex-start; text-align: right; gap: 15px; padding-bottom: 16px; }
       .rm-step:last-child { padding-bottom: 0; }
-      .rm-step__node { flex-shrink: 0; width: 76px; height: 76px; }
-      .rm-step__body { margin-top: 10px; }
-      .rm-step__desc { max-width: none; }
+      .rm-step__node { flex-shrink: 0; width: 54px; height: 54px; }
+      .rm-step__node svg { width: 24px; height: 24px; }
+      .rm-step__num { min-width: 21px; height: 21px; font-size: 11px; top: -7px; }
+      .rm-step__body { margin-top: 3px; }
+      .rm-step__title { font-size: 15.5px; }
+      .rm-step__desc { font-size: 12.5px; line-height: 1.55; margin-top: 5px; max-width: none; }
     }
 
     /* Phone mockup */
