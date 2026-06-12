@@ -1245,7 +1245,11 @@
       margin: 0 auto;
     }
     /* winding route between the nodes (desktop) */
-    .roadmap__path { position: absolute; top: 0; left: 0; width: 100%; height: 132px; z-index: 0; pointer-events: none; overflow: visible; opacity: 0.7; }
+    .roadmap__path { position: absolute; top: 0; left: 0; width: 100%; height: 132px; z-index: 0; pointer-events: none; overflow: visible; opacity: 0.95; }
+    /* lane markings drift along the road like gentle traffic */
+    .rm-road-line { animation: roadFlow 4s linear infinite; }
+    @keyframes roadFlow { to { stroke-dashoffset: -28; } }
+    @media (prefers-reduced-motion: reduce) { .rm-road-line { animation: none; } }
     .roadmap__line { display: none; } /* used only on mobile */
     .rm-step { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
     /* alternate the nodes up/down so the route weaves */
@@ -2227,18 +2231,16 @@
     <div class="roadmap">
       <div class="roadmap__line" aria-hidden="true"></div>
       <svg class="roadmap__path" viewBox="0 0 1000 132" preserveAspectRatio="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="rmGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#C9A35A" stop-opacity="0.12"/>
-            <stop offset="0.18" stop-color="#C9A35A"/>
-            <stop offset="0.82" stop-color="#C9A35A"/>
-            <stop offset="1" stop-color="#C9A35A" stop-opacity="0.12"/>
-          </linearGradient>
-        </defs>
-        <path d="M92,93 C194,93 194,39 296,39 C398,39 398,93 500,93 C602,93 602,39 704,39 C806,39 806,93 908,93"
-              fill="none" stroke="url(#rmGrad)" stroke-width="2.5"
-              stroke-dasharray="2 10" stroke-linecap="round"
-              vector-effect="non-scaling-stroke"/>
+        <!-- gold edges -->
+        <path class="rm-road-edge" d="M92,93 C194,93 194,39 296,39 C398,39 398,93 500,93 C602,93 602,39 704,39 C806,39 806,93 908,93"
+              fill="none" stroke="rgba(201,163,90,0.55)" stroke-width="22" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+        <!-- asphalt surface -->
+        <path class="rm-road-surface" d="M92,93 C194,93 194,39 296,39 C398,39 398,93 500,93 C602,93 602,39 704,39 C806,39 806,93 908,93"
+              fill="none" stroke="#1b120a" stroke-width="18" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+        <!-- dashed centre line (lane marking) -->
+        <path class="rm-road-line" d="M92,93 C194,93 194,39 296,39 C398,39 398,93 500,93 C602,93 602,39 704,39 C806,39 806,93 908,93"
+              fill="none" stroke="#E8D5A8" stroke-width="2.5" stroke-linecap="round"
+              stroke-dasharray="15 13" vector-effect="non-scaling-stroke"/>
       </svg>
 
       <div class="rm-step reveal">
