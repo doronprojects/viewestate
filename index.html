@@ -1170,44 +1170,37 @@
       align-items: start;
     }
 
-    .qr-desc {
-      font-size: 16px;
-      color: rgba(250,246,240,0.78);
-      line-height: 1.7;
-      max-width: 460px;
-      margin: 18px 0 30px;
-    }
-
     .qr-steps {
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: auto auto;
       grid-auto-flow: column;
-      gap: 26px 36px;
+      gap: 18px 40px;
+      margin-top: 14px;
     }
 
-    .qr-step { display: flex; gap: 20px; align-items: flex-start; }
+    .qr-step { display: flex; gap: 24px; align-items: flex-start; }
 
     .qr-step__n {
       font-family: 'Playfair Display', serif;
-      font-size: 52px;
+      font-size: 70px;
       font-weight: 700;
       color: var(--gold-light);
       opacity: 0.18;
       line-height: 1;
-      min-width: 60px;
+      min-width: 82px;
       text-align: center;
     }
 
     .qr-step__title {
       font-family: var(--serif);
-      font-size: 18px;
+      font-size: 22px;
       font-weight: 600;
       color: #FAF6F0;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
-    .qr-step__desc { font-size: 14px; color: rgba(250,246,240,0.72); line-height: 1.65; }
+    .qr-step__desc { font-size: 16px; color: rgba(250,246,240,0.72); line-height: 1.65; }
 
     /* Phone mockup */
     .phone-wrap { display: flex; align-items: center; justify-content: center; gap: 64px; position: relative; }
@@ -1735,7 +1728,6 @@
       .qr-step { gap: 14px; }
       .qr-step__n { font-size: 36px; min-width: 42px; }
       .qr-step__title { font-size: 16px; }
-      .qr-desc { font-size: 15px; margin: 14px 0 26px; }
       .sec-props, .sec-about, .sec-service, .sec-qr, .sec-testi, .sec-contact { padding: 52px 20px; }
       .sec-stats { padding: 40px 20px; }
       footer { padding: 36px 20px; flex-direction: column; text-align: center; }
@@ -1901,11 +1893,6 @@
           הנכס שלך<br>בכיס של כל<br>
           <em style="color:var(--gold-light)">עובר אורח</em>
         </h2>
-        <p class="qr-desc">
-          QR code ייחודי לכל נכס.<br>
-          סורקים — רואים וידאו מקצועי מיידית.<br>
-          גוללים — תמונות, פרטים, ו-WhatsApp ישיר.
-        </p>
         <div class="qr-steps">
           <div class="qr-step">
             <div class="qr-step__n">01</div>
