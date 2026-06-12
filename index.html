@@ -1169,6 +1169,12 @@
       gap: 96px;
       align-items: start;
     }
+    /* text column matches the phone's height; steps span from the top
+       heading down to the bottom of the phone */
+    .qr-inner > .reveal:not(.phone-wrap) { display: flex; flex-direction: column; }
+    @media (min-width: 1101px) {
+      .qr-inner > .reveal:not(.phone-wrap) { min-height: 578px; } /* = phone mockup height */
+    }
 
     .qr-steps {
       display: grid;
@@ -1176,7 +1182,8 @@
       grid-template-rows: auto auto;
       grid-auto-flow: column;
       gap: 18px 40px;
-      margin-top: 14px;
+      margin-top: auto;
+      padding-top: 28px;
     }
 
     .qr-step { display: flex; gap: 24px; align-items: flex-start; }
