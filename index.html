@@ -1244,14 +1244,13 @@
       max-width: 1080px;
       margin: 0 auto;
     }
-    .roadmap__line {
-      position: absolute;
-      top: 39px; left: 12.5%; right: 12.5%;
-      height: 2px; z-index: 0;
-      background: linear-gradient(90deg, rgba(201,163,90,0.12), var(--gold-light) 18%, var(--gold-light) 82%, rgba(201,163,90,0.12));
-      opacity: 0.5;
-    }
+    /* winding route between the nodes (desktop) */
+    .roadmap__path { position: absolute; top: 0; left: 0; width: 100%; height: 132px; z-index: 0; pointer-events: none; overflow: visible; opacity: 0.7; }
+    .roadmap__line { display: none; } /* used only on mobile */
     .rm-step { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    /* alternate the nodes up/down so the route weaves */
+    .rm-step:nth-child(odd)  { margin-top: 54px; }
+    .rm-step:nth-child(even) { margin-top: 0; }
     .rm-step__node {
       position: relative;
       width: 78px; height: 78px; border-radius: 50%;
@@ -1277,8 +1276,10 @@
     @media (max-width: 900px) {
       .sec-roadmap { padding: 64px 24px; }
       .roadmap { grid-template-columns: 1fr; gap: 0; max-width: 480px; }
-      .roadmap__line { top: 12px; bottom: 12px; left: auto; right: 38px; width: 2px; height: auto;
+      .roadmap__path { display: none; }
+      .roadmap__line { display: block; position: absolute; top: 12px; bottom: 12px; left: auto; right: 38px; width: 2px; height: auto; z-index: 0;
         background: linear-gradient(180deg, rgba(201,163,90,0.12), var(--gold-light) 12%, var(--gold-light) 88%, rgba(201,163,90,0.12)); }
+      .rm-step, .rm-step:nth-child(odd), .rm-step:nth-child(even) { margin-top: 0; }
       .rm-step { flex-direction: row; align-items: flex-start; text-align: right; gap: 22px; padding-bottom: 38px; }
       .rm-step:last-child { padding-bottom: 0; }
       .rm-step__node { flex-shrink: 0; width: 76px; height: 76px; }
@@ -2197,6 +2198,20 @@
     </div>
     <div class="roadmap">
       <div class="roadmap__line" aria-hidden="true"></div>
+      <svg class="roadmap__path" viewBox="0 0 1000 132" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="rmGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#C9A35A" stop-opacity="0.12"/>
+            <stop offset="0.18" stop-color="#C9A35A"/>
+            <stop offset="0.82" stop-color="#C9A35A"/>
+            <stop offset="1" stop-color="#C9A35A" stop-opacity="0.12"/>
+          </linearGradient>
+        </defs>
+        <path d="M115,39 C243,39 243,93 372,93 C500,93 500,39 628,39 C757,39 757,93 885,93"
+              fill="none" stroke="url(#rmGrad)" stroke-width="2.5"
+              stroke-dasharray="2 10" stroke-linecap="round"
+              vector-effect="non-scaling-stroke"/>
+      </svg>
 
       <div class="rm-step reveal">
         <div class="rm-step__node">
