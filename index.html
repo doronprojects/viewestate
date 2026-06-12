@@ -1126,6 +1126,7 @@
     .sec-service__head { text-align: center; max-width: 720px; margin: 0 auto 60px; }
     .sec-service__sub { color: var(--text-mid); font-size: 17px; margin-top: 18px; line-height: 1.85; }
     .service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; max-width: 980px; margin: 0 auto; }
+    .sec-about > .service-grid { margin-top: 54px; }
     .service-col {
       background: var(--bg);
       border: 1px solid var(--border);
@@ -1860,12 +1861,14 @@
       .qr-step { gap: 14px; }
       .qr-step__n { font-size: 36px; min-width: 42px; }
       .qr-step__title { font-size: 16px; }
-      /* about photo as a small circular avatar on mobile */
-      .about-grid { gap: 30px; }
-      .about-visual { align-items: center; }
-      .about-img-wrap { flex: none; width: 148px; height: 148px; min-height: 0; padding: 5px; border-radius: 50%; margin: 0 auto; }
+      /* mobile: heading + text on top, circular photo below, cards full-width */
+      .about-grid { display: flex; flex-direction: column; gap: 22px; }
+      .about-body { order: 1; }
+      .about-visual { order: 2; align-items: center; }
+      .about-img-wrap { flex: none; width: 128px; height: 128px; min-height: 0; padding: 4px; border-radius: 50%; margin: 0 auto; }
       .about-img-wrap img { border-radius: 50%; object-position: center 18%; }
       .about-badge { display: none; }
+      .sec-about > .service-grid { grid-template-columns: 1fr; max-width: 420px; margin-top: 30px; gap: 16px; }
       .sec-props, .sec-about, .sec-service, .sec-qr, .sec-testi, .sec-contact { padding: 52px 20px; }
       .sec-stats { padding: 40px 20px; }
       footer { padding: 36px 20px; flex-direction: column; text-align: center; }
@@ -2186,7 +2189,7 @@
       </div>
     </div>
 
-    <div class="service-grid reveal" style="margin-top:54px">
+    <div class="service-grid reveal">
       <div class="service-col">
         <div class="service-col__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></div>
         <h3>למוכרים</h3>
