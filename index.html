@@ -1281,6 +1281,7 @@
       gap: 22px;
       max-width: 1240px;
       margin: 0 auto;
+      direction: ltr; /* steps flow left→right (01 on the left) */
     }
     /* winding route between the nodes (desktop) */
     .roadmap__path { position: absolute; top: 0; left: 0; width: 100%; height: 132px; z-index: 0; pointer-events: none; overflow: visible; opacity: 0.95; }
@@ -1291,7 +1292,7 @@
     @keyframes roadFlowVUp { to { stroke-dashoffset: 21; } }
     @media (prefers-reduced-motion: reduce) { .rm-road-line, .rmv-line { animation: none; } }
     .roadmap__road-v { display: none; } /* vertical road — mobile only */
-    .rm-step { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .rm-step { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; direction: rtl; }
     /* alternate the nodes up/down so the route weaves */
     .rm-step:nth-child(odd)  { margin-top: 54px; }
     .rm-step:nth-child(even) { margin-top: 0; }
