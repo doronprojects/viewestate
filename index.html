@@ -1863,7 +1863,7 @@
          scaled to fit the phone; the phone zooms back to full size after the scan */
       .sec-qr { overflow: hidden; }
       .qr-inner { grid-template-columns: minmax(0, 1fr); }
-      .phone-wrap { justify-self: center; transform-origin: center center;
+      .phone-wrap { justify-self: center; transform-origin: center bottom;
         animation: phoneZoomMobile 13s ease-in-out infinite; animation-play-state: paused; }
       .phone-wrap.visible { animation-play-state: running; }
       .qr-scan { display: flex; animation: qrScanFadeMobile 13s ease-in-out infinite; animation-play-state: paused; }
@@ -1882,6 +1882,9 @@
       .sec-about > .service-grid { grid-template-columns: 1fr; max-width: 420px; margin-top: 30px; gap: 16px; }
       .sec-props, .sec-about, .sec-service, .sec-qr, .sec-testi, .sec-contact { padding: 38px 20px; }
       .sec-stats { padding: 30px 20px; }
+      /* the mobile phone mockup rests scaled-down; anchored to its bottom (above),
+         so trim the gap here to flow straight into "נכסים נבחרים" with no empty band */
+      .sec-qr { padding-bottom: 10px; }
       .qr-inner { gap: 30px; }
       footer { padding: 36px 20px; flex-direction: column; text-align: center; }
       .hero { min-height: auto; padding: 90px 0 24px; }
@@ -1899,7 +1902,7 @@
       .prop-card--sm { min-height: 280px; }
       .stat__num { font-size: 48px; }
       .sec-props__header { flex-direction: column; align-items: flex-start; gap: 24px; margin-bottom: 20px; }
-      .sec-props { padding-top: 40px; }
+      .sec-props { padding-top: 14px; }
       .coverflow { height: 400px; }
       /* compact traffic light on the small mobile card */
       .cf-item .prop-card__status { top: 12px; left: 12px; padding: 8px 10px; gap: 5px; border-radius: 11px; }
