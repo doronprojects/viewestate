@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>חתימה דיגיטלית על חוזים | ViewEstate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F8F4EE; --bg-card: #FFFFFF; --bg-alt: #EDE8DF;
+      --gold: #9A7230; --gold-light: #C9A35A; --gold-pale: #E8D5A8;
+      --dark: #1C1008; --text: #1C1008; --text-mid: #56382A; --text-muted: #8A6A50;
+      --line: rgba(154,114,48,0.28);
+      --serif: 'Frank Ruhl Libre','David',Georgia,serif;
+      --sans: 'Heebo',Arial,sans-serif;
+      --ok: #2e7d32; --err: #b3261e;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.6; }
+
+    /* ===== top bar ===== */
+    .topbar { background: var(--dark); color: #F8F4EE; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .topbar__logo { font-family: 'Playfair Display',serif; font-weight: 700; font-size: 22px; letter-spacing: .5px; }
+    .topbar__logo b { color: var(--gold-light); }
+    .topbar__back { color: rgba(248,244,238,.8); text-decoration: none; font-size: 14px; }
+    .topbar__back:hover { color: var(--gold-light); }
+
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 26px 20px 80px; }
+
+    /* ===== disclaimer ===== */
+    .legal-note { background: #FFF8E8; border: 1px solid var(--gold-pale); border-radius: 12px; padding: 14px 18px; font-size: 13px; color: var(--text-mid); margin-bottom: 24px; }
+    .legal-note b { color: var(--gold-dark, #6B4E1A); }
+
+    h1.page-h { font-family: var(--serif); font-weight: 900; font-size: clamp(26px,4vw,38px); margin: 8px 0 4px; }
+    .page-sub { color: var(--text-muted); margin: 0 0 24px; }
+
+    /* ===== contract switch ===== */
+    .switch { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .switch button { background: var(--bg-card); border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 20px; font-size: 15px; font-weight: 700; color: var(--text-mid); font-family: var(--serif); }
+    .switch button.on { background: var(--dark); color: var(--gold-light); border-color: var(--dark); }
+
+    .layout { display: grid; grid-template-columns: 360px 1fr; gap: 28px; align-items: start; }
+    @media (max-width: 880px) { .layout { grid-template-columns: 1fr; } }
+
+    /* ===== form ===== */
+    .form-card { background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px; padding: 22px; position: sticky; top: 18px; }
+    @media (max-width: 880px) { .form-card { position: static; } }
+    .form-card h3 { font-family: var(--serif); font-size: 17px; margin: 0 0 4px; }
+    .form-card .hint { font-size: 12px; color: var(--text-muted); margin: 0 0 16px; }
+    .fld { margin-bottom: 13px; }
+    .fld > label { display: block; font-size: 12.5px; font-weight: 500; color: var(--text-mid); margin-bottom: 5px; }
+    .fld input, .fld select, .fld textarea {
+      width: 100%; padding: 9px 11px; border: 1.5px solid var(--line); border-radius: 9px;
+      font-family: var(--sans); font-size: 14px; background: #fff; color: var(--text);
+    }
+    .fld input:focus, .fld select:focus, .fld textarea:focus { outline: none; border-color: var(--gold); }
+    .grp-title { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); font-weight: 700; margin: 20px 0 10px; border-top: 1px solid var(--line); padding-top: 14px; }
+    .grp-title:first-of-type { border-top: none; padding-top: 0; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .chk { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text-mid); margin: 6px 0; }
+    .chk input { width: auto; margin-top: 3px; }
+
+    /* ===== document ===== */
+    .doc-card { background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 18px 50px rgba(28,16,8,.08); overflow: hidden; }
+    .doc { padding: 40px 44px; }
+    @media (max-width: 560px) { .doc { padding: 26px 22px; } }
+    .doc__head { text-align: center; border-bottom: 2px solid var(--gold); padding-bottom: 18px; margin-bottom: 26px; }
+    .doc__head .brand { font-family: 'Playfair Display',serif; font-size: 24px; letter-spacing: 1px; }
+    .doc__head .brand b { color: var(--gold); }
+    .doc__head h2 { font-family: var(--serif); font-weight: 900; font-size: 22px; margin: 14px 0 4px; }
+    .doc__head .law { font-size: 12px; color: var(--text-muted); }
+    .doc p, .doc li { font-size: 14.5px; color: #2a1c12; }
+    .doc h4 { font-family: var(--serif); font-size: 16px; margin: 22px 0 8px; color: var(--gold-dark,#6B4E1A); }
+    .doc .v { font-weight: 700; color: var(--dark); border-bottom: 1px dotted var(--gold); padding: 0 3px; }
+    .doc ol { padding-inline-start: 20px; }
+    .doc ol li { margin-bottom: 7px; }
+    .doc .clause { margin-bottom: 4px; }
+    .doc table.party { width: 100%; border-collapse: collapse; margin: 6px 0 14px; font-size: 14px; }
+    .doc table.party td { border: 1px solid var(--line); padding: 7px 10px; }
+    .doc table.party td.k { background: var(--bg-alt); width: 130px; color: var(--text-mid); font-size: 12.5px; }
+
+    /* ===== signature ===== */
+    .sign-zone { border-top: 2px dashed var(--line); margin-top: 30px; padding-top: 24px; }
+    .sign-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 560px) { .sign-grid { grid-template-columns: 1fr; } }
+    .sign-box label { font-size: 12.5px; color: var(--text-mid); display: block; margin-bottom: 6px; font-weight: 500; }
+    .pad-wrap { position: relative; }
+    canvas.pad { width: 100%; height: 150px; border: 1.5px solid var(--line); border-radius: 10px; background: #fffdf8; touch-action: none; display: block; }
+    .pad-clear { position: absolute; top: 8px; inset-inline-start: 10px; font-size: 12px; color: var(--gold-dark,#6B4E1A); background: rgba(255,255,255,.85); border: 1px solid var(--line); border-radius: 7px; padding: 3px 9px; }
+    .sign-meta { margin-top: 10px; font-size: 12px; color: var(--text-muted); min-height: 18px; }
+    .consent { display: flex; align-items: flex-start; gap: 10px; background: var(--bg-alt); border-radius: 10px; padding: 12px 14px; margin: 22px 0 6px; font-size: 13px; color: var(--text-mid); }
+    .consent input { width: auto; margin-top: 3px; }
+
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+    .btn { border: none; border-radius: 11px; padding: 14px 22px; font-size: 15px; font-weight: 700; font-family: var(--serif); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-gold { background: var(--gold); color: #fff; }
+    .btn-gold:disabled { background: #d8cbb2; color: #fff; cursor: not-allowed; }
+    .btn-dark { background: var(--dark); color: var(--gold-light); }
+    .btn-ghost { background: transparent; border: 1.5px solid var(--line); color: var(--text-mid); }
+    .btn-wa { background: #25D366; color: #fff; }
+    .signed-banner { display: none; align-items: center; gap: 10px; background: #ecf7ed; border: 1px solid #bfe0c2; color: var(--ok); border-radius: 11px; padding: 12px 16px; margin-top: 18px; font-weight: 700; }
+    .err-msg { color: var(--err); font-size: 13px; margin-top: 8px; display: none; }
+    .foot-disclaimer { font-size: 11.5px; color: var(--text-muted); margin-top: 26px; border-top: 1px solid var(--line); padding-top: 14px; }
+
+    /* ===== print ===== */
+    @media print {
+      .topbar, .legal-note, .switch, .form-card, .actions, .pad-clear, .page-h, .page-sub, .topbar__back { display: none !important; }
+      body { background: #fff; }
+      .wrap { padding: 0; max-width: none; }
+      .layout { display: block; }
+      .doc-card { box-shadow: none; border: none; }
+      .doc { padding: 0; }
+      .consent { background: #fff; border: 1px solid #ccc; }
+      canvas.pad { border: 1px solid #999; }
+      .sign-zone { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <span class="topbar__logo"><b>VIEW</b>ESTATE</span>
+    <a href="index.html" class="topbar__back">‹ חזרה לאתר</a>
+  </div>
+
+  <div class="wrap">
+    <div class="legal-note">
+      <b>הבהרה משפטית:</b> מסמך זה הוא תבנית לנוחות בלבד. לפני שימוש מול לקוחות יש לקבל אישור עורך/ת דין מקרקעין.
+      החתימה בעמוד זה היא <b>חתימה אלקטרונית רגילה</b> בעלת ערך ראייתי; לרמת אכיפות מרבית מומלץ שירות חתימה אלקטרונית מאושרת.
+    </div>
+
+    <h1 class="page-h">חתימה דיגיטלית על חוזה</h1>
+    <p class="page-sub">מלאו את הפרטים, קראו את ההסכם, חתמו ושמרו / שלחו.</p>
+
+    <div class="switch">
+      <button id="tab-broker" class="on" onclick="setDoc('broker')">הזמנת שירותי תיווך</button>
+      <button id="tab-excl" onclick="setDoc('excl')">הסכם בלעדיות</button>
+    </div>
+
+    <div class="layout">
+      <!-- ===== FORM ===== -->
+      <div class="form-card">
+        <h3>פרטי ההסכם</h3>
+        <p class="hint">השדות מתעדכנים בחוזה בזמן אמת.</p>
+
+        <div class="grp-title">פרטי המתווך</div>
+        <div class="fld"><label>שם המתווך / המשרד</label><input data-f="brokerName" value="דורון — ViewEstate"></div>
+        <div class="row2">
+          <div class="fld"><label>ת"ז / ח.פ</label><input data-f="brokerId" placeholder="________"></div>
+          <div class="fld"><label>מס' רישיון תיווך</label><input data-f="brokerLicense" placeholder="________"></div>
+        </div>
+        <div class="fld"><label>כתובת המשרד</label><input data-f="brokerAddr" placeholder="רחוב, עיר"></div>
+        <div class="fld"><label>טלפון</label><input data-f="brokerPhone" placeholder="05_-_______"></div>
+
+        <div class="grp-title">פרטי הלקוח / המזמין</div>
+        <div class="fld"><label>שם מלא</label><input data-f="clientName" placeholder="שם פרטי ומשפחה"></div>
+        <div class="row2">
+          <div class="fld"><label>ת"ז</label><input data-f="clientId" placeholder="_________"></div>
+          <div class="fld"><label>טלפון</label><input data-f="clientPhone" placeholder="05_-_______"></div>
+        </div>
+        <div class="fld"><label>כתובת</label><input data-f="clientAddr" placeholder="רחוב, עיר"></div>
+
+        <div class="grp-title">פרטי הנכס והעסקה</div>
+        <div class="fld"><label>סוג העסקה</label>
+          <select data-f="dealType"><option>מכירה</option><option>קנייה</option><option>השכרה</option><option>שכירות</option></select>
+        </div>
+        <div class="fld"><label>כתובת הנכס</label><input data-f="propAddr" placeholder="רחוב ומספר, עיר"></div>
+        <div class="row2">
+          <div class="fld"><label>גוש</label><input data-f="block" placeholder="____"></div>
+          <div class="fld"><label>חלקה</label><input data-f="parcel" placeholder="____"></div>
+        </div>
+        <div class="row2">
+          <div class="fld"><label>סוג נכס</label><input data-f="propType" placeholder="דירה / וילה…"></div>
+          <div class="fld"><label>שטח (מ"ר)</label><input data-f="propArea" placeholder="___"></div>
+        </div>
+        <div class="fld"><label>מחיר העסקה המבוקש (בקירוב, ₪)</label><input data-f="price" placeholder="0"></div>
+
+        <div class="grp-title">דמי תיווך</div>
+        <div class="fld"><label>שיעור דמי התיווך (%)</label><input data-f="feePct" value="2"></div>
+        <label class="chk"><input type="checkbox" data-f="feeVat" checked> דמי התיווך אינם כוללים מע"מ (יתווסף כחוק)</label>
+
+        <div id="excl-fields" style="display:none">
+          <div class="grp-title">בלעדיות</div>
+          <div class="row2">
+            <div class="fld"><label>תחילת בלעדיות</label><input type="date" data-f="exclFrom"></div>
+            <div class="fld"><label>סיום בלעדיות</label><input type="date" data-f="exclTo"></div>
+          </div>
+          <p class="hint">לדירת מגורים — תקופת הבלעדיות מוגבלת בחוק. סמנו את פעולות השיווק שיבוצעו תוך 30 יום:</p>
+          <label class="chk"><input type="checkbox" class="mkt" value="פרסום הנכס באתרי נדל״ן ומדיה דיגיטלית" checked> פרסום באתרי נדל״ן ומדיה דיגיטלית</label>
+          <label class="chk"><input type="checkbox" class="mkt" value="צילום מקצועי ווידאו של הנכס" checked> צילום מקצועי ווידאו</label>
+          <label class="chk"><input type="checkbox" class="mkt" value="הקמת דף נכס דיגיטלי ייעודי" checked> דף נכס דיגיטלי ייעודי</label>
+          <label class="chk"><input type="checkbox" class="mkt" value="שילוט ׳למכירה׳ בנכס"> שילוט ׳למכירה׳ בנכס</label>
+          <label class="chk"><input type="checkbox" class="mkt" value="קמפיין ממומן ופנייה למאגר לקוחות" checked> קמפיין ממומן ופנייה למאגר לקוחות</label>
+        </div>
+      </div>
+
+      <!-- ===== DOCUMENT ===== -->
+      <div class="doc-card">
+        <div class="doc" id="docBody"><!-- rendered by JS --></div>
+
+        <div class="doc" style="padding-top:0">
+          <div class="sign-zone">
+            <div class="consent">
+              <input type="checkbox" id="consent">
+              <label for="consent" style="margin:0">אני מאשר/ת כי קראתי והבנתי את ההסכם לעיל, כי הפרטים נכונים, וכי חתימתי האלקטרונית מהווה הסכמה מחייבת לכל תנאיו.</label>
+            </div>
+
+            <div class="sign-grid">
+              <div class="sign-box">
+                <label>חתימת הלקוח/ה</label>
+                <div class="pad-wrap">
+                  <canvas class="pad" id="padClient"></canvas>
+                  <button type="button" class="pad-clear" onclick="clearPad('padClient')">נקה</button>
+                </div>
+                <div class="sign-meta" id="metaClient"></div>
+              </div>
+              <div class="sign-box">
+                <label>חתימת המתווך</label>
+                <div class="pad-wrap">
+                  <canvas class="pad" id="padBroker"></canvas>
+                  <button type="button" class="pad-clear" onclick="clearPad('padBroker')">נקה</button>
+                </div>
+                <div class="sign-meta">דורון — ViewEstate</div>
+              </div>
+            </div>
+
+            <div class="err-msg" id="errMsg"></div>
+            <div class="actions">
+              <button class="btn btn-gold" id="btnSign" onclick="doSign()">חתום ואשר</button>
+              <button class="btn btn-dark" onclick="window.print()">הורד / הדפס PDF</button>
+              <button class="btn btn-wa" onclick="sendWA()">שלח בוואטסאפ</button>
+            </div>
+            <div class="signed-banner" id="signedBanner">✓ נחתם דיגיטלית · <span id="signedAt"></span></div>
+
+            <p class="foot-disclaimer">
+              מסמך זה נחתם בחתימה אלקטרונית. תיעוד החתימה כולל חותמת תאריך ושעה.
+              תבנית זו טעונה אישור עורך דין טרם שימוש; אין באמור ייעוץ משפטי.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var DATA = {};
+    var CUR = 'broker';
+    var SIGNED = null;
+
+    function g(k, fallback){ var v = DATA[k]; return (v===undefined||v===null||v==='') ? (fallback||'__________') : v; }
+    function money(v){ var n = String(v||'').replace(/[^\d.]/g,''); if(!n) return '__________'; return Number(n).toLocaleString('he-IL'); }
+
+    function partyTable(role, nameK, idK, addrK, phoneK, extra){
+      var rows = '<tr><td class="k">שם</td><td><span class="v">'+g(nameK)+'</span></td></tr>'+
+                 '<tr><td class="k">ת"ז / ח.פ</td><td><span class="v">'+g(idK)+'</span></td></tr>';
+      if(extra) rows += extra;
+      rows += '<tr><td class="k">כתובת</td><td><span class="v">'+g(addrK)+'</span></td></tr>'+
+              '<tr><td class="k">טלפון</td><td><span class="v">'+g(phoneK)+'</span></td></tr>';
+      return '<h4>'+role+'</h4><table class="party">'+rows+'</table>';
+    }
+
+    function feeText(){
+      var vat = DATA.feeVat ? ' בתוספת מע"מ כדין' : '';
+      return 'דמי תיווך בשיעור <span class="v">'+g('feePct','2')+'%</span> ממחיר העסקה בפועל'+vat;
+    }
+
+    function propBlock(){
+      return '<table class="party">'+
+        '<tr><td class="k">כתובת הנכס</td><td><span class="v">'+g('propAddr')+'</span></td></tr>'+
+        '<tr><td class="k">גוש / חלקה</td><td><span class="v">'+g('block')+'</span> / <span class="v">'+g('parcel')+'</span></td></tr>'+
+        '<tr><td class="k">סוג נכס</td><td><span class="v">'+g('propType')+'</span></td></tr>'+
+        '<tr><td class="k">שטח</td><td><span class="v">'+g('propArea')+'</span> מ"ר</td></tr>'+
+        '<tr><td class="k">סוג העסקה</td><td><span class="v">'+g('dealType','מכירה')+'</span></td></tr>'+
+        '<tr><td class="k">מחיר מבוקש (בקירוב)</td><td><span class="v">'+money(DATA.price)+'</span> ₪</td></tr>'+
+        '</table>';
+    }
+
+    function brokerDoc(){
+      return '<div class="doc__head"><div class="brand"><b>VIEW</b>ESTATE</div>'+
+        '<h2>הזמנה בכתב לשירותי תיווך במקרקעין</h2>'+
+        '<div class="law">בהתאם לחוק המתווכים במקרקעין, התשנ"ו–1996 ולתקנותיו</div></div>'+
+        '<p>נחתם ביום <span class="v" id="dDate">'+todayHe()+'</span> בין הצדדים:</p>'+
+        partyTable('המתווך', 'brokerName','brokerId','brokerAddr','brokerPhone',
+          '<tr><td class="k">מס\' רישיון</td><td><span class="v">'+g('brokerLicense')+'</span></td></tr>')+
+        partyTable('המזמין (הלקוח)', 'clientName','clientId','clientAddr','clientPhone')+
+        '<h4>1. הנכס והעסקה</h4>'+propBlock()+
+        '<h4>2. שירותי התיווך</h4>'+
+        '<ol>'+
+        '<li>המזמין מזמין בזאת מהמתווך שירותי תיווך לגבי הנכס והעסקה המפורטים לעיל.</li>'+
+        '<li>'+feeText()+', ישולמו עם חתימת זכרון דברים או הסכם מחייב בעסקה.</li>'+
+        '<li>המזמין מאשר כי המתווך הוא שהציג בפניו את הנכס/הצד הנגדי לראשונה, וכי המתווך יהא "הגורם היעיל" להתקשרות, כמשמעו בחוק.</li>'+
+        '<li>דמי התיווך יחולו גם אם העסקה תושלם לאחר מועד הזמנה זו, ובלבד שפעולת המתווך הייתה הגורם היעיל לה.</li>'+
+        '<li>הזמנה זו אינה בלעדית, אלא אם נחתם בנפרד הסכם בלעדיות.</li>'+
+        '</ol>'+
+        '<h4>3. שונות</h4>'+
+        '<ol>'+
+        '<li>על הזמנה זו יחולו דיני מדינת ישראל; סמכות השיפוט הבלעדית נתונה לבתי המשפט המוסמכים במחוז תל אביב.</li>'+
+        '<li>המזמין מאשר כי קרא והבין את ההזמנה טרם חתימתו.</li>'+
+        '</ol>';
+    }
+
+    function exclDoc(){
+      var mkt = [].slice.call(document.querySelectorAll('.mkt:checked')).map(function(c){return '<li>'+c.value+'</li>';}).join('') || '<li>__________</li>';
+      return '<div class="doc__head"><div class="brand"><b>VIEW</b>ESTATE</div>'+
+        '<h2>הסכם בלעדיות בתיווך מקרקעין</h2>'+
+        '<div class="law">בהתאם לסעיף 9 לחוק המתווכים במקרקעין, התשנ"ו–1996 ולתקנותיו</div></div>'+
+        '<p>נחתם ביום <span class="v">'+todayHe()+'</span> בין הצדדים:</p>'+
+        partyTable('המתווך', 'brokerName','brokerId','brokerAddr','brokerPhone',
+          '<tr><td class="k">מס\' רישיון</td><td><span class="v">'+g('brokerLicense')+'</span></td></tr>')+
+        partyTable('המזמין (בעל הנכס)', 'clientName','clientId','clientAddr','clientPhone')+
+        '<h4>1. הנכס</h4>'+propBlock()+
+        '<h4>2. הענקת בלעדיות</h4>'+
+        '<ol>'+
+        '<li>המזמין מעניק למתווך <b>בלעדיות</b> בשיווק ובתיווך הנכס לתקופה שמיום <span class="v">'+g('exclFrom')+'</span> ועד יום <span class="v">'+g('exclTo')+'</span>.</li>'+
+        '<li>לעניין דירת מגורים, תקופת הבלעדיות ופעולות השיווק כפופות למגבלות חוק המתווכים ותקנותיו.</li>'+
+        '<li>בתקופת הבלעדיות לא יתקשר המזמין עם מתווך אחר לגבי הנכס.</li>'+
+        '</ol>'+
+        '<h4>3. פעולות שיווק (יבוצעו תוך 30 יום)</h4><ol>'+mkt+'</ol>'+
+        '<h4>4. דמי תיווך</h4>'+
+        '<ol>'+
+        '<li>'+feeText()+'.</li>'+
+        '<li>נמכר/הושכר הנכס בתקופת הבלעדיות — לרבות באמצעות אחר — יהא המתווך זכאי למלוא דמי התיווך.</li>'+
+        '</ol>'+
+        '<h4>5. שונות</h4>'+
+        '<ol>'+
+        '<li>על הסכם זה יחולו דיני מדינת ישראל; סמכות השיפוט נתונה לבתי המשפט המוסמכים במחוז תל אביב.</li>'+
+        '<li>הצדדים מאשרים כי קראו והבינו את ההסכם טרם חתימתם.</li>'+
+        '</ol>';
+    }
+
+    function todayHe(){
+      var d = new Date();
+      return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear();
+    }
+
+    function render(){
+      document.getElementById('docBody').innerHTML = (CUR==='broker') ? brokerDoc() : exclDoc();
+    }
+
+    function setDoc(which){
+      CUR = which;
+      document.getElementById('tab-broker').classList.toggle('on', which==='broker');
+      document.getElementById('tab-excl').classList.toggle('on', which==='excl');
+      document.getElementById('excl-fields').style.display = (which==='excl') ? 'block' : 'none';
+      render();
+    }
+
+    // bind inputs
+    document.querySelectorAll('[data-f]').forEach(function(el){
+      var key = el.getAttribute('data-f');
+      DATA[key] = (el.type==='checkbox') ? el.checked : el.value;
+      el.addEventListener('input', function(){ DATA[key] = (el.type==='checkbox') ? el.checked : el.value; render(); });
+      el.addEventListener('change', function(){ DATA[key] = (el.type==='checkbox') ? el.checked : el.value; render(); });
+    });
+    document.querySelectorAll('.mkt').forEach(function(c){ c.addEventListener('change', render); });
+
+    // ===== signature pad =====
+    function initPad(id){
+      var c = document.getElementById(id);
+      var ctx = c.getContext('2d');
+      function size(){ var r = c.getBoundingClientRect(); var dpr = window.devicePixelRatio||1; c.width=r.width*dpr; c.height=r.height*dpr; ctx.scale(dpr,dpr); ctx.lineWidth=2.2; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle='#1C1008'; }
+      size();
+      var drawing=false, last=null, dirty=false;
+      function pos(e){ var r=c.getBoundingClientRect(); var t=e.touches?e.touches[0]:e; return {x:t.clientX-r.left, y:t.clientY-r.top}; }
+      function start(e){ drawing=true; last=pos(e); e.preventDefault(); }
+      function move(e){ if(!drawing)return; var p=pos(e); ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(p.x,p.y); ctx.stroke(); last=p; dirty=true; e.preventDefault(); }
+      function end(){ drawing=false; }
+      c.addEventListener('mousedown',start); c.addEventListener('mousemove',move); window.addEventListener('mouseup',end);
+      c.addEventListener('touchstart',start,{passive:false}); c.addEventListener('touchmove',move,{passive:false}); c.addEventListener('touchend',end);
+      c._isDirty = function(){ return dirty; };
+      c._reset = function(){ ctx.clearRect(0,0,c.width,c.height); dirty=false; };
+      window.addEventListener('resize', function(){ /* keep simple: don't wipe on resize */ });
+    }
+    function clearPad(id){ document.getElementById(id)._reset(); }
+    initPad('padClient'); initPad('padBroker');
+
+    function showErr(m){ var e=document.getElementById('errMsg'); e.textContent=m; e.style.display='block'; }
+
+    function doSign(){
+      document.getElementById('errMsg').style.display='none';
+      if(!DATA.clientName || !DATA.clientId){ showErr('יש למלא שם ות"ז של הלקוח לפני החתימה.'); return; }
+      if(!document.getElementById('consent').checked){ showErr('יש לאשר את תיבת ההסכמה לפני החתימה.'); return; }
+      if(!document.getElementById('padClient')._isDirty()){ showErr('נדרשת חתימת הלקוח באזור החתימה.'); return; }
+      var now = new Date();
+      SIGNED = now.toLocaleString('he-IL');
+      document.getElementById('signedAt').textContent = SIGNED + ' · נחתם ע"י ' + DATA.clientName;
+      document.getElementById('metaClient').textContent = 'נחתם: ' + SIGNED;
+      document.getElementById('signedBanner').style.display='flex';
+      document.getElementById('btnSign').disabled = true;
+      document.getElementById('btnSign').textContent = '✓ נחתם';
+    }
+
+    function sendWA(){
+      var doc = (CUR==='broker') ? 'הזמנת שירותי תיווך' : 'הסכם בלעדיות';
+      var lines = ['שלום, מצורף '+doc+' לחתימה דיגיטלית:', '', 'נכס: '+g('propAddr'), 'לקוח: '+g('clientName'),
+        SIGNED ? ('נחתם דיגיטלית: '+SIGNED) : 'טרם נחתם', '', 'קישור: '+location.href];
+      window.open('https://wa.me/?text='+encodeURIComponent(lines.join('\n')), '_blank');
+    }
+
+    render();
+  </script>
+</body>
+</html>
