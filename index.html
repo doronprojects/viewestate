@@ -2656,13 +2656,13 @@
         }
         // dense top (start of the site) — quotes on both sides
         const topEnd = Math.min(H - 160, Math.round(window.innerHeight * 1.15));
-        const topA = mobile ? 120 : 110, topB = mobile ? 185 : 165;
+        const topA = mobile ? 140 : 128, topB = mobile ? 216 : 193;
         for (let y = rnd(60, 130); y < topEnd; y += rnd(topA, topB)) {
           add(y, true, drawTop);
           add(y + rnd(40, 110), false, drawTop);
         }
         // rest of the page — denser fill of the free margins, both sides
-        const restA = mobile ? 230 : 175, restB = mobile ? 360 : 285;
+        const restA = mobile ? 270 : 205, restB = mobile ? 420 : 334;
         for (let y = topEnd + rnd(50, 140); y < H - 160; y += rnd(restA, restB)) {
           add(y, true, drawAll);
           add(y + rnd(60, 150), false, drawAll);
