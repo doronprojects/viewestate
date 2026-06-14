@@ -1861,7 +1861,10 @@
       .nav__ham { display: flex; }
       /* QR scan scene — match the desktop composition (phone + QR + cone),
          scaled to fit the phone; the phone zooms back to full size after the scan */
-      .sec-qr { overflow: hidden; }
+      /* clip only horizontally (contain the phone-zoom scene) but let the
+         phone's drop-shadow bleed downward, so no hard divider line shows
+         before the next section — keeps the uniform borderless background */
+      .sec-qr { overflow-x: clip; }
       .qr-inner { grid-template-columns: minmax(0, 1fr); }
       .phone-wrap { justify-self: center; transform-origin: center center;
         animation: phoneZoomMobile 13s ease-in-out infinite; animation-play-state: paused; }
