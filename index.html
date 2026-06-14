@@ -1281,20 +1281,6 @@
     .rm-step__title { font-family: var(--serif); font-size: 19px; font-weight: 700; color: #FAF6F0; }
     .rm-step__desc { margin-top: 11px; font-size: 14.5px; line-height: 1.65; color: var(--text-mid); max-width: 188px; }
     .rm-step:hover .rm-step__node { border-color: var(--gold-light); transform: translateY(-4px) !important; box-shadow: 0 16px 38px rgba(0,0,0,0.55); }
-    /* middle stops (02–04): the road goes AROUND the icon as a roundabout, not through it */
-    .roadmap .rm-step:nth-child(n+4):nth-child(-n+6) .rm-step__node::before {
-      content: "";
-      position: absolute;
-      left: 50%; top: 50%;
-      width: 122px; height: 122px;
-      transform: translate(-50%, -50%);
-      box-sizing: border-box;
-      border-radius: 50%;
-      border: 18px solid #1b120a;
-      box-shadow: 0 0 0 2px rgba(201,163,90,0.55), inset 0 0 0 2px rgba(201,163,90,0.55);
-      z-index: -1;
-      pointer-events: none;
-    }
 
     /* sequential "light up" along the journey: 01 -> 02 -> 03 -> 04, looping */
     .rm-step__node { animation: rmNodeGlow 11s ease-in-out infinite; animation-delay: var(--rm-delay, 0s); animation-play-state: paused; }
@@ -1337,7 +1323,6 @@
       .roadmap-head .section-h2 { font-size: clamp(25px, 7vw, 34px); }
       .roadmap { grid-template-columns: 1fr; gap: 0; max-width: 480px; position: relative; }
       .roadmap__path { display: none; }
-      .roadmap .rm-step__node::before { display: none; } /* no roundabout on the vertical mobile road */
       /* winding vertical road centred on the node column */
       .roadmap__road-v { display: block; position: absolute; top: 0; bottom: 0; right: 4px; width: 46px; height: 100%; z-index: 0; pointer-events: none; }
       .rm-step, .rm-step:nth-child(odd), .rm-step:nth-child(even) { margin-top: 0; }
@@ -2222,13 +2207,13 @@
       </svg>
       <svg class="roadmap__path" viewBox="0 0 1000 132" preserveAspectRatio="none" aria-hidden="true">
         <!-- gold edges -->
-        <path class="rm-road-edge" d="M92,93 C194,93 194,39 296,39 C398,39 398,93 500,93 C602,93 602,39 704,39 C806,39 806,93 908,93"
+        <path class="rm-road-edge" d="M92,93 C170,93 256,82 256,39 A40,46 0 0 0 336,39 C336,82 460,50 460,93 A40,46 0 0 1 540,93 C540,50 664,82 664,39 A40,46 0 0 0 744,39 C744,82 820,93 908,93"
               fill="none" stroke="rgba(201,163,90,0.55)" stroke-width="22" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
         <!-- asphalt surface -->
-        <path class="rm-road-surface" d="M92,93 C194,93 194,39 296,39 C398,39 398,93 500,93 C602,93 602,39 704,39 C806,39 806,93 908,93"
+        <path class="rm-road-surface" d="M92,93 C170,93 256,82 256,39 A40,46 0 0 0 336,39 C336,82 460,50 460,93 A40,46 0 0 1 540,93 C540,50 664,82 664,39 A40,46 0 0 0 744,39 C744,82 820,93 908,93"
               fill="none" stroke="#1b120a" stroke-width="18" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
         <!-- dashed centre line (lane marking) -->
-        <path class="rm-road-line" d="M92,93 C194,93 194,39 296,39 C398,39 398,93 500,93 C602,93 602,39 704,39 C806,39 806,93 908,93"
+        <path class="rm-road-line" d="M92,93 C170,93 256,82 256,39 A40,46 0 0 0 336,39 C336,82 460,50 460,93 A40,46 0 0 1 540,93 C540,50 664,82 664,39 A40,46 0 0 0 744,39 C744,82 820,93 908,93"
               fill="none" stroke="#E8D5A8" stroke-width="2.5" stroke-linecap="round"
               stroke-dasharray="15 13" vector-effect="non-scaling-stroke"/>
       </svg>
