@@ -971,11 +971,12 @@
 
       /* hero media — video if available, else image */
       const vidSources = (function () {
-        let s = '';
+        /* mp4 FIRST so iOS Safari always picks a format it can play
+           (an unsupported first <source> can break autoplay on iPhone) */
+        let s = `<source src="${esc(p.video)}" type="video/mp4">`;
         if (/^videos\/.*\.mp4$/i.test(p.video || '')) {
           s += `<source src="${esc(p.video.replace(/\.mp4$/i, '.webm'))}" type="video/webm">`;
         }
-        s += `<source src="${esc(p.video)}" type="video/mp4">`;
         return s;
       })();
       const heroMedia = p.video
@@ -1131,6 +1132,27 @@
     }
 
     function wireUp(p) {
+      /* iPhone-friendly video autoplay: force muted inline playback in JS
+         (the autoplay attribute alone is unreliable on iOS), with a
+         tap-to-start fallback for Low Power Mode which blocks autoplay */
+      const vid = document.getElementById('propVid');
+      if (vid) {
+        vid.muted = true;
+        vid.setAttribute('muted', '');
+        vid.playsInline = true;
+        const tryPlay = () => { const pr = vid.play(); if (pr && pr.catch) pr.catch(() => {}); };
+        tryPlay();
+        vid.addEventListener('loadeddata', tryPlay, { once: true });
+        vid.addEventListener('canplay', tryPlay, { once: true });
+        const kick = () => {
+          tryPlay();
+          document.removeEventListener('touchstart', kick);
+          document.removeEventListener('click', kick);
+        };
+        document.addEventListener('touchstart', kick, { once: true, passive: true });
+        document.addEventListener('click', kick, { once: true });
+      }
+
       /* hide scroll cue on first scroll */
       const cue = document.querySelector('.vh__cue');
       window.addEventListener('scroll', () => {
