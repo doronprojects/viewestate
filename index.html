@@ -721,16 +721,12 @@
       font-weight: 700;
       color: var(--gold-light);
       margin-bottom: 18px;
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: center;
+      text-align: center;
     }
-    .sec-qr .section-eyebrow::before {
-      content: "";
-      width: 30px; height: 2px;
-      background: var(--gold-light);
-      flex-shrink: 0;
-    }
+    .sec-qr .section-eyebrow::before { content: none; }
 
     .section-h2 {
       font-family: var(--serif);
