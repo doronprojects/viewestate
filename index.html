@@ -1891,8 +1891,9 @@
       .qr-scan { display: flex; animation: qrScanFadeMobile 13s ease-in-out infinite; animation-play-state: paused; }
       .phone-wrap.visible .qr-scan { animation-play-state: running; }
       .qr-steps { grid-template-columns: 1fr; grid-template-rows: auto; grid-auto-flow: row; gap: 20px; }
-      .qr-step { gap: 14px; }
-      .qr-step__n { font-size: 30px; min-width: 36px; }
+      /* numbers lead on the left → 01–04 form a vertical line left of the heading */
+      .qr-step { gap: 14px; flex-direction: row-reverse; }
+      .qr-step__n { font-size: 30px; min-width: 36px; text-align: left; }
       .qr-step__title { font-size: 16px; }
       /* mobile: heading + text on top, circular photo below, cards full-width */
       .about-grid { display: flex; flex-direction: column; gap: 22px; }
