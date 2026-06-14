@@ -1281,6 +1281,20 @@
     .rm-step__title { font-family: var(--serif); font-size: 19px; font-weight: 700; color: #FAF6F0; }
     .rm-step__desc { margin-top: 11px; font-size: 14.5px; line-height: 1.65; color: var(--text-mid); max-width: 188px; }
     .rm-step:hover .rm-step__node { border-color: var(--gold-light); transform: translateY(-4px) !important; box-shadow: 0 16px 38px rgba(0,0,0,0.55); }
+    /* middle stops (02–04): the road goes AROUND the icon as a roundabout, not through it */
+    .roadmap .rm-step:nth-child(n+4):nth-child(-n+6) .rm-step__node::before {
+      content: "";
+      position: absolute;
+      left: 50%; top: 50%;
+      width: 122px; height: 122px;
+      transform: translate(-50%, -50%);
+      box-sizing: border-box;
+      border-radius: 50%;
+      border: 18px solid #1b120a;
+      box-shadow: 0 0 0 2px rgba(201,163,90,0.55), inset 0 0 0 2px rgba(201,163,90,0.55);
+      z-index: -1;
+      pointer-events: none;
+    }
 
     /* sequential "light up" along the journey: 01 -> 02 -> 03 -> 04, looping */
     .rm-step__node { animation: rmNodeGlow 11s ease-in-out infinite; animation-delay: var(--rm-delay, 0s); animation-play-state: paused; }
@@ -1323,6 +1337,7 @@
       .roadmap-head .section-h2 { font-size: clamp(25px, 7vw, 34px); }
       .roadmap { grid-template-columns: 1fr; gap: 0; max-width: 480px; position: relative; }
       .roadmap__path { display: none; }
+      .roadmap .rm-step__node::before { display: none; } /* no roundabout on the vertical mobile road */
       /* winding vertical road centred on the node column */
       .roadmap__road-v { display: block; position: absolute; top: 0; bottom: 0; right: 4px; width: 46px; height: 100%; z-index: 0; pointer-events: none; }
       .rm-step, .rm-step:nth-child(odd), .rm-step:nth-child(even) { margin-top: 0; }
