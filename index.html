@@ -2396,22 +2396,6 @@
       }
     })();
 
-    /* ---- hero video: begin on the aerial skyline shot (~6s) on first play,
-       then loop the whole clip normally (0 → end → 0 …) ---- */
-    (function heroVideoStartOffset() {
-      const v = document.getElementById('heroBgVideo');
-      if (!v) return;
-      const START = 6.0; // seconds — where the aerial cityscape comes into view
-      let jumped = false;
-      const seekToStart = () => {
-        if (jumped) return;
-        jumped = true;
-        try { v.currentTime = START; } catch (e) {}
-      };
-      if (v.readyState >= 1) seekToStart();
-      v.addEventListener('loadedmetadata', seekToStart);
-    })();
-
     function esc(s) {
       return String(s == null ? '' : s)
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
