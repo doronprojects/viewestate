@@ -82,6 +82,12 @@
 
     a { text-decoration: none; color: inherit; }
     img, video { display: block; }
+    /* iOS: hide the big play button Safari overlays on muted background videos
+       (autoplay deferred under Low Power Mode); the clip starts on first touch/scroll */
+    video::-webkit-media-controls-start-playback-button,
+    video::-webkit-media-controls-play-button,
+    video::-webkit-media-controls,
+    video::-webkit-media-controls-panel { display: none !important; -webkit-appearance: none; }
     button { font-family: var(--sans); cursor: pointer; }
 
     /* ===== NAVIGATION ===== */
