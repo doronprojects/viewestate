@@ -2052,7 +2052,7 @@
 
       <!-- ▼▼ רצועת וידאו רוחבית עם הסטטיסטיקות עליה ▼▼ -->
       <div class="hero__videostrip">
-        <video id="heroBgVideo" autoplay muted loop playsinline preload="metadata" poster="videos/bg2-poster.jpg?v=5" aria-hidden="true">
+        <video id="heroBgVideo" autoplay muted loop playsinline webkit-playsinline preload="auto" poster="videos/bg2-poster.jpg?v=5" aria-hidden="true">
           <source src="videos/bg2.mp4?v=5" type="video/mp4">
         </video>
         <div class="hero__videostrip-scrim" aria-hidden="true"></div>
@@ -2388,6 +2388,29 @@
         v.innerHTML = '<source src="' + src + (isHls ? '" type="application/vnd.apple.mpegurl">' : '">');
         v.load(); v.play().catch(() => {});
       }
+    })();
+
+    /* ---- iOS-safe autoplay: iPhone blocks autoplay under Low Power Mode / strict
+       policies even for muted video. Force the right props, retry, and as a last
+       resort kick playback off on the first user interaction. ---- */
+    (function heroVideoIosAutoplay() {
+      const v = document.getElementById('heroBgVideo');
+      if (!v) return;
+      v.muted = true;            // must be a property, not just the attribute, on iOS
+      v.defaultMuted = true;
+      v.playsInline = true;
+      const tryPlay = () => { const p = v.play(); if (p) p.catch(() => {}); };
+      tryPlay();
+      v.addEventListener('loadedmetadata', tryPlay);
+      v.addEventListener('canplay', tryPlay);
+      const kick = () => {
+        tryPlay();
+        if (!v.paused) {
+          ['touchstart', 'click', 'scroll'].forEach(e => window.removeEventListener(e, kick));
+        }
+      };
+      ['touchstart', 'click', 'scroll'].forEach(e =>
+        window.addEventListener(e, kick, { passive: true }));
     })();
 
     function esc(s) {
