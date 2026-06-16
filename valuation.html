@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>הערכת שווי | ViewEstate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700&family=Heebo:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#F8F4EE; --bg-alt:#EDE8DF; --bg-card:#fff; --bg-dark:#1C1008;
+      --gold:#9A7230; --gold-light:#C9A35A; --text:#1C1008; --text-mid:#56382A;
+      --text-muted:#8A6A50; --border:rgba(154,114,48,0.22); --border-md:rgba(154,114,48,0.4);
+      --sans:'Heebo',Arial,sans-serif; --serif:'Frank Ruhl Libre',Georgia,serif;
+      --red:#C0392B; --green:#1f9d55;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:var(--sans); background:var(--bg); color:var(--text); line-height:1.5; }
+    h1,h2,h3 { font-family:var(--serif); font-weight:700; }
+    a { color:var(--gold); }
+
+    /* ---- gate ---- */
+    .gate { position:fixed; inset:0; background:var(--bg-dark); display:flex; flex-direction:column;
+            align-items:center; justify-content:center; gap:18px; z-index:100; text-align:center; padding:24px; }
+    .gate__logo { font-family:'Playfair Display',serif; font-size:30px; font-weight:700; letter-spacing:3px; direction:ltr; }
+    .gate__logo .v { color:var(--gold-light); } .gate__logo .e { color:rgba(248,244,238,0.9); }
+    .gate h1 { color:#FAF6F0; font-size:22px; font-weight:400; }
+    .gate input { background:rgba(248,244,238,0.06); border:1px solid rgba(248,244,238,0.2); color:#fff;
+                  padding:13px 18px; border-radius:6px; font-size:15px; width:260px; text-align:center; }
+    .gate input:focus { outline:none; border-color:var(--gold-light); }
+    .gate button { background:var(--gold); color:#fff; padding:13px 40px; font-size:15px; font-weight:600;
+                   border:none; border-radius:6px; cursor:pointer; }
+    .gate__err { color:#e88; font-size:13px; height:16px; }
+
+    /* ---- topbar ---- */
+    .topbar { background:var(--bg-dark); color:#FAF6F0; padding:14px 24px; display:flex; align-items:center;
+              justify-content:space-between; position:sticky; top:0; z-index:20; }
+    .topbar__logo { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; letter-spacing:3px; direction:ltr; }
+    .topbar__logo .v { color:var(--gold-light); }
+    .topbar a { color:rgba(250,246,240,0.7); font-size:13px; text-decoration:none; }
+
+    .wrap { max-width:1180px; margin:0 auto; padding:24px; }
+    .setup-note { background:#FFF6E0; border:1px solid var(--border-md); border-radius:10px; padding:14px 18px;
+                  font-size:13.5px; color:var(--text-mid); margin-bottom:20px; }
+    .setup-note code { background:rgba(154,114,48,0.12); padding:1px 6px; border-radius:4px; direction:ltr; display:inline-block; }
+
+    .grid { display:grid; grid-template-columns:380px 1fr; gap:24px; align-items:start; }
+    @media (max-width:900px){ .grid { grid-template-columns:1fr; } }
+
+    .card { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:22px; }
+    .card h2 { font-size:19px; margin-bottom:4px; }
+    .card .sub { font-size:13px; color:var(--text-muted); margin-bottom:18px; }
+
+    .field { margin-bottom:15px; }
+    .field label { display:block; font-size:13px; font-weight:500; color:var(--text-mid); margin-bottom:6px; }
+    .field input, .field select { width:100%; padding:11px 13px; border:1px solid var(--border-md);
+                  border-radius:8px; font-size:14.5px; font-family:var(--sans); background:#fff; color:var(--text); }
+    .field input:focus, .field select:focus { outline:none; border-color:var(--gold); }
+    .row2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+    .btn { width:100%; background:var(--gold); color:#fff; border:none; border-radius:9px; padding:14px;
+           font-size:15.5px; font-weight:600; cursor:pointer; font-family:var(--sans); transition:background .2s; }
+    .btn:hover { background:var(--gold-light); }
+    .btn:disabled { opacity:.55; cursor:default; }
+    .btn-sec { width:100%; background:#fff; color:var(--gold); border:1px solid var(--gold); border-radius:8px;
+               padding:11px; font-size:14px; font-weight:600; cursor:pointer; font-family:var(--sans); }
+    .btn-sec:hover { background:var(--bg-alt); }
+
+    .comps-box { border-top:1px solid var(--border); margin:18px 0 16px; padding-top:16px; }
+    .comps-box__label { display:block; font-size:13px; font-weight:600; color:var(--text-mid); margin-bottom:9px; }
+    .comps-box__hint { font-size:12px; color:var(--text-muted); margin:9px 0 10px; }
+    .comp-row { display:grid; grid-template-columns:1fr 1fr 26px; gap:8px; margin-bottom:8px; align-items:center; }
+    .comp-row input { padding:9px 10px; border:1px solid var(--border-md); border-radius:7px; font-size:13.5px;
+                      font-family:var(--sans); width:100%; background:#fff; }
+    .comp-row input:focus { outline:none; border-color:var(--gold); }
+    .comp-row .c-del { background:none; border:none; color:var(--red); font-size:19px; cursor:pointer; line-height:1; }
+    .add-comp { background:none; border:1px dashed var(--border-md); color:var(--gold); width:100%; padding:8px;
+                border-radius:7px; font-size:13px; cursor:pointer; font-family:var(--sans); }
+    .add-comp:hover { background:var(--bg-alt); }
+
+    /* ---- results ---- */
+    .result-empty { color:var(--text-muted); font-size:14px; text-align:center; padding:40px 10px; }
+    .estimate { text-align:center; padding:8px 0 18px; }
+    .estimate__label { font-size:13px; color:var(--text-muted); }
+    .estimate__value { font-family:var(--serif); font-size:42px; font-weight:700; color:var(--gold); margin:2px 0; }
+    .estimate__range { font-size:14px; color:var(--text-mid); }
+    .estimate__ppsm { font-size:13px; color:var(--text-muted); margin-top:6px; }
+    .conf { display:inline-block; font-size:12px; font-weight:600; padding:3px 12px; border-radius:20px; margin-top:10px; }
+    .conf.high { background:#e3f5ea; color:#177245; } .conf.med { background:#fcf3dd; color:#9a6b00; }
+    .conf.low { background:#fbe6e3; color:#a23b2c; }
+
+    .metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px 0; }
+    .metric { background:var(--bg-alt); border-radius:9px; padding:11px; text-align:center; }
+    .metric b { display:block; font-size:19px; color:var(--text); font-family:var(--serif); }
+    .metric span { font-size:11.5px; color:var(--text-muted); }
+
+    .adj { font-size:13px; color:var(--text-mid); margin:12px 0; }
+    .adj div { display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed var(--border); }
+
+    table.comps { width:100%; border-collapse:collapse; font-size:12.5px; margin-top:8px; }
+    table.comps th, table.comps td { padding:7px 6px; border-bottom:1px solid var(--border); text-align:right; }
+    table.comps th { color:var(--text-muted); font-weight:600; font-size:11.5px; }
+    table.comps tr:hover td { background:var(--bg-alt); }
+
+    #map { width:100%; height:420px; border-radius:14px; border:1px solid var(--border); background:var(--bg-alt); }
+    .map-legend { display:flex; gap:16px; flex-wrap:wrap; font-size:13px; margin:12px 0 4px; color:var(--text-mid); }
+    .map-legend i { display:inline-block; width:11px; height:11px; border-radius:50%; margin-inline-end:5px; vertical-align:middle; }
+
+    .loading { text-align:center; padding:36px; color:var(--text-muted); font-size:14px; }
+    .spinner { width:30px; height:30px; border:3px solid var(--border); border-top-color:var(--gold);
+               border-radius:50%; animation:spin .8s linear infinite; margin:0 auto 14px; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .err { background:#fbe6e3; color:#a23b2c; border-radius:9px; padding:12px 14px; font-size:13.5px; }
+  </style>
+</head>
+<body>
+  <!-- ===== access gate ===== -->
+  <div class="gate" id="gate">
+    <div class="gate__logo"><span class="v">VIEW</span><span class="e">ESTATE</span></div>
+    <h1>הערכת שווי נכס</h1>
+    <input type="password" id="gatePass" placeholder="קוד גישה" autocomplete="off">
+    <div class="gate__err" id="gateErr"></div>
+    <button id="gateBtn">כניסה</button>
+  </div>
+
+  <!-- ===== app ===== -->
+  <div id="app" style="display:none">
+    <div class="topbar">
+      <div class="topbar__logo"><span class="v">VIEW</span>ESTATE</div>
+      <a href="index.html">← לאתר</a>
+    </div>
+
+    <div class="wrap">
+      <div class="setup-note" id="setupNote" style="display:none"></div>
+
+      <div class="grid">
+        <!-- input form -->
+        <div class="card">
+          <h2>פרטי הנכס</h2>
+          <p class="sub">מלא את הפרטים — הערכה לפי עסקאות אמת מאתר רשות המסים</p>
+
+          <div class="field">
+            <label for="fAddress">כתובת הנכס</label>
+            <input id="fAddress" placeholder="רחוב ומספר, עיר — לדוגמה: רוטשילד 22 תל אביב" autocomplete="off">
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="fSize">שטח (מ"ר)</label>
+              <input id="fSize" type="number" min="10" max="1000" placeholder="85">
+            </div>
+            <div class="field">
+              <label for="fRooms">חדרים</label>
+              <input id="fRooms" type="number" min="1" max="15" step="0.5" placeholder="4">
+            </div>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="fFloor">קומה</label>
+              <input id="fFloor" type="number" min="-1" max="80" placeholder="3">
+            </div>
+            <div class="field">
+              <label for="fYear">שנת בנייה</label>
+              <input id="fYear" type="number" min="1900" max="2030" placeholder="1998">
+            </div>
+          </div>
+          <div class="field">
+            <label for="fCondition">מצב הדירה</label>
+            <select id="fCondition">
+              <option value="new">חדשה / מקבלן</option>
+              <option value="renovated">משופצת</option>
+              <option value="good" selected>תקינה (רגילה)</option>
+              <option value="needs">דורשת שיפוץ / ישנה</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="fElevator">מעלית</label>
+            <select id="fElevator">
+              <option value="yes">יש מעלית</option>
+              <option value="no">אין מעלית</option>
+            </select>
+          </div>
+          <div class="comps-box">
+            <label class="comps-box__label">עסקאות השוואה (מ-nadlan.gov.il)</label>
+            <button type="button" class="btn-sec" id="openNadlan">פתח עסקאות לכתובת ב-nadlan.gov.il ↗</button>
+            <p class="comps-box__hint">העתק 2-3 עסקאות דומות (מחיר ושטח) משם, והזן כאן:</p>
+            <div id="compRows"></div>
+            <button type="button" class="add-comp" id="addComp">+ הוסף עסקה</button>
+          </div>
+          <button class="btn" id="goBtn">חשב הערכת שווי</button>
+        </div>
+
+        <!-- results + map -->
+        <div>
+          <div class="card" id="resultCard" style="margin-bottom:24px">
+            <div class="result-empty" id="resultEmpty">
+              הזן כתובת ופרטי נכס, ולחץ "חשב הערכת שווי".<br>
+              ההערכה מבוססת על עסקאות אמת באזור (רשות המסים).
+            </div>
+            <div id="resultBody" style="display:none"></div>
+          </div>
+
+          <div class="card">
+            <h2>סביבת הנכס</h2>
+            <p class="sub">בתי ספר, גני ילדים ומסחר ברדיוס של ~1 ק"מ</p>
+            <div class="map-legend">
+              <span><i style="background:#9A7230"></i>הנכס</span>
+              <span><i style="background:#2d7dd2"></i>בתי ספר</span>
+              <span><i style="background:#1f9d55"></i>גני ילדים</span>
+              <span><i style="background:#e08a1e"></i>מסחר</span>
+            </div>
+            <div id="map"></div>
+            <div id="poiSummary" style="font-size:13px;color:var(--text-muted);margin-top:10px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  /* ============================================================
+     CONFIG — paste your Google Maps key (for the map + address search)
+     ============================================================ */
+  const GOOGLE_MAPS_KEY = ""; // Google Maps JavaScript API key (Maps + Places)
+  const NADLAN_SITE = "https://www.nadlan.gov.il/";
+  const ACCESS_CODE = "viewestate2026";
+
+  /* ---- access gate (shares session with admin) ---- */
+  const gate = document.getElementById('gate');
+  const app  = document.getElementById('app');
+  function unlock(){
+    const v = document.getElementById('gatePass').value;
+    if (v === ACCESS_CODE) { sessionStorage.setItem('ve_admin_ok','1'); showApp(); }
+    else document.getElementById('gateErr').textContent = 'קוד שגוי';
+  }
+  function showApp(){ gate.style.display='none'; app.style.display='block'; init(); }
+  document.getElementById('gateBtn').addEventListener('click', unlock);
+  document.getElementById('gatePass').addEventListener('keydown', e=>{ if(e.key==='Enter') unlock(); });
+  if (sessionStorage.getItem('ve_admin_ok')==='1') showApp();
+
+  /* ---- helpers ---- */
+  const ils = n => '₪' + Math.round(n).toLocaleString('en-US');
+  const median = arr => { if(!arr.length) return null; const s=[...arr].sort((a,b)=>a-b); const m=s.length>>1;
+                          return s.length%2 ? s[m] : (s[m-1]+s[m])/2; };
+  const percentile = (arr,p) => { if(!arr.length) return null; const s=[...arr].sort((a,b)=>a-b);
+                          const i=Math.min(s.length-1, Math.floor(p*(s.length-1))); return s[i]; };
+  const monthsAgo = iso => { if(!iso) return 999; const d=new Date(iso); if(isNaN(d)) return 999;
+                          return (Date.now()-d)/(1000*60*60*24*30.4); };
+
+  const CONDITION_FACTOR = { new:1.12, renovated:1.06, good:1.0, needs:0.90 };
+  const CONDITION_LABEL  = { new:'חדשה / מקבלן', renovated:'משופצת', good:'תקינה', needs:'דורשת שיפוץ' };
+
+  let map, geocoder, placesService, propMarker, poiMarkers=[];
+
+  function init(){
+    // setup banner if not configured yet
+    if (!GOOGLE_MAPS_KEY) {
+      const n = document.getElementById('setupNote');
+      n.style.display='block';
+      n.innerHTML = '<b>הגדרה אחרונה כדי שהמפה תעבוד:</b><br>' +
+        '• צור מפתח Google Maps (Maps JavaScript API + Places API) והדבק אותו ב-<code>GOOGLE_MAPS_KEY</code> ' +
+        'בראש בלוק ה-&lt;script&gt; בקובץ <code>valuation.html</code>.<br>' +
+        'חישוב השווי עובד גם בלי מפתח — המפתח דרוש רק למפת הסביבה ולהשלמת כתובת.';
+    }
+    if (GOOGLE_MAPS_KEY) loadGoogleMaps();
+    // start with 3 empty comp rows
+    addCompRow(); addCompRow(); addCompRow();
+    document.getElementById('addComp').addEventListener('click', ()=>addCompRow());
+    document.getElementById('openNadlan').addEventListener('click', openNadlan);
+    document.getElementById('goBtn').addEventListener('click', calculate);
+  }
+
+  /* ---- manual comps (from nadlan.gov.il) ---- */
+  function openNadlan(){
+    const a = document.getElementById('fAddress').value.trim();
+    if (!a) return showError('הזן כתובת קודם, ואז פתח את העסקאות.');
+    window.open(NADLAN_SITE + '?query=' + encodeURIComponent(a), '_blank', 'noopener');
+  }
+  function addCompRow(){
+    const row = document.createElement('div');
+    row.className = 'comp-row';
+    row.innerHTML = '<input type="number" class="c-price" placeholder="מחיר ₪" min="0">' +
+                    '<input type="number" class="c-sqm" placeholder="מ&quot;ר" min="0">' +
+                    '<button type="button" class="c-del" title="הסר">×</button>';
+    row.querySelector('.c-del').addEventListener('click', ()=>row.remove());
+    document.getElementById('compRows').appendChild(row);
+  }
+  function gatherComps(){
+    return [...document.querySelectorAll('.comp-row')].map(r=>{
+      const price = parseFloat(r.querySelector('.c-price').value);
+      const sqm   = parseFloat(r.querySelector('.c-sqm').value);
+      return (price>0 && sqm>0) ? { price, sqm, pricePerSqm:Math.round(price/sqm), date:null, rooms:null, address:null } : null;
+    }).filter(Boolean);
+  }
+
+  /* ---- Google Maps ---- */
+  function loadGoogleMaps(){
+    const s = document.createElement('script');
+    s.src = 'https://maps.googleapis.com/maps/api/js?key=' + GOOGLE_MAPS_KEY +
+            '&libraries=places&language=he&region=IL&callback=onMapsReady';
+    s.async = true; s.defer = true;
+    document.head.appendChild(s);
+  }
+  window.onMapsReady = function(){
+    geocoder = new google.maps.Geocoder();
+    map = new google.maps.Map(document.getElementById('map'), {
+      center:{lat:32.0853, lng:34.7818}, zoom:13, mapTypeControl:false, streetViewControl:false,
+    });
+    placesService = new google.maps.places.PlacesService(map);
+    // address autocomplete
+    const ac = new google.maps.places.Autocomplete(document.getElementById('fAddress'),
+      { componentRestrictions:{country:'il'}, fields:['formatted_address','geometry'] });
+    ac.addListener('place_changed', ()=>{ window._place = ac.getPlace(); });
+  };
+
+  /* ---- main flow ---- */
+  function calculate(){
+    const address = document.getElementById('fAddress').value.trim();
+    const size    = parseFloat(document.getElementById('fSize').value);
+    if (!address) { return showError('הזן כתובת.'); }
+    if (!size || size<10) { return showError('הזן שטח תקין במ"ר.'); }
+
+    const comps = gatherComps();
+    if (comps.length<1) { return showError('הזן לפחות עסקת השוואה אחת (מחיר + שטח). לחץ "פתח עסקאות ב-nadlan.gov.il" כדי למצוא עסקאות דומות.'); }
+
+    const subject = {
+      address, size,
+      rooms: parseFloat(document.getElementById('fRooms').value)||null,
+      floor: parseInt(document.getElementById('fFloor').value),
+      year:  parseInt(document.getElementById('fYear').value)||null,
+      condition: document.getElementById('fCondition').value,
+      elevator: document.getElementById('fElevator').value==='yes',
+    };
+
+    renderResult(subject, comps);
+
+    if (window.google && window._place && window._place.geometry) {
+      updateMap(window._place.geometry.location);
+    } else if (geocoder) {
+      geocoder.geocode({address, region:'il'}, (r,st)=>{ if(st==='OK'&&r[0]) updateMap(r[0].geometry.location); });
+    }
+  }
+
+  /* ---- valuation model (comparative market analysis) ---- */
+  function renderResult(subject, deals){
+    // user-curated comps — keep any with a sane price-per-sqm
+    const used = deals.filter(d => d.pricePerSqm && d.pricePerSqm>3000 && d.pricePerSqm<300000 && d.sqm>15);
+    if (!used.length) {
+      return showError('העסקאות שהוזנו לא תקינות. ודא שהזנת מחיר ושטח אמיתיים.');
+    }
+
+    const ppsmArr = used.map(d=>d.pricePerSqm);
+    const medPpsm = median(ppsmArr);
+    const lowPpsm = percentile(ppsmArr,0.25);
+    const highPpsm= percentile(ppsmArr,0.75);
+
+    // adjustments on top of the area median
+    let factor = CONDITION_FACTOR[subject.condition] || 1;
+    const adjustments = [['בסיס (חציון ₪/מ"ר באזור)', ils(medPpsm)+' /מ"ר']];
+    adjustments.push(['מצב הדירה: '+CONDITION_LABEL[subject.condition], pct(CONDITION_FACTOR[subject.condition])]);
+
+    if (!isNaN(subject.floor)) {
+      if (subject.floor===0 || subject.floor===-1) { factor*=0.97; adjustments.push(['קומת קרקע', '−3%']); }
+      else if (subject.floor>=3 && subject.elevator){ factor*=1.02; adjustments.push(['קומה גבוהה + מעלית', '+2%']); }
+      else if (subject.floor>=3 && !subject.elevator){ factor*=0.96; adjustments.push(['קומה גבוהה בלי מעלית', '−4%']); }
+    }
+    if (subject.year && subject.year>=new Date().getFullYear()-5 && subject.condition!=='new'){
+      factor*=1.03; adjustments.push(['בניין חדש יחסית','+3%']);
+    }
+
+    const adjPpsm = medPpsm*factor;
+    const estimate = adjPpsm*subject.size;
+    const low  = lowPpsm*factor*subject.size;
+    const high = highPpsm*factor*subject.size;
+
+    const conf = used.length>=12 ? ['high','ביטחון גבוה'] : used.length>=5 ? ['med','ביטחון בינוני'] : ['low','ביטחון נמוך'];
+
+    const compRows = used.slice(0,12).map(d=>`<tr>
+        <td>${d.address?escapeHtml(d.address.slice(0,28)):'—'}</td>
+        <td>${d.sqm?Math.round(d.sqm):'—'}</td>
+        <td>${d.rooms||'—'}</td>
+        <td>${d.date?d.date.slice(0,7):'—'}</td>
+        <td>${ils(d.price)}</td>
+        <td><b>${ils(d.pricePerSqm)}</b></td>
+      </tr>`).join('');
+
+    document.getElementById('resultEmpty').style.display='none';
+    const body = document.getElementById('resultBody');
+    body.style.display='block';
+    body.innerHTML = `
+      <div class="estimate">
+        <div class="estimate__label">הערכת שווי משוערת</div>
+        <div class="estimate__value">${ils(estimate)}</div>
+        <div class="estimate__range">טווח: ${ils(low)} – ${ils(high)}</div>
+        <div class="estimate__ppsm">${ils(adjPpsm)} למ"ר × ${subject.size} מ"ר</div>
+        <div class="conf ${conf[0]}">${conf[1]} · ${used.length} עסקאות השוואה</div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><b>${ils(medPpsm)}</b><span>חציון ₪/מ"ר באזור</span></div>
+        <div class="metric"><b>${used.length}</b><span>עסקאות בשימוש</span></div>
+        <div class="metric"><b>${pct(factor)}</b><span>התאמות נטו</span></div>
+      </div>
+      <div class="adj">
+        ${adjustments.map(a=>`<div><span>${a[0]}</span><span>${a[1]}</span></div>`).join('')}
+      </div>
+      <h3 style="font-size:15px;margin:16px 0 4px">עסקאות השוואה</h3>
+      <table class="comps">
+        <thead><tr><th>כתובת</th><th>מ"ר</th><th>חד'</th><th>תאריך</th><th>מחיר</th><th>₪/מ"ר</th></tr></thead>
+        <tbody>${compRows}</tbody>
+      </table>
+      <p style="font-size:11.5px;color:var(--text-muted);margin-top:12px">
+        * הערכה אוטומטית להתרשמות בלבד, אינה תחליף להערכת שמאי מוסמך.
+      </p>`;
+  }
+
+  const pct = f => (f>=1?'+':'−') + Math.round(Math.abs(f-1)*100) + '%';
+  function escapeHtml(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  /* ---- map + nearby POIs ---- */
+  function updateMap(loc){
+    if (!map) return;
+    map.setCenter(loc); map.setZoom(15);
+    if (propMarker) propMarker.setMap(null);
+    propMarker = new google.maps.Marker({ position:loc, map,
+      icon:markerIcon('#9A7230',12), title:'הנכס', zIndex:999 });
+    poiMarkers.forEach(m=>m.setMap(null)); poiMarkers=[];
+    const counts = {school:0, kinder:0, store:0};
+    searchPOI(loc,'school',null,'#2d7dd2',()=>counts.school++);
+    searchPOI(loc,null,'גן ילדים','#1f9d55',()=>counts.kinder++);
+    searchPOI(loc,'supermarket',null,'#e08a1e',()=>counts.store++,()=>{
+      document.getElementById('poiSummary').textContent =
+        `נמצאו בקרבת מקום: ${counts.school} בתי ספר · ${counts.kinder} גני ילדים · ${counts.store} מסחר/סופר`;
+    });
+  }
+  function searchPOI(loc, type, keyword, color, onEach, onDone){
+    const req = { location:loc, radius:1000 };
+    if (type) req.type=type; if (keyword) req.keyword=keyword;
+    placesService.nearbySearch(req, (results, status)=>{
+      if (status===google.maps.places.PlacesServiceStatus.OK){
+        results.slice(0,12).forEach(p=>{
+          poiMarkers.push(new google.maps.Marker({ position:p.geometry.location, map,
+            icon:markerIcon(color,7), title:p.name }));
+          onEach && onEach();
+        });
+      }
+      onDone && onDone();
+    });
+  }
+  function markerIcon(color, r){
+    return { path:google.maps.SymbolPath.CIRCLE, fillColor:color, fillOpacity:1,
+             strokeColor:'#fff', strokeWeight:2, scale:r };
+  }
+
+  /* ---- ui states ---- */
+  function showLoading(msg){
+    document.getElementById('resultEmpty').style.display='none';
+    const b=document.getElementById('resultBody'); b.style.display='block';
+    b.innerHTML = `<div class="loading"><div class="spinner"></div>${msg}</div>`;
+  }
+  function showError(msg){
+    document.getElementById('resultEmpty').style.display='none';
+    const b=document.getElementById('resultBody'); b.style.display='block';
+    b.innerHTML = `<div class="err">${msg}</div>`;
+  }
+  </script>
+</body>
+</html>
