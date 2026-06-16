@@ -355,6 +355,22 @@
     const windowLabel = windowUsed<=12 ? 'השנה האחרונה' : windowUsed<=24 ? 'השנתיים האחרונות'
                       : windowUsed<=36 ? '3 השנים האחרונות' : '5 השנים האחרונות';
 
+    // price trend in the area: median ₪/m² of the last 12 months vs the 12-36 months before
+    let trendHTML = '';
+    const recT = valid.filter(d=>monthsAgo(d.date)<=12);
+    const priT = valid.filter(d=>{ const m=monthsAgo(d.date); return m>12 && m<=36; });
+    if (recT.length>=3 && priT.length>=3) {
+      const rM=median(recT.map(d=>d.pricePerSqm)), pM=median(priT.map(d=>d.pricePerSqm));
+      if (rM && pM) {
+        const ch=(rM-pM)/pM, up=ch>=0.005, down=ch<=-0.005;
+        const color = up?'#1f9d55':down?'#C0392B':'#8A6A50';
+        const arrow = up?'↑':down?'↓':'→';
+        trendHTML = `<div style="font-size:15px;font-weight:600;margin-top:10px;color:${color}">`+
+          `${arrow} מגמת מחירים באזור: ${ch>=0?'+':'−'}${Math.abs(ch*100).toFixed(1)}%`+
+          `<span style="font-size:11.5px;font-weight:400;color:var(--text-muted)"> (שנה אחרונה מול קודמתה)</span></div>`;
+      }
+    }
+
     const ppsmArr = used.map(d=>d.pricePerSqm);
     const medPpsm = median(ppsmArr), lowPpsm = percentile(ppsmArr,0.25), highPpsm = percentile(ppsmArr,0.75);
 
@@ -394,6 +410,7 @@
         <div class="estimate__ppsm">${ils(adjPpsm)} למ"ר × ${subject.size} מ"ר</div>
         <div class="conf ${conf[0]}">${conf[1]} · ${used.length} עסקאות השוואה</div>
         <div style="font-size:12px;color:var(--text-muted);margin-top:7px">מבוסס על עסקאות מ${windowLabel}</div>
+        ${trendHTML}
       </div>
       <div class="metrics">
         <div class="metric"><b>${ils(medPpsm)}</b><span>חציון ₪/מ"ר באזור</span></div>
