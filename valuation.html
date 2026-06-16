@@ -361,7 +361,7 @@
     const low = lowPpsm*factor*subject.size, high = highPpsm*factor*subject.size;
     const conf = used.length>=12 ? ['high','ביטחון גבוה'] : used.length>=5 ? ['med','ביטחון בינוני'] : ['low','ביטחון נמוך'];
 
-    const compRows = used.slice(0,14).map(d=>`<tr>
+    const compRows = [...used].sort((a,b)=> new Date(b.date||0) - new Date(a.date||0)).slice(0,14).map(d=>`<tr>
         <td>${d.address?escapeHtml(d.address.slice(0,26)):'—'}</td>
         <td>${d.sqm?Math.round(d.sqm):'—'}</td>
         <td>${d.rooms||'—'}</td>
