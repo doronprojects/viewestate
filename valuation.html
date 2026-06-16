@@ -334,13 +334,21 @@
 
   /* ---- valuation model (comparative market analysis) ---- */
   function renderResult(subject, deals, pt){
-    let comps = deals.filter(d => d.pricePerSqm>3000 && d.pricePerSqm<300000 && d.sqm>15 && d.sqm<500);
-    // prefer comps within ±35% size and last 48 months; relax if too few
-    const near = comps.filter(d => Math.abs(d.sqm-subject.size)/subject.size <= 0.35 && monthsAgo(d.date)<=48);
-    const used = near.length>=4 ? near : comps
-      .sort((a,b)=> Math.abs(a.sqm-subject.size)-Math.abs(b.sqm-subject.size)).slice(0,40);
-
+    const valid = deals.filter(d => d.pricePerSqm>3000 && d.pricePerSqm<300000 && d.sqm>15 && d.sqm<500);
+    const sizeOk = d => Math.abs(d.sqm-subject.size)/subject.size <= 0.35;
+    // base the estimate on the most recent deals — use the shortest window with
+    // enough comps (size-matched if possible), expanding only when too few
+    let used = [], windowUsed = 60;
+    for (const months of [12, 24, 36, 60]) {
+      const recent = valid.filter(d => monthsAgo(d.date) <= months);
+      const sized  = recent.filter(sizeOk);
+      const pick   = sized.length>=4 ? sized : recent;
+      used = pick; windowUsed = months;
+      if (pick.length>=4) break;
+    }
     if (!used.length) return showError('לא נמצאו עסקאות השוואה מתאימות. נסה כתובת סמוכה.');
+    const windowLabel = windowUsed<=12 ? 'השנה האחרונה' : windowUsed<=24 ? 'השנתיים האחרונות'
+                      : windowUsed<=36 ? '3 השנים האחרונות' : '5 השנים האחרונות';
 
     const ppsmArr = used.map(d=>d.pricePerSqm);
     const medPpsm = median(ppsmArr), lowPpsm = percentile(ppsmArr,0.25), highPpsm = percentile(ppsmArr,0.75);
@@ -380,6 +388,7 @@
         <div class="estimate__range">טווח: ${ils(low)} – ${ils(high)}</div>
         <div class="estimate__ppsm">${ils(adjPpsm)} למ"ר × ${subject.size} מ"ר</div>
         <div class="conf ${conf[0]}">${conf[1]} · ${used.length} עסקאות השוואה</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:7px">מבוסס על עסקאות מ${windowLabel}</div>
       </div>
       <div class="metrics">
         <div class="metric"><b>${ils(medPpsm)}</b><span>חציון ₪/מ"ר באזור</span></div>
