@@ -1286,11 +1286,13 @@
     }
     /* winding route between the nodes (desktop) */
     .roadmap__path { position: absolute; top: 0; left: 0; width: 100%; height: 132px; z-index: 0; pointer-events: none; overflow: visible; opacity: 0.95; }
-    /* lane markings drift along the road like gentle traffic */
-    .rm-road-line { animation: roadFlow 6s linear infinite; }
+    /* lane markings drift along the road like gentle traffic — start only once the roadmap scrolls into view */
+    .rm-road-line { animation: roadFlow 6s linear infinite; animation-play-state: paused; }
     @keyframes roadFlow { to { stroke-dashoffset: -28; } }
-    .rmv-line { animation: roadFlowVUp 4.5s linear infinite; }
+    .rmv-line { animation: roadFlowVUp 4.5s linear infinite; animation-play-state: paused; }
     @keyframes roadFlowVUp { to { stroke-dashoffset: 21; } }
+    .roadmap.visible .rm-road-line,
+    .roadmap.visible .rmv-line { animation-play-state: running; }
     @media (prefers-reduced-motion: reduce) { .rm-road-line, .rmv-line { animation: none; } }
     .roadmap__road-v { display: none; } /* vertical road — mobile only */
     .rm-step { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; direction: rtl; }
@@ -2697,6 +2699,10 @@
     }, { threshold: 0.1, rootMargin: '0px 0px -32px 0px' });
 
     document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+    // roadmap road-line drift: kick in only when the roadmap scrolls into view
+    const roadmapEl = document.querySelector('.roadmap');
+    if (roadmapEl) revealObs.observe(roadmapEl);
 
     // ── Property card stagger ──
     const gridEl = document.querySelector('.props-grid');
