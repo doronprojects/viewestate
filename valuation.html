@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700&family=Heebo:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     :root {
       --bg:#F8F4EE; --bg-alt:#EDE8DF; --bg-card:#fff; --bg-dark:#1C1008;
@@ -84,7 +86,7 @@
     table.comps tr:hover td { background:var(--bg-alt); }
 
     #map { width:100%; height:420px; border-radius:14px; border:1px solid var(--border); background:var(--bg-alt);
-           display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:13px; }
+           color:var(--text-muted); font-size:13px; overflow:hidden; }
     .map-legend { display:flex; gap:16px; flex-wrap:wrap; font-size:13px; margin:12px 0 4px; color:var(--text-mid); }
     .map-legend i { display:inline-block; width:11px; height:11px; border-radius:50%; margin-inline-end:5px; vertical-align:middle; }
 
@@ -182,7 +184,7 @@
               <span><i style="background:#1f9d55"></i>גני ילדים</span>
               <span><i style="background:#e08a1e"></i>מסחר</span>
             </div>
-            <div id="map">המפה תופיע לאחר חישוב (דורש מפתח Google Maps)</div>
+            <div id="map"></div>
             <div id="poiSummary" style="font-size:13px;color:var(--text-muted);margin-top:10px"></div>
           </div>
         </div>
@@ -192,13 +194,9 @@
 
   <script>
   /* ============================================================
-     CONFIG
-     - The valuation itself needs NO setup: it pulls official deals
-       straight from the government GovMap API (keyless, CORS-open).
-     - GOOGLE_MAPS_KEY is optional — only for the neighbourhood map
-       (schools / kindergartens / commerce) + address autocomplete.
+     CONFIG — zero setup. Deals come from the government GovMap API
+     (keyless, CORS-open); the map is OpenStreetMap + Overpass (also free).
      ============================================================ */
-  const GOOGLE_MAPS_KEY = ""; // optional — Google Maps JavaScript API + Places API
   const GOVMAP = "https://www.govmap.gov.il/api";
   const ACCESS_CODE = "viewestate2026";
 
@@ -213,7 +211,6 @@
   function showApp(){ gate.style.display='none'; app.style.display='block'; init(); }
   document.getElementById('gateBtn').addEventListener('click', unlock);
   document.getElementById('gatePass').addEventListener('keydown', e=>{ if(e.key==='Enter') unlock(); });
-  if (sessionStorage.getItem('ve_admin_ok')==='1') showApp();
 
   /* ---- helpers ---- */
   const ils = n => '₪' + Math.round(n).toLocaleString('en-US');
@@ -232,10 +229,10 @@
   const CONDITION_FACTOR = { new:1.12, renovated:1.06, good:1.0, needs:0.90 };
   const CONDITION_LABEL  = { new:'חדשה / מקבלן', renovated:'משופצת', good:'תקינה', needs:'דורשת שיפוץ' };
 
-  let map, geocoder, placesService, propMarker, poiMarkers=[];
+  let lmap, propMarker, poiLayer;
 
   function init(){
-    if (GOOGLE_MAPS_KEY) loadGoogleMaps();
+    initMap();
     document.getElementById('goBtn').addEventListener('click', calculate);
     document.getElementById('fAddress').addEventListener('keydown', e=>{ if(e.key==='Enter') calculate(); });
   }
@@ -275,7 +272,7 @@
     if (!price || !sqm) return null;
     const type = (x.propertyTypeDescription||'') + ' ' + (x.dealNatureDescription||'');
     const addr = [x.streetNameHeb, x.houseNum].filter(Boolean).join(' ') || x.neighborhood || x.settlementNameHeb || '';
-    return { price, sqm, rooms:x.assetRoomNum||null, floor:x.floorNo||null, date:x.dealDate||null,
+    return { dealId:x.dealId||null, price, sqm, rooms:x.assetRoomNum||null, floor:x.floorNo||null, date:x.dealDate||null,
              type:type.trim(), address:addr, gush:x.gushNum?`${x.gushNum}-${x.parcelNum}`:null,
              pricePerSqm: Math.round(price/sqm) };
   }
@@ -321,12 +318,20 @@
       const batches = await Promise.all(top.map(p=>govmapStreetDeals(p.polygon_id).catch(()=>[])));
       let deals = batches.flat();
 
+      // overlapping polygons return the same deal more than once — dedupe
+      const seen = new Set();
+      deals = deals.filter(d=>{
+        const k = d.dealId || `${d.price}|${d.sqm}|${d.date}|${d.address}`;
+        if (seen.has(k)) return false; seen.add(k); return true;
+      });
+
       deals = deals.filter(isApartment);
       if (!deals.length) return showError('נמצאו עסקאות באזור אך לא דירות מגורים להשוואה.');
 
       renderResult(subject, deals, pt);
 
-      if (GOOGLE_MAPS_KEY && map) updateMap(mercToLatLng(pt.x, pt.y));
+      const ll = mercToLatLng(pt.x, pt.y);
+      updateMap(ll.lat, ll.lng);
     } catch(e){
       showError('שגיאה בשליפת הנתונים: ' + e.message);
     }
@@ -406,48 +411,53 @@
       </p>`;
   }
 
-  /* ---- Google Maps (optional) ---- */
-  function loadGoogleMaps(){
-    const s = document.createElement('script');
-    s.src = 'https://maps.googleapis.com/maps/api/js?key=' + GOOGLE_MAPS_KEY +
-            '&libraries=places&language=he&region=IL&callback=onMapsReady';
-    s.async = true; s.defer = true; document.head.appendChild(s);
-  }
-  window.onMapsReady = function(){
-    geocoder = new google.maps.Geocoder();
+  /* ---- map (OpenStreetMap + Leaflet, keyless) ---- */
+  function initMap(){
+    if (lmap || !window.L) return;
     const el = document.getElementById('map'); el.textContent='';
-    map = new google.maps.Map(el, { center:{lat:32.0853,lng:34.7818}, zoom:13, mapTypeControl:false, streetViewControl:false });
-    placesService = new google.maps.places.PlacesService(map);
-    const ac = new google.maps.places.Autocomplete(document.getElementById('fAddress'),
-      { componentRestrictions:{country:'il'}, fields:['formatted_address','geometry'] });
-    ac.addListener('place_changed', ()=>{ window._place = ac.getPlace(); });
-  };
-  function updateMap(loc){
-    if (!map) return;
-    map.setCenter(loc); map.setZoom(15);
-    if (propMarker) propMarker.setMap(null);
-    propMarker = new google.maps.Marker({ position:loc, map, icon:markerIcon('#9A7230',12), title:'הנכס', zIndex:999 });
-    poiMarkers.forEach(m=>m.setMap(null)); poiMarkers=[];
-    const counts = {school:0, kinder:0, store:0};
-    searchPOI(loc,'school',null,'#2d7dd2',()=>counts.school++);
-    searchPOI(loc,null,'גן ילדים','#1f9d55',()=>counts.kinder++);
-    searchPOI(loc,'supermarket',null,'#e08a1e',()=>counts.store++,()=>{
+    lmap = L.map(el, { scrollWheelZoom:false }).setView([32.0853,34.7818], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      { maxZoom:19, attribution:'© OpenStreetMap' }).addTo(lmap);
+    poiLayer = L.layerGroup().addTo(lmap);
+  }
+  function dot(color, r){
+    return L.divIcon({ className:'', iconSize:[r*2,r*2], iconAnchor:[r,r],
+      html:`<div style="width:${r*2}px;height:${r*2}px;border-radius:50%;background:${color};border:2px solid #fff;box-shadow:0 0 3px rgba(0,0,0,.45)"></div>` });
+  }
+  async function updateMap(lat, lng){
+    initMap(); if (!lmap) return;
+    setTimeout(()=>lmap.invalidateSize(), 50);
+    lmap.setView([lat,lng], 15);
+    if (propMarker) propMarker.remove();
+    propMarker = L.marker([lat,lng], { icon:dot('#9A7230',9), zIndexOffset:1000 }).addTo(lmap).bindTooltip('הנכס');
+    poiLayer.clearLayers();
+    const around = `(around:1000,${lat},${lng})`;
+    const q = `[out:json][timeout:25];(`+
+      `node["amenity"="school"]${around};way["amenity"="school"]${around};`+
+      `node["amenity"="kindergarten"]${around};way["amenity"="kindergarten"]${around};`+
+      `node["shop"~"supermarket|mall|convenience|department_store"]${around};`+
+      `node["amenity"="marketplace"]${around};`+
+      `);out center 100;`;
+    try {
+      const r = await fetch('https://overpass-api.de/api/interpreter', { method:'POST', body:'data='+encodeURIComponent(q) });
+      const d = await r.json();
+      const counts = { school:0, kinder:0, store:0 };
+      (d.elements||[]).forEach(e=>{
+        const la = e.lat || (e.center&&e.center.lat), ln = e.lon || (e.center&&e.center.lon);
+        if (!la) return;
+        const t = e.tags||{}; let color, key;
+        if (t.amenity==='school') { color='#2d7dd2'; key='school'; }
+        else if (t.amenity==='kindergarten') { color='#1f9d55'; key='kinder'; }
+        else { color='#e08a1e'; key='store'; }
+        counts[key]++;
+        L.marker([la,ln], { icon:dot(color,6) }).addTo(poiLayer).bindTooltip(t.name||'');
+      });
       document.getElementById('poiSummary').textContent =
         `בקרבת מקום: ${counts.school} בתי ספר · ${counts.kinder} גני ילדים · ${counts.store} מסחר/סופר`;
-    });
+    } catch(e){
+      document.getElementById('poiSummary').textContent = 'לא הצלחתי לטעון נקודות עניין כרגע.';
+    }
   }
-  function searchPOI(loc, type, keyword, color, onEach, onDone){
-    const req = { location:loc, radius:1000 };
-    if (type) req.type=type; if (keyword) req.keyword=keyword;
-    placesService.nearbySearch(req, (results, status)=>{
-      if (status===google.maps.places.PlacesServiceStatus.OK)
-        results.slice(0,12).forEach(p=>{ poiMarkers.push(new google.maps.Marker({ position:p.geometry.location, map,
-          icon:markerIcon(color,7), title:p.name })); onEach&&onEach(); });
-      onDone&&onDone();
-    });
-  }
-  function markerIcon(color,r){ return { path:google.maps.SymbolPath.CIRCLE, fillColor:color, fillOpacity:1,
-             strokeColor:'#fff', strokeWeight:2, scale:r }; }
 
   /* ---- ui states ---- */
   function showLoading(msg){
@@ -460,6 +470,9 @@
     const b=document.getElementById('resultBody'); b.style.display='block';
     b.innerHTML = `<div class="err">${msg}</div>`;
   }
+
+  // auto-login last (after all declarations) so initMap doesn't hit a TDZ on lmap
+  if (sessionStorage.getItem('ve_admin_ok')==='1') showApp();
   </script>
 </body>
 </html>
