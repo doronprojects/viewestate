@@ -21,7 +21,6 @@
     h1,h2,h3 { font-family:var(--serif); font-weight:700; }
     a { color:var(--gold); }
 
-    /* ---- gate ---- */
     .gate { position:fixed; inset:0; background:var(--bg-dark); display:flex; flex-direction:column;
             align-items:center; justify-content:center; gap:18px; z-index:100; text-align:center; padding:24px; }
     .gate__logo { font-family:'Playfair Display',serif; font-size:30px; font-weight:700; letter-spacing:3px; direction:ltr; }
@@ -34,7 +33,6 @@
                    border:none; border-radius:6px; cursor:pointer; }
     .gate__err { color:#e88; font-size:13px; height:16px; }
 
-    /* ---- topbar ---- */
     .topbar { background:var(--bg-dark); color:#FAF6F0; padding:14px 24px; display:flex; align-items:center;
               justify-content:space-between; position:sticky; top:0; z-index:20; }
     .topbar__logo { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; letter-spacing:3px; direction:ltr; }
@@ -42,10 +40,6 @@
     .topbar a { color:rgba(250,246,240,0.7); font-size:13px; text-decoration:none; }
 
     .wrap { max-width:1180px; margin:0 auto; padding:24px; }
-    .setup-note { background:#FFF6E0; border:1px solid var(--border-md); border-radius:10px; padding:14px 18px;
-                  font-size:13.5px; color:var(--text-mid); margin-bottom:20px; }
-    .setup-note code { background:rgba(154,114,48,0.12); padding:1px 6px; border-radius:4px; direction:ltr; display:inline-block; }
-
     .grid { display:grid; grid-template-columns:380px 1fr; gap:24px; align-items:start; }
     @media (max-width:900px){ .grid { grid-template-columns:1fr; } }
 
@@ -64,23 +58,8 @@
            font-size:15.5px; font-weight:600; cursor:pointer; font-family:var(--sans); transition:background .2s; }
     .btn:hover { background:var(--gold-light); }
     .btn:disabled { opacity:.55; cursor:default; }
-    .btn-sec { width:100%; background:#fff; color:var(--gold); border:1px solid var(--gold); border-radius:8px;
-               padding:11px; font-size:14px; font-weight:600; cursor:pointer; font-family:var(--sans); }
-    .btn-sec:hover { background:var(--bg-alt); }
+    .source-note { font-size:11.5px; color:var(--text-muted); margin-top:12px; text-align:center; }
 
-    .comps-box { border-top:1px solid var(--border); margin:18px 0 16px; padding-top:16px; }
-    .comps-box__label { display:block; font-size:13px; font-weight:600; color:var(--text-mid); margin-bottom:9px; }
-    .comps-box__hint { font-size:12px; color:var(--text-muted); margin:9px 0 10px; }
-    .comp-row { display:grid; grid-template-columns:1fr 1fr 26px; gap:8px; margin-bottom:8px; align-items:center; }
-    .comp-row input { padding:9px 10px; border:1px solid var(--border-md); border-radius:7px; font-size:13.5px;
-                      font-family:var(--sans); width:100%; background:#fff; }
-    .comp-row input:focus { outline:none; border-color:var(--gold); }
-    .comp-row .c-del { background:none; border:none; color:var(--red); font-size:19px; cursor:pointer; line-height:1; }
-    .add-comp { background:none; border:1px dashed var(--border-md); color:var(--gold); width:100%; padding:8px;
-                border-radius:7px; font-size:13px; cursor:pointer; font-family:var(--sans); }
-    .add-comp:hover { background:var(--bg-alt); }
-
-    /* ---- results ---- */
     .result-empty { color:var(--text-muted); font-size:14px; text-align:center; padding:40px 10px; }
     .estimate { text-align:center; padding:8px 0 18px; }
     .estimate__label { font-size:13px; color:var(--text-muted); }
@@ -104,7 +83,8 @@
     table.comps th { color:var(--text-muted); font-weight:600; font-size:11.5px; }
     table.comps tr:hover td { background:var(--bg-alt); }
 
-    #map { width:100%; height:420px; border-radius:14px; border:1px solid var(--border); background:var(--bg-alt); }
+    #map { width:100%; height:420px; border-radius:14px; border:1px solid var(--border); background:var(--bg-alt);
+           display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:13px; }
     .map-legend { display:flex; gap:16px; flex-wrap:wrap; font-size:13px; margin:12px 0 4px; color:var(--text-mid); }
     .map-legend i { display:inline-block; width:11px; height:11px; border-radius:50%; margin-inline-end:5px; vertical-align:middle; }
 
@@ -133,13 +113,11 @@
     </div>
 
     <div class="wrap">
-      <div class="setup-note" id="setupNote" style="display:none"></div>
-
       <div class="grid">
         <!-- input form -->
         <div class="card">
           <h2>פרטי הנכס</h2>
-          <p class="sub">מלא את הפרטים — הערכה לפי עסקאות אמת מאתר רשות המסים</p>
+          <p class="sub">מלא את הפרטים — ההערכה נשלפת אוטומטית מעסקאות אמת (רשות המסים / GovMap)</p>
 
           <div class="field">
             <label for="fAddress">כתובת הנכס</label>
@@ -181,14 +159,8 @@
               <option value="no">אין מעלית</option>
             </select>
           </div>
-          <div class="comps-box">
-            <label class="comps-box__label">עסקאות השוואה (מ-nadlan.gov.il)</label>
-            <button type="button" class="btn-sec" id="openNadlan">פתח עסקאות לכתובת ב-nadlan.gov.il ↗</button>
-            <p class="comps-box__hint">העתק 2-3 עסקאות דומות (מחיר ושטח) משם, והזן כאן:</p>
-            <div id="compRows"></div>
-            <button type="button" class="add-comp" id="addComp">+ הוסף עסקה</button>
-          </div>
           <button class="btn" id="goBtn">חשב הערכת שווי</button>
+          <p class="source-note">המקור: נתוני עסקאות רשמיים של רשות המסים, דרך שירות GovMap הממשלתי.</p>
         </div>
 
         <!-- results + map -->
@@ -196,7 +168,7 @@
           <div class="card" id="resultCard" style="margin-bottom:24px">
             <div class="result-empty" id="resultEmpty">
               הזן כתובת ופרטי נכס, ולחץ "חשב הערכת שווי".<br>
-              ההערכה מבוססת על עסקאות אמת באזור (רשות המסים).
+              העסקאות נשלפות אוטומטית מהמקור הרשמי — אין צורך להעתיק דבר.
             </div>
             <div id="resultBody" style="display:none"></div>
           </div>
@@ -210,7 +182,7 @@
               <span><i style="background:#1f9d55"></i>גני ילדים</span>
               <span><i style="background:#e08a1e"></i>מסחר</span>
             </div>
-            <div id="map"></div>
+            <div id="map">המפה תופיע לאחר חישוב (דורש מפתח Google Maps)</div>
             <div id="poiSummary" style="font-size:13px;color:var(--text-muted);margin-top:10px"></div>
           </div>
         </div>
@@ -220,10 +192,14 @@
 
   <script>
   /* ============================================================
-     CONFIG — paste your Google Maps key (for the map + address search)
+     CONFIG
+     - The valuation itself needs NO setup: it pulls official deals
+       straight from the government GovMap API (keyless, CORS-open).
+     - GOOGLE_MAPS_KEY is optional — only for the neighbourhood map
+       (schools / kindergartens / commerce) + address autocomplete.
      ============================================================ */
-  const GOOGLE_MAPS_KEY = ""; // Google Maps JavaScript API key (Maps + Places)
-  const NADLAN_SITE = "https://www.nadlan.gov.il/";
+  const GOOGLE_MAPS_KEY = ""; // optional — Google Maps JavaScript API + Places API
+  const GOVMAP = "https://www.govmap.gov.il/api";
   const ACCESS_CODE = "viewestate2026";
 
   /* ---- access gate (shares session with admin) ---- */
@@ -247,6 +223,11 @@
                           const i=Math.min(s.length-1, Math.floor(p*(s.length-1))); return s[i]; };
   const monthsAgo = iso => { if(!iso) return 999; const d=new Date(iso); if(isNaN(d)) return 999;
                           return (Date.now()-d)/(1000*60*60*24*30.4); };
+  const pct = f => (f>=1?'+':'−') + Math.round(Math.abs(f-1)*100) + '%';
+  function escapeHtml(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  // EPSG:3857 (GovMap) → WGS84 lat/lng (for Google Maps)
+  function mercToLatLng(x,y){ const R=6378137;
+    return { lat:(2*Math.atan(Math.exp(y/R))-Math.PI/2)*180/Math.PI, lng:(x/R)*180/Math.PI }; }
 
   const CONDITION_FACTOR = { new:1.12, renovated:1.06, good:1.0, needs:0.90 };
   const CONDITION_LABEL  = { new:'חדשה / מקבלן', renovated:'משופצת', good:'תקינה', needs:'דורשת שיפוץ' };
@@ -254,75 +235,62 @@
   let map, geocoder, placesService, propMarker, poiMarkers=[];
 
   function init(){
-    // setup banner if not configured yet
-    if (!GOOGLE_MAPS_KEY) {
-      const n = document.getElementById('setupNote');
-      n.style.display='block';
-      n.innerHTML = '<b>הגדרה אחרונה כדי שהמפה תעבוד:</b><br>' +
-        '• צור מפתח Google Maps (Maps JavaScript API + Places API) והדבק אותו ב-<code>GOOGLE_MAPS_KEY</code> ' +
-        'בראש בלוק ה-&lt;script&gt; בקובץ <code>valuation.html</code>.<br>' +
-        'חישוב השווי עובד גם בלי מפתח — המפתח דרוש רק למפת הסביבה ולהשלמת כתובת.';
-    }
     if (GOOGLE_MAPS_KEY) loadGoogleMaps();
-    // start with 3 empty comp rows
-    addCompRow(); addCompRow(); addCompRow();
-    document.getElementById('addComp').addEventListener('click', ()=>addCompRow());
-    document.getElementById('openNadlan').addEventListener('click', openNadlan);
     document.getElementById('goBtn').addEventListener('click', calculate);
+    document.getElementById('fAddress').addEventListener('keydown', e=>{ if(e.key==='Enter') calculate(); });
   }
 
-  /* ---- manual comps (from nadlan.gov.il) ---- */
-  function openNadlan(){
-    const a = document.getElementById('fAddress').value.trim();
-    if (!a) return showError('הזן כתובת קודם, ואז פתח את העסקאות.');
-    window.open(NADLAN_SITE + '?query=' + encodeURIComponent(a), '_blank', 'noopener');
+  /* ============================================================
+     GovMap — official deals pipeline (keyless, runs in the browser)
+     1) autocomplete(address) → point (x,y in EPSG:3857)
+     2) deals/{x},{y}/{radius} → nearby polygons (block-parcels)
+     3) street-deals/{polygonId} → the actual transactions
+     ============================================================ */
+  async function govmapGeocode(address){
+    const r = await fetch(GOVMAP + '/search-service/autocomplete', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ searchText:address, language:'he' }) });
+    const d = await r.json();
+    const hit = (d.results||[]).find(x=>x.type==='address') || (d.results||[])[0];
+    if (!hit || !hit.shape) return null;
+    const m = hit.shape.match(/POINT\(([-\d.]+)\s+([-\d.]+)\)/);
+    if (!m) return null;
+    return { x:parseFloat(m[1]), y:parseFloat(m[2]), text:hit.text };
   }
-  function addCompRow(){
-    const row = document.createElement('div');
-    row.className = 'comp-row';
-    row.innerHTML = '<input type="number" class="c-price" placeholder="מחיר ₪" min="0">' +
-                    '<input type="number" class="c-sqm" placeholder="מ&quot;ר" min="0">' +
-                    '<button type="button" class="c-del" title="הסר">×</button>';
-    row.querySelector('.c-del').addEventListener('click', ()=>row.remove());
-    document.getElementById('compRows').appendChild(row);
+  async function govmapPolygons(x,y,radius){
+    const r = await fetch(`${GOVMAP}/real-estate/deals/${x},${y}/${radius}`);
+    if (!r.ok) return [];
+    const d = await r.json();
+    return Array.isArray(d) ? d : [];
   }
-  function gatherComps(){
-    return [...document.querySelectorAll('.comp-row')].map(r=>{
-      const price = parseFloat(r.querySelector('.c-price').value);
-      const sqm   = parseFloat(r.querySelector('.c-sqm').value);
-      return (price>0 && sqm>0) ? { price, sqm, pricePerSqm:Math.round(price/sqm), date:null, rooms:null, address:null } : null;
-    }).filter(Boolean);
+  async function govmapStreetDeals(polygonId){
+    const r = await fetch(`${GOVMAP}/real-estate/street-deals/${encodeURIComponent(polygonId)}?limit=20&dealType=2`);
+    if (!r.ok) return [];
+    const d = await r.json();
+    const rows = Array.isArray(d) ? d : (d.data||[]);
+    return rows.map(normalize).filter(Boolean);
   }
-
-  /* ---- Google Maps ---- */
-  function loadGoogleMaps(){
-    const s = document.createElement('script');
-    s.src = 'https://maps.googleapis.com/maps/api/js?key=' + GOOGLE_MAPS_KEY +
-            '&libraries=places&language=he&region=IL&callback=onMapsReady';
-    s.async = true; s.defer = true;
-    document.head.appendChild(s);
+  function normalize(x){
+    const price = +x.dealAmount, sqm = +x.assetArea;
+    if (!price || !sqm) return null;
+    const type = (x.propertyTypeDescription||'') + ' ' + (x.dealNatureDescription||'');
+    const addr = [x.streetNameHeb, x.houseNum].filter(Boolean).join(' ') || x.neighborhood || x.settlementNameHeb || '';
+    return { price, sqm, rooms:x.assetRoomNum||null, floor:x.floorNo||null, date:x.dealDate||null,
+             type:type.trim(), address:addr, gush:x.gushNum?`${x.gushNum}-${x.parcelNum}`:null,
+             pricePerSqm: Math.round(price/sqm) };
   }
-  window.onMapsReady = function(){
-    geocoder = new google.maps.Geocoder();
-    map = new google.maps.Map(document.getElementById('map'), {
-      center:{lat:32.0853, lng:34.7818}, zoom:13, mapTypeControl:false, streetViewControl:false,
-    });
-    placesService = new google.maps.places.PlacesService(map);
-    // address autocomplete
-    const ac = new google.maps.places.Autocomplete(document.getElementById('fAddress'),
-      { componentRestrictions:{country:'il'}, fields:['formatted_address','geometry'] });
-    ac.addListener('place_changed', ()=>{ window._place = ac.getPlace(); });
-  };
+  function isApartment(d){
+    const t = d.type||'';
+    if (/קרקע|מסחר|חנות|משרד|חניה|מחסן|תעשיה|מלונאות|מבנה|אחסנה/.test(t)) return false;
+    return /דירה|מגורים|פנטהאוז|דופלקס|גג|קוטג|בית|מיני/.test(t) || d.rooms;
+  }
 
   /* ---- main flow ---- */
-  function calculate(){
+  async function calculate(){
     const address = document.getElementById('fAddress').value.trim();
     const size    = parseFloat(document.getElementById('fSize').value);
-    if (!address) { return showError('הזן כתובת.'); }
-    if (!size || size<10) { return showError('הזן שטח תקין במ"ר.'); }
-
-    const comps = gatherComps();
-    if (comps.length<1) { return showError('הזן לפחות עסקת השוואה אחת (מחיר + שטח). לחץ "פתח עסקאות ב-nadlan.gov.il" כדי למצוא עסקאות דומות.'); }
+    if (!address) return showError('הזן כתובת.');
+    if (!size || size<10) return showError('הזן שטח תקין במ"ר.');
 
     const subject = {
       address, size,
@@ -333,54 +301,71 @@
       elevator: document.getElementById('fElevator').value==='yes',
     };
 
-    renderResult(subject, comps);
+    showLoading('מאתר את הכתובת…');
+    try {
+      const pt = await govmapGeocode(address);
+      if (!pt) return showError('לא הצלחתי לאתר את הכתובת. נסה ניסוח אחר (רחוב מספר עיר).');
 
-    if (window.google && window._place && window._place.geometry) {
-      updateMap(window._place.geometry.location);
-    } else if (geocoder) {
-      geocoder.geocode({address, region:'il'}, (r,st)=>{ if(st==='OK'&&r[0]) updateMap(r[0].geometry.location); });
+      showLoading('שולף עסקאות אמת מהמקור הרשמי…');
+      // widen the radius until we find enough polygons with deals
+      let polygons = [];
+      for (const radius of [250, 600, 1200]) {
+        polygons = await govmapPolygons(pt.x, pt.y, radius);
+        if (polygons.length) break;
+      }
+      if (!polygons.length) return showError('לא נמצאו עסקאות באזור הזה.');
+
+      // fetch the actual deals for the busiest nearby polygons
+      polygons.sort((a,b)=> (+b.dealscount||0)-(+a.dealscount||0));
+      const top = polygons.slice(0, 10);
+      const batches = await Promise.all(top.map(p=>govmapStreetDeals(p.polygon_id).catch(()=>[])));
+      let deals = batches.flat();
+
+      deals = deals.filter(isApartment);
+      if (!deals.length) return showError('נמצאו עסקאות באזור אך לא דירות מגורים להשוואה.');
+
+      renderResult(subject, deals, pt);
+
+      if (GOOGLE_MAPS_KEY && map) updateMap(mercToLatLng(pt.x, pt.y));
+    } catch(e){
+      showError('שגיאה בשליפת הנתונים: ' + e.message);
     }
   }
 
   /* ---- valuation model (comparative market analysis) ---- */
-  function renderResult(subject, deals){
-    // user-curated comps — keep any with a sane price-per-sqm
-    const used = deals.filter(d => d.pricePerSqm && d.pricePerSqm>3000 && d.pricePerSqm<300000 && d.sqm>15);
-    if (!used.length) {
-      return showError('העסקאות שהוזנו לא תקינות. ודא שהזנת מחיר ושטח אמיתיים.');
-    }
+  function renderResult(subject, deals, pt){
+    let comps = deals.filter(d => d.pricePerSqm>3000 && d.pricePerSqm<300000 && d.sqm>15 && d.sqm<500);
+    // prefer comps within ±35% size and last 48 months; relax if too few
+    const near = comps.filter(d => Math.abs(d.sqm-subject.size)/subject.size <= 0.35 && monthsAgo(d.date)<=48);
+    const used = near.length>=4 ? near : comps
+      .sort((a,b)=> Math.abs(a.sqm-subject.size)-Math.abs(b.sqm-subject.size)).slice(0,40);
+
+    if (!used.length) return showError('לא נמצאו עסקאות השוואה מתאימות. נסה כתובת סמוכה.');
 
     const ppsmArr = used.map(d=>d.pricePerSqm);
-    const medPpsm = median(ppsmArr);
-    const lowPpsm = percentile(ppsmArr,0.25);
-    const highPpsm= percentile(ppsmArr,0.75);
+    const medPpsm = median(ppsmArr), lowPpsm = percentile(ppsmArr,0.25), highPpsm = percentile(ppsmArr,0.75);
 
-    // adjustments on top of the area median
     let factor = CONDITION_FACTOR[subject.condition] || 1;
-    const adjustments = [['בסיס (חציון ₪/מ"ר באזור)', ils(medPpsm)+' /מ"ר']];
-    adjustments.push(['מצב הדירה: '+CONDITION_LABEL[subject.condition], pct(CONDITION_FACTOR[subject.condition])]);
-
+    const adjustments = [['בסיס (חציון ₪/מ"ר באזור)', ils(medPpsm)+' /מ"ר'],
+                         ['מצב הדירה: '+CONDITION_LABEL[subject.condition], pct(CONDITION_FACTOR[subject.condition])]];
     if (!isNaN(subject.floor)) {
-      if (subject.floor===0 || subject.floor===-1) { factor*=0.97; adjustments.push(['קומת קרקע', '−3%']); }
-      else if (subject.floor>=3 && subject.elevator){ factor*=1.02; adjustments.push(['קומה גבוהה + מעלית', '+2%']); }
-      else if (subject.floor>=3 && !subject.elevator){ factor*=0.96; adjustments.push(['קומה גבוהה בלי מעלית', '−4%']); }
+      if (subject.floor<=0) { factor*=0.97; adjustments.push(['קומת קרקע','−3%']); }
+      else if (subject.floor>=3 && subject.elevator){ factor*=1.02; adjustments.push(['קומה גבוהה + מעלית','+2%']); }
+      else if (subject.floor>=3 && !subject.elevator){ factor*=0.96; adjustments.push(['קומה גבוהה בלי מעלית','−4%']); }
     }
     if (subject.year && subject.year>=new Date().getFullYear()-5 && subject.condition!=='new'){
       factor*=1.03; adjustments.push(['בניין חדש יחסית','+3%']);
     }
 
-    const adjPpsm = medPpsm*factor;
-    const estimate = adjPpsm*subject.size;
-    const low  = lowPpsm*factor*subject.size;
-    const high = highPpsm*factor*subject.size;
-
+    const adjPpsm = medPpsm*factor, estimate = adjPpsm*subject.size;
+    const low = lowPpsm*factor*subject.size, high = highPpsm*factor*subject.size;
     const conf = used.length>=12 ? ['high','ביטחון גבוה'] : used.length>=5 ? ['med','ביטחון בינוני'] : ['low','ביטחון נמוך'];
 
-    const compRows = used.slice(0,12).map(d=>`<tr>
-        <td>${d.address?escapeHtml(d.address.slice(0,28)):'—'}</td>
+    const compRows = used.slice(0,14).map(d=>`<tr>
+        <td>${d.address?escapeHtml(d.address.slice(0,26)):'—'}</td>
         <td>${d.sqm?Math.round(d.sqm):'—'}</td>
         <td>${d.rooms||'—'}</td>
-        <td>${d.date?d.date.slice(0,7):'—'}</td>
+        <td>${d.date?String(d.date).slice(0,7):'—'}</td>
         <td>${ils(d.price)}</td>
         <td><b>${ils(d.pricePerSqm)}</b></td>
       </tr>`).join('');
@@ -401,56 +386,59 @@
         <div class="metric"><b>${used.length}</b><span>עסקאות בשימוש</span></div>
         <div class="metric"><b>${pct(factor)}</b><span>התאמות נטו</span></div>
       </div>
-      <div class="adj">
-        ${adjustments.map(a=>`<div><span>${a[0]}</span><span>${a[1]}</span></div>`).join('')}
-      </div>
-      <h3 style="font-size:15px;margin:16px 0 4px">עסקאות השוואה</h3>
+      <div class="adj">${adjustments.map(a=>`<div><span>${a[0]}</span><span>${a[1]}</span></div>`).join('')}</div>
+      <h3 style="font-size:15px;margin:16px 0 4px">עסקאות השוואה (${used.length})</h3>
       <table class="comps">
         <thead><tr><th>כתובת</th><th>מ"ר</th><th>חד'</th><th>תאריך</th><th>מחיר</th><th>₪/מ"ר</th></tr></thead>
         <tbody>${compRows}</tbody>
       </table>
       <p style="font-size:11.5px;color:var(--text-muted);margin-top:12px">
-        * הערכה אוטומטית להתרשמות בלבד, אינה תחליף להערכת שמאי מוסמך.
+        * הערכה אוטומטית להתרשמות בלבד, אינה תחליף להערכת שמאי מוסמך. מקור: רשות המסים / GovMap.
       </p>`;
   }
 
-  const pct = f => (f>=1?'+':'−') + Math.round(Math.abs(f-1)*100) + '%';
-  function escapeHtml(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-
-  /* ---- map + nearby POIs ---- */
+  /* ---- Google Maps (optional) ---- */
+  function loadGoogleMaps(){
+    const s = document.createElement('script');
+    s.src = 'https://maps.googleapis.com/maps/api/js?key=' + GOOGLE_MAPS_KEY +
+            '&libraries=places&language=he&region=IL&callback=onMapsReady';
+    s.async = true; s.defer = true; document.head.appendChild(s);
+  }
+  window.onMapsReady = function(){
+    geocoder = new google.maps.Geocoder();
+    const el = document.getElementById('map'); el.textContent='';
+    map = new google.maps.Map(el, { center:{lat:32.0853,lng:34.7818}, zoom:13, mapTypeControl:false, streetViewControl:false });
+    placesService = new google.maps.places.PlacesService(map);
+    const ac = new google.maps.places.Autocomplete(document.getElementById('fAddress'),
+      { componentRestrictions:{country:'il'}, fields:['formatted_address','geometry'] });
+    ac.addListener('place_changed', ()=>{ window._place = ac.getPlace(); });
+  };
   function updateMap(loc){
     if (!map) return;
     map.setCenter(loc); map.setZoom(15);
     if (propMarker) propMarker.setMap(null);
-    propMarker = new google.maps.Marker({ position:loc, map,
-      icon:markerIcon('#9A7230',12), title:'הנכס', zIndex:999 });
+    propMarker = new google.maps.Marker({ position:loc, map, icon:markerIcon('#9A7230',12), title:'הנכס', zIndex:999 });
     poiMarkers.forEach(m=>m.setMap(null)); poiMarkers=[];
     const counts = {school:0, kinder:0, store:0};
     searchPOI(loc,'school',null,'#2d7dd2',()=>counts.school++);
     searchPOI(loc,null,'גן ילדים','#1f9d55',()=>counts.kinder++);
     searchPOI(loc,'supermarket',null,'#e08a1e',()=>counts.store++,()=>{
       document.getElementById('poiSummary').textContent =
-        `נמצאו בקרבת מקום: ${counts.school} בתי ספר · ${counts.kinder} גני ילדים · ${counts.store} מסחר/סופר`;
+        `בקרבת מקום: ${counts.school} בתי ספר · ${counts.kinder} גני ילדים · ${counts.store} מסחר/סופר`;
     });
   }
   function searchPOI(loc, type, keyword, color, onEach, onDone){
     const req = { location:loc, radius:1000 };
     if (type) req.type=type; if (keyword) req.keyword=keyword;
     placesService.nearbySearch(req, (results, status)=>{
-      if (status===google.maps.places.PlacesServiceStatus.OK){
-        results.slice(0,12).forEach(p=>{
-          poiMarkers.push(new google.maps.Marker({ position:p.geometry.location, map,
-            icon:markerIcon(color,7), title:p.name }));
-          onEach && onEach();
-        });
-      }
-      onDone && onDone();
+      if (status===google.maps.places.PlacesServiceStatus.OK)
+        results.slice(0,12).forEach(p=>{ poiMarkers.push(new google.maps.Marker({ position:p.geometry.location, map,
+          icon:markerIcon(color,7), title:p.name })); onEach&&onEach(); });
+      onDone&&onDone();
     });
   }
-  function markerIcon(color, r){
-    return { path:google.maps.SymbolPath.CIRCLE, fillColor:color, fillOpacity:1,
-             strokeColor:'#fff', strokeWeight:2, scale:r };
-  }
+  function markerIcon(color,r){ return { path:google.maps.SymbolPath.CIRCLE, fillColor:color, fillOpacity:1,
+             strokeColor:'#fff', strokeWeight:2, scale:r }; }
 
   /* ---- ui states ---- */
   function showLoading(msg){
