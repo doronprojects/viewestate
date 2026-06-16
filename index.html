@@ -1211,9 +1211,6 @@
     /* text column matches the phone's height; steps span from the top
        heading down to the bottom of the phone */
     .qr-inner > .reveal:not(.phone-wrap) { display: flex; flex-direction: column; }
-    @media (min-width: 1101px) {
-      .qr-inner > .reveal:not(.phone-wrap) { min-height: 578px; } /* = phone mockup height */
-    }
 
     .qr-steps {
       display: grid;
@@ -1221,10 +1218,7 @@
       grid-template-rows: auto auto;
       grid-auto-flow: column;
       gap: 18px 40px;
-      margin-top: auto;
-      padding-top: 28px;
-      max-width: 600px; /* keep wrapping (and height) consistent on wide screens */
-      align-self: flex-end; /* push the 01-04 block to the left edge of the column (RTL) */
+      padding-top: 36px;
     }
 
     .qr-step {
@@ -2088,8 +2082,7 @@
       <div class="reveal">
         <p class="section-eyebrow section-eyebrow--light">השיטה החדשנית</p>
         <h2 class="section-h2 section-h2--light">
-          הנכס שלך<br>בכיס של כל<br>
-          <em style="color:var(--gold-light)">עובר אורח</em>
+          הנכס שלך בכיס של כל <em style="color:var(--gold-light)">עובר אורח</em>
         </h2>
         <div class="qr-steps">
           <div class="qr-step">
