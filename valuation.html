@@ -380,20 +380,30 @@
     const windowLabel = windowUsed<=12 ? 'השנה האחרונה' : windowUsed<=24 ? 'השנתיים האחרונות'
                       : windowUsed<=36 ? '3 השנים האחרונות' : '5 השנים האחרונות';
 
-    // area annual trend (regression of ₪/m² over time) — for the badge AND to time-adjust comps
+    // area price trend — median ₪/m² of the last year vs the year before it, so it
+    // reflects the ACTUAL recent direction (a regression over all years masked dips).
+    // computed on similar-size units to avoid composition skew.
     let annualRate = 0, haveTrend = false;
     {
-      const pts = valid.filter(d=>d.date && !isNaN(new Date(d.date)))
-                       .map(d=>({ t:new Date(d.date).getTime()/(1000*3600*24*365.25), y:d.pricePerSqm }));
-      if (pts.length>=5) {
-        const n=pts.length; let sx=0,sy=0,sxy=0,sxx=0;
-        pts.forEach(p=>{ sx+=p.t; sy+=p.y; sxy+=p.t*p.y; sxx+=p.t*p.t; });
-        const denom=n*sxx-sx*sx, meanY=sy/n;
-        if (Math.abs(denom)>1e-9 && meanY>0) {
-          const r=((n*sxy-sx*sy)/denom)/meanY;
-          if (Math.abs(r)<0.5) { annualRate=r; haveTrend=true; }
-        }
+      const pool = (() => {
+        const sized = valid.filter(d => d.date && Math.abs(d.sqm-subject.size)/subject.size <= 0.5);
+        return sized.length>=8 ? sized : valid.filter(d=>d.date && !isNaN(new Date(d.date)));
+      })();
+      const recent = pool.filter(d => monthsAgo(d.date) <= 12);
+      const prior  = pool.filter(d => { const m=monthsAgo(d.date); return m>12 && m<=30; });
+      if (recent.length>=3 && prior.length>=3) {
+        const mr=median(recent.map(d=>d.pricePerSqm)), mp=median(prior.map(d=>d.pricePerSqm));
+        if (mr && mp) { annualRate=(mr-mp)/mp; haveTrend=true; }
+      } else if (pool.length>=6) {
+        // fallback: split by date into older/newer halves and annualise the change
+        const s=[...pool].sort((a,b)=> new Date(a.date)-new Date(b.date));
+        const mid=Math.floor(s.length/2), older=s.slice(0,mid), newer=s.slice(mid);
+        const mo=median(older.map(d=>d.pricePerSqm)), mn=median(newer.map(d=>d.pricePerSqm));
+        const to=median(older.map(d=>new Date(d.date).getTime())), tn=median(newer.map(d=>new Date(d.date).getTime()));
+        const yrs=(tn-to)/(1000*3600*24*365.25);
+        if (mo && mn && yrs>0.3) { annualRate=Math.pow(mn/mo, 1/yrs)-1; haveTrend=true; }
       }
+      if (Math.abs(annualRate)>=0.5) haveTrend=false; // discard implausible swings
     }
 
     // ── accuracy passes on the comp set ──
