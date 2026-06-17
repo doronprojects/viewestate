@@ -345,15 +345,20 @@
     const valid = deals.filter(d => d.pricePerSqm>3000 && d.pricePerSqm<300000 && d.sqm>15 && d.sqm<500);
     const sizeOk  = d => Math.abs(d.sqm-subject.size)/subject.size <= 0.35;
     let used = [], windowUsed = 60, matchLabel = '';
-    // primary basis: same room count (and roughly similar size), most-recent first
+    // primary basis: same room count AND similar size (m²), most-recent first.
+    // start tight on size (±25%) and only loosen / widen the period if too few.
     if (subject.rooms) {
-      for (const months of [12, 24, 36, 60]) {
-        const rm = valid.filter(d => monthsAgo(d.date)<=months && d.rooms &&
-                     Math.abs(d.rooms-subject.rooms)<=0.5 && Math.abs(d.sqm-subject.size)/subject.size<=0.5);
-        used = rm; windowUsed = months;
-        if (rm.length>=3) break;
+      outer:
+      for (const tol of [0.25, 0.40]) {
+        for (const months of [12, 24, 36, 60]) {
+          const rm = valid.filter(d => monthsAgo(d.date)<=months && d.rooms &&
+                       Math.abs(d.rooms-subject.rooms)<=0.5 &&
+                       Math.abs(d.sqm-subject.size)/subject.size<=tol);
+          if (rm.length >= 3) { used = rm; windowUsed = months; break outer; }
+          if (rm.length > used.length) { used = rm; windowUsed = months; }
+        }
       }
-      if (used.length>=2) matchLabel = `· ${subject.rooms} חד׳`;
+      if (used.length>=2) matchLabel = `· ${subject.rooms} חד׳ · ~${subject.size} מ״ר`;
       else used = [];
     }
     // fallback: similar-size recent comps (when room count yields too few)
