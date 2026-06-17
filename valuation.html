@@ -89,6 +89,8 @@
            color:var(--text-muted); font-size:13px; overflow:hidden; }
     .map-legend { display:flex; gap:16px; flex-wrap:wrap; font-size:13px; margin:12px 0 4px; color:var(--text-mid); }
     .map-legend i { display:inline-block; width:11px; height:11px; border-radius:50%; margin-inline-end:5px; vertical-align:middle; }
+    .leaflet-tooltip.prop-label { font-family:var(--sans); font-weight:600; font-size:12.5px; color:var(--text);
+                  border:1.5px solid var(--gold); border-radius:7px; padding:4px 9px; box-shadow:0 2px 6px rgba(0,0,0,.18); }
 
     .loading { text-align:center; padding:36px; color:var(--text-muted); font-size:14px; }
     .spinner { width:30px; height:30px; border:3px solid var(--border); border-top-color:var(--gold);
@@ -179,10 +181,11 @@
             <h2>סביבת הנכס</h2>
             <p class="sub">בתי ספר, גני ילדים ומסחר ברדיוס של ~1 ק"מ</p>
             <div class="map-legend">
-              <span><i style="background:#9A7230"></i>הנכס</span>
-              <span><i style="background:#2d7dd2"></i>בתי ספר</span>
-              <span><i style="background:#1f9d55"></i>גני ילדים</span>
-              <span><i style="background:#e08a1e"></i>מסחר</span>
+              <span>🏠 הנכס</span>
+              <span>🏫 בתי ספר</span>
+              <span>🧒 גני ילדים</span>
+              <span>🌳 גינות / פארקים</span>
+              <span>🛒 מסחר</span>
             </div>
             <div id="map"></div>
             <div id="poiSummary" style="font-size:13px;color:var(--text-muted);margin-top:10px"></div>
@@ -229,7 +232,7 @@
   const CONDITION_FACTOR = { new:1.12, renovated:1.06, good:1.0, needs:0.90 };
   const CONDITION_LABEL  = { new:'חדשה / מקבלן', renovated:'משופצת', good:'תקינה', needs:'דורשת שיפוץ' };
 
-  let lmap, propMarker, poiLayer;
+  let lmap, propMarker, poiLayer, areaCircle;
 
   function init(){
     initMap();
@@ -331,7 +334,7 @@
       renderResult(subject, deals, pt);
 
       const ll = mercToLatLng(pt.x, pt.y);
-      updateMap(ll.lat, ll.lng);
+      updateMap(ll.lat, ll.lng, pt.text || subject.address);
     } catch(e){
       showError('שגיאה בשליפת הנתונים: ' + e.message);
     }
@@ -355,19 +358,23 @@
     const windowLabel = windowUsed<=12 ? 'השנה האחרונה' : windowUsed<=24 ? 'השנתיים האחרונות'
                       : windowUsed<=36 ? '3 השנים האחרונות' : '5 השנים האחרונות';
 
-    // price trend in the area: median ₪/m² of the last 12 months vs the 12-36 months before
+    // area price trend — linear regression of ₪/m² over time, annualised
     let trendHTML = '';
-    const recT = valid.filter(d=>monthsAgo(d.date)<=12);
-    const priT = valid.filter(d=>{ const m=monthsAgo(d.date); return m>12 && m<=36; });
-    if (recT.length>=3 && priT.length>=3) {
-      const rM=median(recT.map(d=>d.pricePerSqm)), pM=median(priT.map(d=>d.pricePerSqm));
-      if (rM && pM) {
-        const ch=(rM-pM)/pM, up=ch>=0.005, down=ch<=-0.005;
-        const color = up?'#1f9d55':down?'#C0392B':'#8A6A50';
-        const arrow = up?'↑':down?'↓':'→';
-        trendHTML = `<div style="font-size:15px;font-weight:600;margin-top:10px;color:${color}">`+
-          `${arrow} מגמת מחירים באזור: ${ch>=0?'+':'−'}${Math.abs(ch*100).toFixed(1)}%`+
-          `<span style="font-size:11.5px;font-weight:400;color:var(--text-muted)"> (שנה אחרונה מול קודמתה)</span></div>`;
+    const pts = valid.filter(d=>d.date && !isNaN(new Date(d.date)))
+                     .map(d=>({ t:new Date(d.date).getTime()/(1000*3600*24*365.25), y:d.pricePerSqm }));
+    if (pts.length>=5) {
+      const n=pts.length; let sx=0,sy=0,sxy=0,sxx=0;
+      pts.forEach(p=>{ sx+=p.t; sy+=p.y; sxy+=p.t*p.y; sxx+=p.t*p.t; });
+      const denom=n*sxx-sx*sx, meanY=sy/n;
+      if (Math.abs(denom)>1e-9 && meanY>0) {
+        const ch=((n*sxy-sx*sy)/denom)/meanY; // fractional change per year
+        if (Math.abs(ch)<0.5) {
+          const up=ch>=0.005, down=ch<=-0.005;
+          const color=up?'#1f9d55':down?'#C0392B':'#8A6A50', arrow=up?'↑':down?'↓':'→';
+          trendHTML = `<div style="font-size:15px;font-weight:600;margin-top:10px;color:${color}">`+
+            `${arrow} מגמת מחירים באזור: ${ch>=0?'+':'−'}${Math.abs(ch*100).toFixed(1)}% לשנה`+
+            `<span style="font-size:11.5px;font-weight:400;color:var(--text-muted)"> (לפי כל העסקאות)</span></div>`;
+        }
       }
     }
 
@@ -437,40 +444,62 @@
       { maxZoom:19, attribution:'© OpenStreetMap' }).addTo(lmap);
     poiLayer = L.layerGroup().addTo(lmap);
   }
-  function dot(color, r){
-    return L.divIcon({ className:'', iconSize:[r*2,r*2], iconAnchor:[r,r],
-      html:`<div style="width:${r*2}px;height:${r*2}px;border-radius:50%;background:${color};border:2px solid #fff;box-shadow:0 0 3px rgba(0,0,0,.45)"></div>` });
+  function homeIcon(){
+    return L.divIcon({ className:'', iconSize:[38,38], iconAnchor:[19,19],
+      html:`<div style="width:38px;height:38px;border-radius:50%;background:#9A7230;border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 2px 7px rgba(0,0,0,.45)">🏠</div>` });
   }
-  async function updateMap(lat, lng){
+  function poiIcon(emoji, color){
+    return L.divIcon({ className:'', iconSize:[26,26], iconAnchor:[13,13],
+      html:`<div style="width:26px;height:26px;border-radius:50%;background:#fff;border:2px solid ${color};display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 1px 3px rgba(0,0,0,.35)">${emoji}</div>` });
+  }
+  const POI_CATS = {
+    school: { emoji:'🏫', color:'#2d7dd2', label:'בית ספר' },
+    kinder: { emoji:'🧒', color:'#1f9d55', label:'גן ילדים' },
+    park:   { emoji:'🌳', color:'#2bb3a3', label:'גינה / פארק' },
+    store:  { emoji:'🛒', color:'#e08a1e', label:'מסחר' },
+  };
+  async function updateMap(lat, lng, label){
     initMap(); if (!lmap) return;
     setTimeout(()=>lmap.invalidateSize(), 50);
     lmap.setView([lat,lng], 15);
     if (propMarker) propMarker.remove();
-    propMarker = L.marker([lat,lng], { icon:dot('#9A7230',9), zIndexOffset:1000 }).addTo(lmap).bindTooltip('הנכס');
+    if (areaCircle) areaCircle.remove();
+    // colour-tint the surrounding area
+    areaCircle = L.circle([lat,lng], { radius:800, color:'#9A7230', weight:1.5,
+                  fillColor:'#C9A35A', fillOpacity:0.07 }).addTo(lmap);
+    propMarker = L.marker([lat,lng], { icon:homeIcon(), zIndexOffset:1000 }).addTo(lmap)
+      .bindTooltip(label||'הנכס', { permanent:true, direction:'top', offset:[0,-22], className:'prop-label' });
     poiLayer.clearLayers();
     const around = `(around:1000,${lat},${lng})`;
     const q = `[out:json][timeout:25];(`+
       `node["amenity"="school"]${around};way["amenity"="school"]${around};`+
       `node["amenity"="kindergarten"]${around};way["amenity"="kindergarten"]${around};`+
+      `node["leisure"~"park|garden|playground"]${around};way["leisure"~"park|garden|playground"]${around};`+
       `node["shop"~"supermarket|mall|convenience|department_store"]${around};`+
       `node["amenity"="marketplace"]${around};`+
-      `);out center 100;`;
+      `);out center 160;`;
     try {
       const r = await fetch('https://overpass-api.de/api/interpreter', { method:'POST', body:'data='+encodeURIComponent(q) });
       const d = await r.json();
-      const counts = { school:0, kinder:0, store:0 };
+      const counts = { school:0, kinder:0, park:0, store:0 };
+      const shown  = { school:0, kinder:0, park:0, store:0 };
       (d.elements||[]).forEach(e=>{
         const la = e.lat || (e.center&&e.center.lat), ln = e.lon || (e.center&&e.center.lon);
         if (!la) return;
-        const t = e.tags||{}; let color, key;
-        if (t.amenity==='school') { color='#2d7dd2'; key='school'; }
-        else if (t.amenity==='kindergarten') { color='#1f9d55'; key='kinder'; }
-        else { color='#e08a1e'; key='store'; }
+        const t = e.tags||{}; let key;
+        if (t.amenity==='school') key='school';
+        else if (t.amenity==='kindergarten') key='kinder';
+        else if (t.leisure) key='park';
+        else key='store';
         counts[key]++;
-        L.marker([la,ln], { icon:dot(color,6) }).addTo(poiLayer).bindTooltip(t.name||'');
+        if (shown[key] >= 35) return;       // keep the map readable in dense areas
+        shown[key]++;
+        const c = POI_CATS[key], name = t.name || c.label;
+        L.marker([la,ln], { icon:poiIcon(c.emoji,c.color) }).addTo(poiLayer)
+          .bindTooltip(`${c.emoji} ${c.label}${t.name?': '+t.name:''}`, { direction:'top' });
       });
       document.getElementById('poiSummary').textContent =
-        `בקרבת מקום: ${counts.school} בתי ספר · ${counts.kinder} גני ילדים · ${counts.store} מסחר/סופר`;
+        `בקרבת מקום: ${counts.school} בתי ספר · ${counts.kinder} גני ילדים · ${counts.park} גינות · ${counts.store} מסחר`;
     } catch(e){
       document.getElementById('poiSummary').textContent = 'לא הצלחתי לטעון נקודות עניין כרגע.';
     }
