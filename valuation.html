@@ -343,16 +343,27 @@
   /* ---- valuation model (comparative market analysis) ---- */
   function renderResult(subject, deals, pt){
     const valid = deals.filter(d => d.pricePerSqm>3000 && d.pricePerSqm<300000 && d.sqm>15 && d.sqm<500);
-    const sizeOk = d => Math.abs(d.sqm-subject.size)/subject.size <= 0.35;
-    // base the estimate on the most recent deals — use the shortest window with
-    // enough comps (size-matched if possible), expanding only when too few
-    let used = [], windowUsed = 60;
-    for (const months of [12, 24, 36, 60]) {
-      const recent = valid.filter(d => monthsAgo(d.date) <= months);
-      const sized  = recent.filter(sizeOk);
-      const pick   = sized.length>=4 ? sized : recent;
-      used = pick; windowUsed = months;
-      if (pick.length>=4) break;
+    const sizeOk  = d => Math.abs(d.sqm-subject.size)/subject.size <= 0.35;
+    let used = [], windowUsed = 60, matchLabel = '';
+    // primary basis: same room count (and roughly similar size), most-recent first
+    if (subject.rooms) {
+      for (const months of [12, 24, 36, 60]) {
+        const rm = valid.filter(d => monthsAgo(d.date)<=months && d.rooms &&
+                     Math.abs(d.rooms-subject.rooms)<=0.5 && Math.abs(d.sqm-subject.size)/subject.size<=0.5);
+        used = rm; windowUsed = months;
+        if (rm.length>=3) break;
+      }
+      if (used.length>=2) matchLabel = `· ${subject.rooms} חד׳`;
+      else used = [];
+    }
+    // fallback: similar-size recent comps (when room count yields too few)
+    if (!used.length) {
+      for (const months of [12, 24, 36, 60]) {
+        const recent = valid.filter(d => monthsAgo(d.date) <= months);
+        const sized  = recent.filter(sizeOk);
+        used = sized.length>=4 ? sized : recent; windowUsed = months;
+        if (used.length>=4) break;
+      }
     }
     if (!used.length) return showError('לא נמצאו עסקאות השוואה מתאימות. נסה כתובת סמוכה.');
     const windowLabel = windowUsed<=12 ? 'השנה האחרונה' : windowUsed<=24 ? 'השנתיים האחרונות'
@@ -370,10 +381,12 @@
         const ch=((n*sxy-sx*sy)/denom)/meanY; // fractional change per year
         if (Math.abs(ch)<0.5) {
           const up=ch>=0.005, down=ch<=-0.005;
-          const color=up?'#1f9d55':down?'#C0392B':'#8A6A50', arrow=up?'↑':down?'↓':'→';
-          trendHTML = `<div style="font-size:15px;font-weight:600;margin-top:10px;color:${color}">`+
-            `${arrow} מגמת מחירים באזור: ${ch>=0?'+':'−'}${Math.abs(ch*100).toFixed(1)}% לשנה`+
-            `<span style="font-size:11.5px;font-weight:400;color:var(--text-muted)"> (לפי כל העסקאות)</span></div>`;
+          const color = up?'#177245':down?'#a23b2c':'#6b5a45';
+          const bg    = up?'#e3f5ea':down?'#fbe6e3':'#efe9df';
+          const arrow = up?'▲':down?'▼':'▬';
+          trendHTML = `<div style="display:inline-flex;align-items:center;gap:7px;margin-top:12px;`+
+            `padding:6px 15px;border-radius:22px;background:${bg};color:${color};font-size:14px;font-weight:600">`+
+            `<span style="font-size:13px">${arrow}</span> מגמת מחירים באזור ${ch>=0?'+':'−'}${Math.abs(ch*100).toFixed(1)}% לשנה</div>`;
         }
       }
     }
@@ -415,7 +428,7 @@
         <div class="estimate__value">${ils(estimate)}</div>
         <div class="estimate__range">טווח: ${ils(low)} – ${ils(high)}</div>
         <div class="estimate__ppsm">${ils(adjPpsm)} למ"ר × ${subject.size} מ"ר</div>
-        <div class="conf ${conf[0]}">${conf[1]} · ${used.length} עסקאות השוואה</div>
+        <div class="conf ${conf[0]}">${conf[1]} · ${used.length} עסקאות השוואה ${matchLabel}</div>
         <div style="font-size:12px;color:var(--text-muted);margin-top:7px">מבוסס על עסקאות מ${windowLabel}</div>
         ${trendHTML}
       </div>
@@ -458,6 +471,22 @@
     park:   { emoji:'🌳', color:'#2bb3a3', label:'גינה / פארק' },
     store:  { emoji:'🛒', color:'#e08a1e', label:'מסחר' },
   };
+  async function overpassFetch(q){
+    const mirrors = [
+      'https://overpass-api.de/api/interpreter',
+      'https://overpass.kumi.systems/api/interpreter',
+      'https://overpass.private.coffee/api/interpreter',
+    ];
+    for (const url of mirrors){
+      try {
+        const r = await fetch(url, { method:'POST', body:'data='+encodeURIComponent(q) });
+        if (!r.ok) continue;
+        const d = await r.json();
+        if (d && Array.isArray(d.elements)) return d;
+      } catch(e){ /* try next mirror */ }
+    }
+    return null;
+  }
   async function updateMap(lat, lng, label){
     initMap(); if (!lmap) return;
     setTimeout(()=>lmap.invalidateSize(), 50);
@@ -479,8 +508,8 @@
       `node["amenity"="marketplace"]${around};`+
       `);out center 160;`;
     try {
-      const r = await fetch('https://overpass-api.de/api/interpreter', { method:'POST', body:'data='+encodeURIComponent(q) });
-      const d = await r.json();
+      const d = await overpassFetch(q);
+      if (!d) { document.getElementById('poiSummary').textContent = 'נקודות העניין לא נטענו כרגע (נסה שוב).'; return; }
       const counts = { school:0, kinder:0, park:0, store:0 };
       const shown  = { school:0, kinder:0, park:0, store:0 };
       (d.elements||[]).forEach(e=>{
