@@ -270,14 +270,20 @@
     const rows = Array.isArray(d) ? d : (d.data||[]);
     return rows.map(normalize).filter(Boolean);
   }
+  function firstCoord(shape){
+    if (!shape) return null;
+    const m = String(shape).match(/(-?\d+\.?\d*)\s+(-?\d+\.?\d*)/);
+    return m ? { x:+m[1], y:+m[2] } : null;
+  }
   function normalize(x){
     const price = +x.dealAmount, sqm = +x.assetArea;
     if (!price || !sqm) return null;
     const type = (x.propertyTypeDescription||'') + ' ' + (x.dealNatureDescription||'');
     const addr = [x.streetNameHeb, x.houseNum].filter(Boolean).join(' ') || x.neighborhood || x.settlementNameHeb || '';
+    const c = firstCoord(x.shape);
     return { dealId:x.dealId||null, price, sqm, rooms:x.assetRoomNum||null, floor:x.floorNo||null, date:x.dealDate||null,
              type:type.trim(), address:addr, gush:x.gushNum?`${x.gushNum}-${x.parcelNum}`:null,
-             pricePerSqm: Math.round(price/sqm) };
+             gx:c?c.x:null, gy:c?c.y:null, pricePerSqm: Math.round(price/sqm) };
   }
   function isApartment(d){
     const t = d.type||'';
@@ -374,33 +380,43 @@
     const windowLabel = windowUsed<=12 ? 'השנה האחרונה' : windowUsed<=24 ? 'השנתיים האחרונות'
                       : windowUsed<=36 ? '3 השנים האחרונות' : '5 השנים האחרונות';
 
-    // area price trend — linear regression of ₪/m² over time, annualised
-    let trendHTML = '';
-    const pts = valid.filter(d=>d.date && !isNaN(new Date(d.date)))
-                     .map(d=>({ t:new Date(d.date).getTime()/(1000*3600*24*365.25), y:d.pricePerSqm }));
-    if (pts.length>=5) {
-      const n=pts.length; let sx=0,sy=0,sxy=0,sxx=0;
-      pts.forEach(p=>{ sx+=p.t; sy+=p.y; sxy+=p.t*p.y; sxx+=p.t*p.t; });
-      const denom=n*sxx-sx*sx, meanY=sy/n;
-      if (Math.abs(denom)>1e-9 && meanY>0) {
-        const ch=((n*sxy-sx*sy)/denom)/meanY; // fractional change per year
-        if (Math.abs(ch)<0.5) {
-          const up=ch>=0.005, down=ch<=-0.005;
-          const color = up?'#177245':down?'#a23b2c':'#6b5a45';
-          const bg    = up?'#e3f5ea':down?'#fbe6e3':'#efe9df';
-          const arrow = up?'▲':down?'▼':'▬';
-          trendHTML = `<div style="display:inline-flex;align-items:center;gap:7px;margin-top:12px;`+
-            `padding:6px 15px;border-radius:22px;background:${bg};color:${color};font-size:14px;font-weight:600">`+
-            `<span style="font-size:13px">${arrow}</span> מגמת מחירים באזור ${ch>=0?'+':'−'}${Math.abs(ch*100).toFixed(1)}% לשנה</div>`;
+    // area annual trend (regression of ₪/m² over time) — for the badge AND to time-adjust comps
+    let annualRate = 0, haveTrend = false;
+    {
+      const pts = valid.filter(d=>d.date && !isNaN(new Date(d.date)))
+                       .map(d=>({ t:new Date(d.date).getTime()/(1000*3600*24*365.25), y:d.pricePerSqm }));
+      if (pts.length>=5) {
+        const n=pts.length; let sx=0,sy=0,sxy=0,sxx=0;
+        pts.forEach(p=>{ sx+=p.t; sy+=p.y; sxy+=p.t*p.y; sxx+=p.t*p.t; });
+        const denom=n*sxx-sx*sx, meanY=sy/n;
+        if (Math.abs(denom)>1e-9 && meanY>0) {
+          const r=((n*sxy-sx*sy)/denom)/meanY;
+          if (Math.abs(r)<0.5) { annualRate=r; haveTrend=true; }
         }
       }
     }
 
-    const ppsmArr = used.map(d=>d.pricePerSqm);
-    const medPpsm = median(ppsmArr), lowPpsm = percentile(ppsmArr,0.25), highPpsm = percentile(ppsmArr,0.75);
+    // ── accuracy passes on the comp set ──
+    // (a) time-adjust each comp's ₪/m² to today's prices using the area trend
+    const yrsAgo = d => Math.min((monthsAgo(d.date)||0)/12, 6);
+    used.forEach(d=>{ d._tppsm = haveTrend ? Math.round(d.pricePerSqm*Math.pow(1+annualRate, yrsAgo(d))) : d.pricePerSqm; });
+    // (b) prefer geographic proximity — keep the closest comps to the subject
+    if (pt && pt.x!=null) used.forEach(d=>{ d._dist = (d.gx!=null) ? Math.hypot(d.gx-pt.x, d.gy-pt.y) : Infinity; });
+    let comps = [...used].sort((a,b)=>(a._dist||0)-(b._dist||0)).slice(0, 18);
+    // (c) drop ₪/m² outliers (IQR fence) when there are enough comps
+    if (comps.length>=6) {
+      const arr=[...comps.map(d=>d._tppsm)].sort((a,b)=>a-b);
+      const qq=p=>arr[Math.min(arr.length-1,Math.floor(p*(arr.length-1)))];
+      const q1=qq(0.25), q3=qq(0.75), iqr=q3-q1, lo=q1-1.5*iqr, hi=q3+1.5*iqr;
+      const trimmed = comps.filter(d=> d._tppsm>=lo && d._tppsm<=hi);
+      if (trimmed.length>=3) comps = trimmed;
+    }
+
+    const tArr = comps.map(d=>d._tppsm);
+    const medPpsm = median(tArr), lowPpsm = percentile(tArr,0.25), highPpsm = percentile(tArr,0.75);
 
     let factor = CONDITION_FACTOR[subject.condition] || 1;
-    const adjustments = [['בסיס (חציון ₪/מ"ר באזור)', ils(medPpsm)+' /מ"ר'],
+    const adjustments = [['בסיס (חציון ₪/מ"ר, מותאם לזמן)', ils(medPpsm)+' /מ"ר'],
                          ['מצב הדירה: '+CONDITION_LABEL[subject.condition], pct(CONDITION_FACTOR[subject.condition])]];
     if (!isNaN(subject.floor)) {
       if (subject.floor<=0) { factor*=0.97; adjustments.push(['קומת קרקע','−3%']); }
@@ -413,9 +429,19 @@
 
     const adjPpsm = medPpsm*factor, estimate = adjPpsm*subject.size;
     const low = lowPpsm*factor*subject.size, high = highPpsm*factor*subject.size;
-    const conf = used.length>=12 ? ['high','ביטחון גבוה'] : used.length>=5 ? ['med','ביטחון בינוני'] : ['low','ביטחון נמוך'];
+    const conf = comps.length>=12 ? ['high','ביטחון גבוה'] : comps.length>=5 ? ['med','ביטחון בינוני'] : ['low','ביטחון נמוך'];
 
-    const compRows = [...used].sort((a,b)=> new Date(b.date||0) - new Date(a.date||0)).slice(0,14).map(d=>`<tr>
+    let trendHTML = '';
+    if (haveTrend) {
+      const ch=annualRate, up=ch>=0.005, down=ch<=-0.005;
+      const color=up?'#177245':down?'#a23b2c':'#6b5a45', bg=up?'#e3f5ea':down?'#fbe6e3':'#efe9df', arrow=up?'▲':down?'▼':'▬';
+      trendHTML = `<div style="display:inline-flex;align-items:center;gap:7px;margin-top:12px;`+
+        `padding:6px 15px;border-radius:22px;background:${bg};color:${color};font-size:14px;font-weight:600">`+
+        `<span style="font-size:13px">${arrow}</span> מגמת מחירים באזור ${ch>=0?'+':'−'}${Math.abs(ch*100).toFixed(1)}% לשנה</div>`;
+    }
+
+    const usedCount = comps.length;
+    const compRows = [...comps].sort((a,b)=> new Date(b.date||0) - new Date(a.date||0)).slice(0,14).map(d=>`<tr>
         <td>${d.address?escapeHtml(d.address.slice(0,26)):'—'}</td>
         <td>${d.sqm?Math.round(d.sqm):'—'}</td>
         <td>${d.rooms||'—'}</td>
@@ -433,23 +459,23 @@
         <div class="estimate__value">${ils(estimate)}</div>
         <div class="estimate__range">טווח: ${ils(low)} – ${ils(high)}</div>
         <div class="estimate__ppsm">${ils(adjPpsm)} למ"ר × ${subject.size} מ"ר</div>
-        <div class="conf ${conf[0]}">${conf[1]} · ${used.length} עסקאות השוואה ${matchLabel}</div>
+        <div class="conf ${conf[0]}">${conf[1]} · ${usedCount} עסקאות השוואה ${matchLabel}</div>
         <div style="font-size:12px;color:var(--text-muted);margin-top:7px">מבוסס על עסקאות מ${windowLabel}</div>
         ${trendHTML}
       </div>
       <div class="metrics">
-        <div class="metric"><b>${ils(medPpsm)}</b><span>חציון ₪/מ"ר באזור</span></div>
-        <div class="metric"><b>${used.length}</b><span>עסקאות בשימוש</span></div>
+        <div class="metric"><b>${ils(medPpsm)}</b><span>חציון ₪/מ"ר (מותאם)</span></div>
+        <div class="metric"><b>${usedCount}</b><span>עסקאות בשימוש</span></div>
         <div class="metric"><b>${pct(factor)}</b><span>התאמות נטו</span></div>
       </div>
       <div class="adj">${adjustments.map(a=>`<div><span>${a[0]}</span><span>${a[1]}</span></div>`).join('')}</div>
-      <h3 style="font-size:15px;margin:16px 0 4px">עסקאות השוואה (${used.length})</h3>
+      <h3 style="font-size:15px;margin:16px 0 4px">עסקאות השוואה (${usedCount})</h3>
       <table class="comps">
         <thead><tr><th>כתובת</th><th>מ"ר</th><th>חד'</th><th>תאריך</th><th>מחיר</th><th>₪/מ"ר</th></tr></thead>
         <tbody>${compRows}</tbody>
       </table>
       <p style="font-size:11.5px;color:var(--text-muted);margin-top:12px">
-        * הערכה אוטומטית להתרשמות בלבד, אינה תחליף להערכת שמאי מוסמך. מקור: רשות המסים / GovMap.
+        * לשיפור דיוק: המחירים מותאמים לזמן לפי מגמת האזור, העסקאות ממוינות לפי קרבה לכתובת, וחריגים סוננו. הערכה להתרשמות בלבד — אינה תחליף לשמאי מוסמך. מקור: רשות המסים / GovMap.
       </p>`;
   }
 
