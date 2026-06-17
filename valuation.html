@@ -462,9 +462,11 @@
       { maxZoom:19, attribution:'© OpenStreetMap' }).addTo(lmap);
     poiLayer = L.layerGroup().addTo(lmap);
   }
-  function homeIcon(){
-    return L.divIcon({ className:'', iconSize:[38,38], iconAnchor:[19,19],
-      html:`<div style="width:38px;height:38px;border-radius:50%;background:#9A7230;border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 2px 7px rgba(0,0,0,.45)">🏠</div>` });
+  function homeIcon(label){
+    const safe = escapeHtml(label || 'הנכס');
+    return L.divIcon({ className:'prop-pin', iconSize:[0,0], iconAnchor:[0,0],
+      html:`<div style="position:absolute;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:#9A7230;border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 2px 7px rgba(0,0,0,.45)">🏠</div>`+
+            `<div style="position:absolute;transform:translate(-50%,calc(-50% - 32px));white-space:nowrap;background:#fff;border:1.5px solid #9A7230;border-radius:8px;padding:3px 10px;font-size:12.5px;font-weight:600;color:#1C1008;box-shadow:0 2px 6px rgba(0,0,0,.22)">${safe}</div>` });
   }
   function poiIcon(emoji, color){
     return L.divIcon({ className:'', iconSize:[26,26], iconAnchor:[13,13],
@@ -501,8 +503,7 @@
     // colour-tint the surrounding area
     areaCircle = L.circle([lat,lng], { radius:800, color:'#9A7230', weight:1.5,
                   fillColor:'#C9A35A', fillOpacity:0.07 }).addTo(lmap);
-    propMarker = L.marker([lat,lng], { icon:homeIcon(), zIndexOffset:1000 }).addTo(lmap)
-      .bindTooltip(label||'הנכס', { permanent:true, direction:'top', offset:[0,-22], className:'prop-label' });
+    propMarker = L.marker([lat,lng], { icon:homeIcon(label), zIndexOffset:1000 }).addTo(lmap);
     poiLayer.clearLayers();
     const around = `(around:1000,${lat},${lng})`;
     const q = `[out:json][timeout:25];(`+
