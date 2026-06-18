@@ -506,7 +506,7 @@
     const safe = escapeHtml(label || 'הנכס');
     return L.divIcon({ className:'prop-pin', iconSize:[0,0], iconAnchor:[0,0],
       html:`<div style="position:absolute;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:#9A7230;border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 2px 7px rgba(0,0,0,.45)">🏠</div>`+
-            `<div style="position:absolute;transform:translate(-50%,calc(-50% - 32px));white-space:nowrap;background:#fff;border:1.5px solid #9A7230;border-radius:8px;padding:3px 10px;font-size:12.5px;font-weight:600;color:#1C1008;box-shadow:0 2px 6px rgba(0,0,0,.22)">${safe}</div>` });
+            `<div style="position:absolute;transform:translate(-50%,20px);white-space:nowrap;background:#fff;border:1.5px solid #9A7230;border-radius:8px;padding:3px 10px;font-size:12.5px;font-weight:600;color:#1C1008;box-shadow:0 2px 6px rgba(0,0,0,.22)">${safe}</div>` });
   }
   function poiIcon(emoji, color){
     return L.divIcon({ className:'', iconSize:[26,26], iconAnchor:[13,13],
@@ -536,13 +536,13 @@
   }
   async function updateMap(lat, lng, label){
     initMap(); if (!lmap) return;
-    setTimeout(()=>lmap.invalidateSize(), 50);
-    lmap.setView([lat,lng], 15);
     if (propMarker) propMarker.remove();
     if (areaCircle) areaCircle.remove();
     // colour-tint the surrounding area
     areaCircle = L.circle([lat,lng], { radius:800, color:'#9A7230', weight:1.5,
                   fillColor:'#C9A35A', fillOpacity:0.07 }).addTo(lmap);
+    // frame the area immediately (after the container has its real size)
+    setTimeout(()=>{ lmap.invalidateSize(); lmap.fitBounds(areaCircle.getBounds(), { padding:[24,24] }); }, 50);
     propMarker = L.marker([lat,lng], { icon:homeIcon(label), zIndexOffset:1000 }).addTo(lmap);
     poiLayer.clearLayers();
     const around = `(around:1000,${lat},${lng})`;
@@ -557,7 +557,7 @@
       const d = await overpassFetch(q);
       if (!d) { document.getElementById('poiSummary').textContent = 'נקודות העניין לא נטענו כרגע (נסה שוב).'; return; }
       const counts = { school:0, kinder:0, park:0, store:0 };
-      const shown  = { school:0, kinder:0, park:0, store:0 };
+      const nearest = { school:null, kinder:null, park:null, store:null };
       (d.elements||[]).forEach(e=>{
         const la = e.lat || (e.center&&e.center.lat), ln = e.lon || (e.center&&e.center.lon);
         if (!la) return;
@@ -567,11 +567,15 @@
         else if (t.leisure) key='park';
         else key='store';
         counts[key]++;
-        if (shown[key] >= 35) return;       // keep the map readable in dense areas
-        shown[key]++;
-        const c = POI_CATS[key], name = t.name || c.label;
-        L.marker([la,ln], { icon:poiIcon(c.emoji,c.color) }).addTo(poiLayer)
-          .bindTooltip(`${c.emoji} ${c.label}${t.name?': '+t.name:''}`, { direction:'top' });
+        // keep only the closest one per category — one icon conveys "there's one nearby"
+        const dist = (la-lat)*(la-lat) + (ln-lng)*(ln-lng);
+        if (!nearest[key] || dist < nearest[key].dist) nearest[key] = { la, ln, dist, name:t.name };
+      });
+      Object.keys(nearest).forEach(key=>{
+        const n = nearest[key]; if (!n) return;
+        const c = POI_CATS[key], more = counts[key]>1 ? ` (+${counts[key]-1} באזור)` : '';
+        L.marker([n.la,n.ln], { icon:poiIcon(c.emoji,c.color) }).addTo(poiLayer)
+          .bindTooltip(`${c.emoji} ${c.label}${n.name?': '+n.name:''}${more}`, { direction:'top' });
       });
       document.getElementById('poiSummary').textContent =
         `בקרבת מקום: ${counts.school} בתי ספר · ${counts.kinder} גני ילדים · ${counts.park} גינות · ${counts.store} מסחר`;
