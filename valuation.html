@@ -268,7 +268,7 @@
     return Array.isArray(d) ? d : [];
   }
   async function govmapStreetDeals(polygonId){
-    const r = await fetch(`${GOVMAP}/real-estate/street-deals/${encodeURIComponent(polygonId)}`);
+    const r = await fetch(`${GOVMAP}/real-estate/street-deals/${encodeURIComponent(polygonId)}?limit=50`);
     if (!r.ok) return [];
     const d = await r.json();
     const rows = Array.isArray(d) ? d : (d.data||[]);
@@ -327,7 +327,7 @@
 
       // fetch the actual deals for the busiest nearby polygons
       polygons.sort((a,b)=> (+b.dealscount||0)-(+a.dealscount||0));
-      const top = polygons.slice(0, 10);
+      const top = polygons.slice(0, 20);
       const batches = await Promise.all(top.map(p=>govmapStreetDeals(p.polygon_id).catch(()=>[])));
       let deals = batches.flat();
 
