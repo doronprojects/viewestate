@@ -567,15 +567,23 @@
     .hero__signature {
       direction: rtl;
       align-items: center;
-      gap: 13px;
-      margin-top: 6px;
+      gap: 14px;
+      margin-top: 10px;
+    }
+    .hero__signature::before,
+    .hero__signature::after {
+      content: "";
+      flex-shrink: 0;
+      height: 1px;
+      width: clamp(22px, 6vw, 64px);
+      background: linear-gradient(90deg, transparent, rgba(201,163,90,0.55), transparent);
     }
     .sig-text {
       font-family: var(--serif);
       font-size: clamp(16px, 2vw, 21px);
       font-weight: 400;
       letter-spacing: 0.3px;
-      color: rgba(250,246,240,0.82);
+      color: rgba(250,246,240,0.86);
       line-height: 1.5;
     }
     .sig-print {
@@ -583,6 +591,17 @@
       height: auto;
       flex-shrink: 0;
       display: block;
+      padding: 9px;
+      box-sizing: content-box;
+      border-radius: 50%;
+      border: 1px solid rgba(201,163,90,0.35);
+      background: rgba(201,163,90,0.07);
+      animation: sigScan 3.2s ease-out infinite;
+    }
+    @keyframes sigScan {
+      0%   { box-shadow: 0 0 0 0 rgba(201,163,90,0.32); }
+      70%  { box-shadow: 0 0 0 9px rgba(201,163,90,0); }
+      100% { box-shadow: 0 0 0 0 rgba(201,163,90,0); }
     }
     .sig-print path {
       fill: none;
@@ -593,6 +612,11 @@
     }
     @media (max-width: 520px) {
       .sig-text { font-size: 15px; }
+      .hero__signature::before,
+      .hero__signature::after { width: 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .sig-print { animation: none; }
     }
 
     /* scroll-down cue: two chevrons cascading downward below the buttons */
