@@ -563,6 +563,37 @@
       flex-wrap: wrap;
     }
 
+    /* signature line: "we create your unique [fingerprint] for the property" */
+    .hero__signature {
+      direction: rtl;
+      align-items: center;
+      gap: 13px;
+      margin-top: 6px;
+    }
+    .sig-text {
+      font-family: var(--serif);
+      font-size: clamp(16px, 2vw, 21px);
+      font-weight: 400;
+      letter-spacing: 0.3px;
+      color: rgba(250,246,240,0.82);
+      line-height: 1.5;
+    }
+    .sig-print {
+      width: clamp(40px, 6vw, 52px);
+      height: clamp(40px, 6vw, 52px);
+      flex-shrink: 0;
+      display: block;
+    }
+    .sig-print path {
+      fill: none;
+      stroke: var(--gold-light);
+      stroke-width: 2.6;
+      stroke-linecap: round;
+    }
+    @media (max-width: 520px) {
+      .sig-text { font-size: 15px; }
+    }
+
     /* scroll-down cue: two chevrons cascading downward below the buttons */
     .hero__scroll-cue {
       display: flex; flex-direction: column; align-items: center;
@@ -2073,9 +2104,17 @@
       <p class="hero__sub">
         <span class="hero__tagline"><span class="tl-part">תיווך נכסים</span> · <span class="tl-part">שיווק מתקדם</span> · <span class="tl-part">שירות אישי</span></span>
       </p>
-      <div class="hero__actions">
-        <a href="properties.html" class="btn btn-gold">צפה בנכסים</a>
-        <a href="#contact" class="btn btn-ghost-light">דבר עם דורון</a>
+      <div class="hero__actions hero__signature">
+        <span class="sig-text">יוצרים עבורך את</span>
+        <svg class="sig-print" viewBox="0 0 100 100" role="img" aria-label="טביעת אצבע">
+          <path d="M28.8 74 A30 34 0 1 1 71.2 74"/>
+          <path d="M33.0 69.4 A24 27.5 0 1 1 67.0 69.4"/>
+          <path d="M37.3 64.9 A18 21 0 1 1 62.7 64.9"/>
+          <path d="M41.5 60.3 A12 14.5 0 1 1 58.5 60.3"/>
+          <path d="M45.4 56 A6.5 8.5 0 1 1 54.6 56"/>
+          <path d="M50 56 V42"/>
+        </svg>
+        <span class="sig-text">היחודית עבור הנכס שלך</span>
       </div>
       <a href="#concept" class="hero__scroll-cue" aria-label="גלול למטה">
         <span class="scroll-chev"><svg viewBox="0 0 24 14" aria-hidden="true"><path d="M2 2l10 10L22 2"/></svg></span>
