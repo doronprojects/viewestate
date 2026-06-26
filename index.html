@@ -2724,18 +2724,15 @@
           const anim = reduce ? '' : '--fdur:' + dur + 's;animation-delay:' + delay + 's,0.8s;';
           html += '<span class="' + cls + '" style="top:' + Math.round(y) + 'px;' + pos + ';--rot:' + rot + 'deg;' + mw + sz + anim + '">' + q + '</span>';
         }
-        // dense top (start of the site) — quotes on both sides
-        const topEnd = Math.min(H - 160, Math.round(window.innerHeight * 1.15));
+        // quotes only in the top part of the hero — above the video strip
+        const vs = document.querySelector('.hero__videostrip');
+        const cutoff = vs
+          ? Math.max(220, Math.round(vs.getBoundingClientRect().top + window.scrollY - 24))
+          : Math.round(window.innerHeight * 0.5);
         const topA = mobile ? 140 : 128, topB = mobile ? 216 : 193;
-        for (let y = rnd(60, 130); y < topEnd; y += rnd(topA, topB)) {
+        for (let y = rnd(60, 120); y < cutoff; y += rnd(topA, topB)) {
           add(y, true, drawTop);
           add(y + rnd(40, 110), false, drawTop);
-        }
-        // rest of the page — denser fill of the free margins, both sides
-        const restA = mobile ? 270 : 205, restB = mobile ? 420 : 334;
-        for (let y = topEnd + rnd(50, 140); y < H - 160; y += rnd(restA, restB)) {
-          add(y, true, drawAll);
-          add(y + rnd(60, 150), false, drawAll);
         }
         box.innerHTML = html;
       }
