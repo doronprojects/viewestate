@@ -184,24 +184,25 @@
       list-style: none;
     }
 
-    .nav__links a {
-      font-size: 14px;
-      font-weight: 400;
-      letter-spacing: 0.8px;
-      color: rgba(28,16,8,0.7);
+    .nav__links a:not(.nav__cta) {
+      font-family: var(--serif);
+      font-size: 16.5px;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+      color: rgba(28,16,8,0.72);
       transition: color 0.3s;
       position: relative;
     }
-    .nav__links a::after {
+    .nav__links a:not(.nav__cta)::after {
       content: "";
       position: absolute;
-      left: 0; right: 0; bottom: -5px;
-      height: 1.5px;
-      background: var(--gold-light);
-      transform: scaleX(0);
-      transition: transform 0.32s var(--ease);
+      left: 50%; bottom: -6px;
+      width: 0; height: 1.5px;
+      background: linear-gradient(90deg, transparent, var(--gold-light) 50%, transparent);
+      transform: translateX(-50%);
+      transition: width 0.34s var(--ease);
     }
-    .nav__links a:hover::after { transform: scaleX(1); }
+    .nav__links a:not(.nav__cta):hover::after { width: 115%; }
 
     .nav--scrolled .nav__links a { color: rgba(248,244,238,0.92); }
     .nav__links a:hover { color: var(--gold-light) !important; }
