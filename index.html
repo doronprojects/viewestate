@@ -162,8 +162,17 @@
       to   { transform: translateX(0); }
     }
 
-    .logo-v { color: var(--gold-light); }
-    .logo-e { color: var(--bg); }
+    .logo-v {
+      background: linear-gradient(115deg, var(--gold-pale) 0%, var(--gold-light) 48%, var(--gold) 100%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+    }
+    .logo-e {
+      color: var(--bg);
+      font-weight: 400;
+      letter-spacing: 5px;
+      margin-inline-start: 9px;
+    }
 
     .nav:not(.nav--scrolled) .logo-v { color: var(--gold-light); }
     .nav:not(.nav--scrolled) .logo-e { color: rgba(248,244,238,0.30); }
