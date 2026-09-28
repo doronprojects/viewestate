@@ -155,13 +155,14 @@ window.VIEWESTATE_DATA = {
       elevator:     "לא",
       storage:      "כן",
       condition:    "מצוין",
-      video:        "videos/hero-fhd.mp4",
-      poster:       "videos/hero-fhd-poster.jpg",
+      video:        "videos/sample-tour.mp4",
+      poster:       "videos/sample-tour-poster.jpg",
       gallery: [
-        "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1400&q=85",
-        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&q=80",
-        "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=900&q=80",
-        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=900&q=80"
+        "images/sample-1.webp",
+        "images/sample-2.webp",
+        "images/sample-3.webp",
+        "images/sample-4.webp",
+        "images/sample-5.webp"
       ],
       description:
         "וילה יוקרתית בשכונת הזהב בהרצליה פיתוח. 320 מ\"ר בנוי על מגרש מרווח, " +
