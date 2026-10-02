@@ -777,8 +777,9 @@
     .vh__media.is-theater .vh__video { object-fit: cover; }   /* fill edge to edge — no black bars */
     .vh__media.is-theater .vh__topbar,
     .vh__media.is-theater .vh__shade { display: none; }
-    .vh__media.is-theater .vh__fs span { display: none; }
-    .vh__media.is-theater .vh__fs { padding: 0 13px; }
+    .vh__fs .fs-close { display: none; }
+    .vh__media.is-theater .vh__fs .fs-open { display: none; }
+    .vh__media.is-theater .vh__fs .fs-close { display: inline; }
     /* phone held upright → turn the player sideways so the video fills the long edge */
     @media (orientation: portrait) {
       .vh__media.is-theater {
@@ -831,7 +832,7 @@
         u_sqm: 'מ"ר', u_rooms: 'חדרים', u_floorOf: 'מתוך', u_spots: 'מקומות',
         ss_sale: 'למכירה', ss_neg: 'במשא ומתן', ss_sold: 'נמכר',
         notfound_h: 'הנכס לא נמצא', notfound_p: 'ייתכן שהנכס הוסר או שהקישור שגוי.', notfound_a: '← חזרה לכל הנכסים',
-        aria_sound: 'הפעל צליל', aria_call: 'התקשר', aria_lang: 'switch to English', aria_fs: 'הגדל למסך מלא', fs_label: 'צפייה במסך מלא', tap_sound: 'הקישו להפעלת קול',
+        aria_sound: 'הפעל צליל', aria_call: 'התקשר', aria_lang: 'switch to English', aria_fs: 'הגדל למסך מלא', fs_label: 'צפייה במסך מלא', tap_sound: 'הקישו להפעלת קול', fs_close: 'דלג לדף הנכס',
         foot_disclaimer: 'האתר נמצא בהקמה. הנכסים והפרטים המוצגים הם להמחשה בלבד, אינם מהווים מידע עדכני או מחייב, ואין לראות בהם הצעה לרכישה או למכירה.'
       },
       en: {
@@ -848,7 +849,7 @@
         u_sqm: 'm²', u_rooms: 'rooms', u_floorOf: 'of', u_spots: 'spots',
         ss_sale: 'For Sale', ss_neg: 'Under Offer', ss_sold: 'Sold',
         notfound_h: 'Property not found', notfound_p: 'The property may have been removed or the link is incorrect.', notfound_a: '← Back to all properties',
-        aria_sound: 'Play sound', aria_call: 'Call', aria_lang: 'מעבר לעברית', aria_fs: 'Fullscreen', fs_label: 'Full screen', tap_sound: 'Tap for sound',
+        aria_sound: 'Play sound', aria_call: 'Call', aria_lang: 'מעבר לעברית', aria_fs: 'Fullscreen', fs_label: 'Full screen', tap_sound: 'Tap for sound', fs_close: 'Skip to listing',
         foot_disclaimer: 'This site is under construction. All properties and details shown are for illustration only — they are not current or binding information and do not constitute an offer to buy or sell.'
       }
     };
@@ -1022,7 +1023,7 @@
         return s;
       })();
       const heroMedia = p.video
-        ? `<video class="vh__video" id="propVid" autoplay loop playsinline poster="${esc(p.poster || heroImg)}">${vidSources}</video>`
+        ? `<video class="vh__video" id="propVid" autoplay playsinline poster="${esc(p.poster || heroImg)}">${vidSources}</video>`
         : `<img class="vh__video" src="${esc(p.poster || heroImg)}" alt="${esc(nm)}">`;
 
       /* whatsapp prefilled */
@@ -1045,7 +1046,7 @@
             </div>
           </div>
           ${p.video ? '<button class="vh__sound" id="soundBtn" onclick="toggleSound()" aria-label="' + esc(t('aria_sound')) + '"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z\"/><line x1=\"22\" x2=\"16\" y1=\"9\" y2=\"15\"/><line x1=\"16\" x2=\"22\" y1=\"9\" y2=\"15\"/></svg></button>' : ''}
-          ${p.video ? '<button class="vh__fs" onclick="goFullscreen()" aria-label="' + esc(t('aria_fs')) + '"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M8 3H5a2 2 0 0 0-2 2v3\"/><path d="M21 8V5a2 2 0 0 0-2-2h-3\"/><path d="M3 16v3a2 2 0 0 0 2 2h3\"/><path d="M16 21h3a2 2 0 0 0 2-2v-3\"/></svg><span>' + esc(t('fs_label')) + '</span></button>' : ''}
+          ${p.video ? '<button class="vh__fs" onclick="goFullscreen()" aria-label="' + esc(t('aria_fs')) + '"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M8 3H5a2 2 0 0 0-2 2v3\"/><path d="M21 8V5a2 2 0 0 0-2-2h-3\"/><path d="M3 16v3a2 2 0 0 0 2 2h3\"/><path d="M16 21h3a2 2 0 0 0 2-2v-3\"/></svg><span class="fs-open">' + esc(t('fs_label')) + '</span><span class="fs-close">' + esc(t('fs_close')) + '</span></button>' : ''}
           ${p.video ? '<button class="vh__tapsnd" id="tapSnd" type="button">' + SND_ON + '<span>' + esc(t('tap_sound')) + '</span></button>' : ''}
         </div>
         <div class="vh__info">
@@ -1174,14 +1175,16 @@
        phone is held upright, is rotated 90° (CSS) so the video runs along the
        long edge. On Android we also enter real fullscreen and lock landscape;
        iPhone has no orientation lock, so the CSS rotation does the job there. */
-    function goFullscreen() {
+    function goFullscreen(auto) {
       const vid = document.getElementById('propVid');
       const box = vid && vid.closest('.vh__media');
       if (!box) return;
       if (box.classList.contains('is-theater')) { exitTheater(); return; }
       box.classList.add('is-theater');
       document.documentElement.classList.add('vh-theater');
+      if (auto !== true) { vid.muted = false; vid.removeAttribute('muted'); syncSoundBtn(); }   /* a tap: sound is allowed */
       if (vid.paused) vid.play().catch(() => {});
+      if (auto === true) return;   /* on page load: no gesture yet, so real fullscreen isn't allowed */
       const req = box.requestFullscreen || box.webkitRequestFullscreen;
       if (!req) return;
       try {
@@ -1190,9 +1193,16 @@
         if (pr && pr.then) pr.then(lock).catch(() => {}); else lock();
       } catch (e) {}
     }
+    var tourDone = false;   /* the opening full-screen tour has finished or was skipped */
     function exitTheater() {
       const box = document.querySelector('.vh__media.is-theater');
-      if (box) box.classList.remove('is-theater');
+      if (box) {
+        box.classList.remove('is-theater');
+        tourDone = true;
+        document.getElementById('tapSnd')?.classList.remove('show');
+        const vid = document.getElementById('propVid');   /* tour is over — stop on the property page */
+        if (vid) { vid.pause(); try { vid.currentTime = 0; } catch (e) {} }
+      }
       document.documentElement.classList.remove('vh-theater');
       try { screen.orientation && screen.orientation.unlock && screen.orientation.unlock(); } catch (e) {}
       if (document.fullscreenElement || document.webkitFullscreenElement) {
@@ -1217,6 +1227,7 @@
         const tap = document.getElementById('tapSnd');
         const tryPlay = () => { const pr = vid.play(); if (pr && pr.catch) pr.catch(() => {}); };
         const fallbackMuted = () => {
+          if (tourDone) return;
           vid.muted = true;
           vid.setAttribute('muted', '');
           tryPlay();
@@ -1234,12 +1245,16 @@
                    .catch(() => { if (my === gen && !userSet) fallbackMuted(); return false; });
         };
         playWithSound();
+        /* open straight into the full-screen tour; when it ends, drop to the listing */
+        goFullscreen(true);
+        vid.addEventListener('ended', exitTheater);
         vid.addEventListener('loadeddata', () => { if (vid.paused) tryPlay(); }, { once: true });
         document.getElementById('soundBtn')?.addEventListener('click', () => { userSet = true; tap?.classList.remove('show'); });
         /* only events that count as a real user gesture */
         const evts = ['touchend', 'click', 'keydown'];
         const done = () => evts.forEach(n => document.removeEventListener(n, kick, true));
         const kick = (e) => {
+          if (tourDone) { done(); return; }
           if (userSet || (e.target && e.target.closest && e.target.closest('#soundBtn'))) { done(); return; }
           if (!vid.muted && !vid.paused) { done(); return; }
           playWithSound().then(ok => { if (ok) done(); });
