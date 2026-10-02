@@ -2275,11 +2275,8 @@
         <div class="phone" aria-hidden="true">
           <div class="phone__screen">
             <div class="phone__media">
-              <video autoplay muted loop playsinline preload="metadata"
-                     poster="videos/sample-tour2-poster.jpg">
-                <source src="videos/sample-tour2.mp4" type="video/mp4">
-                <source src="videos/sample-tour2.webm" type="video/webm">
-              </video>
+              <video class="phone-vid" autoplay muted loop playsinline webkit-playsinline preload="auto"
+                     poster="videos/sample-tour2-poster.jpg" src="videos/sample-tour2-phone.mp4"></video>
               <div class="phone__topbar">
                 <span class="phone__logo"><b>VIEW</b>ESTATE</span>
                 <span class="phone__back">← כל הנכסים</span>
@@ -2323,10 +2320,7 @@
 
             <div class="phone__tour" aria-hidden="true">
               <div class="phone__tour-rot">
-                <video autoplay muted loop playsinline preload="metadata" poster="videos/sample-tour2-poster.jpg">
-                  <source src="videos/sample-tour2.mp4" type="video/mp4">
-                  <source src="videos/sample-tour2.webm" type="video/webm">
-                </video>
+                <video class="phone-vid" autoplay muted loop playsinline webkit-playsinline preload="auto" poster="videos/sample-tour2-poster.jpg" src="videos/sample-tour2-phone.mp4"></video>
                 <span class="phone__tour-skip">דלג לדף הנכס</span>
               </div>
             </div>
@@ -2572,6 +2566,29 @@
       };
       ['touchstart', 'click', 'scroll'].forEach(e =>
         window.addEventListener(e, kick, { passive: true }));
+    })();
+
+    /* ---- QR-section phone mockup videos: same iPhone-safe autoplay treatment
+       (muted as a property, inline, retry when the section comes into view
+       and on the first touch/scroll — Low Power Mode blocks plain autoplay) ---- */
+    (function phoneMockVideos() {
+      const vids = document.querySelectorAll('.phone-vid');
+      if (!vids.length) return;
+      const playAll = () => vids.forEach(v => {
+        v.muted = true; v.defaultMuted = true; v.playsInline = true;
+        if (v.paused) { const p = v.play(); if (p) p.catch(() => {}); }
+      });
+      playAll();
+      vids.forEach(v => v.addEventListener('canplay', playAll, { once: true }));
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) playAll(); })
+          .observe(document.querySelector('.phone-wrap'));
+      }
+      const kick = () => {
+        playAll();
+        if ([...vids].every(v => !v.paused)) ['touchstart', 'click', 'scroll'].forEach(e => window.removeEventListener(e, kick));
+      };
+      ['touchstart', 'click', 'scroll'].forEach(e => window.addEventListener(e, kick, { passive: true }));
     })();
 
     function esc(s) {
