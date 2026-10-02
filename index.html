@@ -1620,6 +1620,17 @@
       font-size: 8px; font-weight: 700; letter-spacing: 1.5px;
       padding: 3px 9px; border-radius: 3px; margin-bottom: 9px;
     }
+    .phone__status--neg { background: #E08A1E; }
+    .phone__fs {
+      position: absolute; right: 8px; bottom: 8px; z-index: 3;
+      display: flex; align-items: center; gap: 4px;
+      font-size: 7.5px; font-weight: 600; color: rgba(248,244,238,0.9);
+      background: rgba(20,10,4,0.45); border: 1px solid rgba(248,244,238,0.2);
+      border-radius: 10px; padding: 3px 7px;
+    }
+    .phone__gallery { display: grid; grid-template-columns: 1.4fr 1fr; grid-template-rows: 1fr 1fr; gap: 5px; height: 92px; }
+    .phone__gallery img { width: 100%; height: 100%; object-fit: cover; border-radius: 5px; display: block; }
+    .phone__gallery img:first-child { grid-row: span 2; }
     .phone__prop-name { font-family: var(--serif); font-size: 20px; color: #FAF6F0; line-height: 1.15; margin-bottom: 5px; font-weight: 700; }
     .phone__prop-meta { font-size: 11px; color: rgba(248,244,238,0.7); margin-bottom: 11px; }
     .phone__price { font-family: var(--serif); font-size: 19px; color: #FAF6F0; font-weight: 700; }
@@ -1733,8 +1744,33 @@
     .phone__scan-pop__t { font-size: 13px; font-weight: 700; color: #1C1008; line-height: 1.2; }
     .phone__scan-pop__u { font-size: 11px; color: #1F9D4D; font-weight: 500; margin-top: 2px; }
 
+    /* full-screen tour: the video opens sideways across the whole screen,
+       then hands over to the property page (mirrors the real page) */
+    .phone__tour {
+      position: absolute; inset: 0; z-index: 19; background: #000; overflow: hidden;
+      opacity: 0; animation: phoneTour 13s ease-in-out infinite;
+    }
+    .phone__tour-rot {
+      position: absolute; top: 50%; left: 50%;
+      width: 222.2%; height: 45%;            /* = screen height × screen width (9:20) */
+      transform: translate(-50%, -50%) rotate(90deg);
+    }
+    .phone__tour-rot video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .phone__tour-skip {
+      position: absolute; right: 10px; bottom: 10px;
+      font-size: 8px; font-weight: 600; color: #F8F4EE;
+      background: rgba(20,10,4,0.45); border: 1px solid rgba(248,244,238,0.25);
+      border-radius: 10px; padding: 4px 9px;
+    }
+    @keyframes phoneTour {
+      0%, 27%   { opacity: 0; }
+      31%, 63%  { opacity: 1; }
+      68%, 100% { opacity: 0; }
+    }
+
     /* hold the scan animation until the section scrolls into view */
-    .phone__scan, .phone__scan-line, .phone__scan-pop { animation-play-state: paused; }
+    .phone__scan, .phone__scan-line, .phone__scan-pop, .phone__tour { animation-play-state: paused; }
+    .phone-wrap.visible .phone__tour,
     .phone-wrap.visible .phone__scan,
     .phone-wrap.visible .phone__scan-line,
     .phone-wrap.visible .phone__scan-pop { animation-play-state: running; }
@@ -1757,12 +1793,12 @@
     }
     @keyframes phoneScanPop {
       0%, 27% { opacity: 0; transform: translateY(18px); }
-      33%     { opacity: 1; transform: translateY(0); }
-      45%     { opacity: 1; transform: translateY(0); }
-      52%, 100% { opacity: 0; transform: translateY(-8px); }
+      31%     { opacity: 1; transform: translateY(0); }
+      37%     { opacity: 1; transform: translateY(0); }
+      41%, 100% { opacity: 0; transform: translateY(-8px); }
     }
     @media (prefers-reduced-motion: reduce) {
-      .phone__scan { animation: none; opacity: 0; }
+      .phone__scan, .phone__tour { animation: none; opacity: 0; }
       .phone__scan-line, .phone__scan-pop { animation: none; }
       .phone__scan-pop { opacity: 0; }
       .phone-wrap { animation: none !important; transform: none !important; }
@@ -2214,30 +2250,38 @@
         <div class="phone" aria-hidden="true">
           <div class="phone__screen">
             <div class="phone__media">
-              <video autoplay muted loop playsinline
-                     poster="videos/hero-fhd-poster.jpg">
-                <source src="videos/hero-fhd.webm" type="video/webm">
-                <source src="videos/hero-fhd.mp4" type="video/mp4">
+              <video autoplay muted loop playsinline preload="metadata"
+                     poster="videos/sample-tour2-poster.jpg">
+                <source src="videos/sample-tour2.mp4" type="video/mp4">
+                <source src="videos/sample-tour2.webm" type="video/webm">
               </video>
               <div class="phone__topbar">
-                <span class="phone__back">‹ הנכסים</span>
                 <span class="phone__logo"><b>VIEW</b>ESTATE</span>
+                <span class="phone__back">← כל הנכסים</span>
               </div>
+              <span class="phone__fs">
+                <svg viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+                צפייה במסך מלא
+              </span>
             </div>
             <div class="phone__info">
-              <span class="phone__status">למכירה</span>
-              <div class="phone__prop-name">פנטהאוז רוטשילד 22</div>
-              <div class="phone__prop-meta">רוטשילד 22 · תל אביב</div>
-              <div class="phone__price">4,800,000 ₪</div>
+              <span class="phone__status phone__status--neg">במשא ומתן</span>
+              <div class="phone__prop-name">וילה בשכונת הזהב</div>
+              <div class="phone__prop-meta">7 חדרים · 320 מ"ר · הרצליה פיתוח</div>
+              <div class="phone__price">7,200,000 ₪</div>
             </div>
             <div class="phone__specs">
-              <div class="phone__spec"><b>5</b><span>חדרים</span></div>
-              <div class="phone__spec"><b>160</b><span>מ"ר</span></div>
-              <div class="phone__spec"><b>12</b><span>קומה</span></div>
+              <div class="phone__spec"><b>7</b><span>חדרים</span></div>
+              <div class="phone__spec"><b>320</b><span>מ"ר</span></div>
+              <div class="phone__spec"><b>3</b><span>חניות</span></div>
             </div>
             <div class="phone__body">
-              <div class="phone__sec-label">תיאור הנכס</div>
-              <p class="phone__lines"><span></span><span></span><span></span></p>
+              <div class="phone__sec-label">גלריית תמונות</div>
+              <div class="phone__gallery">
+                <img src="images/sample-1.webp" alt="" loading="lazy" decoding="async">
+                <img src="images/sample-2.webp" alt="" loading="lazy" decoding="async">
+                <img src="images/sample-3.webp" alt="" loading="lazy" decoding="async">
+              </div>
             </div>
             <div class="phone__cta">
               <button class="phone__wa">
@@ -2252,6 +2296,15 @@
               </span>
             </div>
 
+            <div class="phone__tour" aria-hidden="true">
+              <div class="phone__tour-rot">
+                <video autoplay muted loop playsinline preload="metadata" poster="videos/sample-tour2-poster.jpg">
+                  <source src="videos/sample-tour2.mp4" type="video/mp4">
+                  <source src="videos/sample-tour2.webm" type="video/webm">
+                </video>
+                <span class="phone__tour-skip">דלג לדף הנכס</span>
+              </div>
+            </div>
             <div class="phone__scan" aria-hidden="true">
               <div class="phone__scan-cam">
                 <div class="phone__scan-qr" id="phoneScanQR"></div>
@@ -2268,7 +2321,7 @@
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
               </span>
               <div class="phone__scan-pop__txt">
-                <div class="phone__scan-pop__t">פנטהאוז רוטשילד 22</div>
+                <div class="phone__scan-pop__t">וילה בשכונת הזהב</div>
                 <div class="phone__scan-pop__u">viewestate.co.il/property</div>
               </div>
             </div>
@@ -2527,13 +2580,8 @@
         const heroImg = (p.gallery && p.gallery[0]) || p.poster || '';
         const info = [fmtPrice(p.price), p.rooms ? p.rooms + ' חדרים' : '', p.area ? p.area + ' מ"ר' : '',
                       p.floor ? 'קומה ' + p.floor : ''].filter(Boolean).map(s => s.replace(/ /g, ' ')).join('  ·  ');
-        const cardSrcs = p.video
-          ? (/^videos\/.*\.mp4$/i.test(p.video) ? `<source src="${esc(p.video.replace(/\.mp4$/i, '.webm'))}" type="video/webm">` : '')
-            + `<source src="${esc(p.video)}" type="video/mp4">`
-          : '';
-        const media = p.video
-          ? `<video class="prop-card__media" autoplay muted loop playsinline preload="metadata" poster="${esc(p.poster || heroImg)}">${cardSrcs}</video>`
-          : `<img class="prop-card__media" src="${esc(heroImg)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`;
+        /* carousel cards always show a photo from the property's gallery */
+        const media = `<img class="prop-card__media" src="${esc(heroImg)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`;
         const ss = saleStatusInfo(p.saleStatus);
         const label = [esc(p.name), esc(p.type || ''), esc(p.city || ''), ss.label, info].filter(Boolean).join(', ');
         return `
