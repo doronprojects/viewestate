@@ -792,6 +792,39 @@
       pointer-events: none;
     }
 
+    /* ── "turn your phone" hint: a phone that turns sideways (portrait only) ── */
+    .vh__rotate {
+      position: fixed; z-index: 10000; left: 50%; top: max(28px, env(safe-area-inset-top));
+      transform: translateX(-50%);
+      display: none; align-items: center; gap: 10px;
+      padding: 10px 18px 10px 14px; border-radius: 30px;
+      background: rgba(20,10,4,0.62);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(212,175,95,0.45);
+      color: #F8F4EE; font-size: 14px; font-weight: 600; white-space: nowrap;
+      pointer-events: none;
+    }
+    .vh__rotate svg { flex: none; fill: none; stroke: var(--gold-light); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .vh__rotate-phone circle { fill: var(--gold-light); stroke: none; }
+    .vh__rotate-phone { animation: phoneTurn 2.6s cubic-bezier(.6,0,.3,1) infinite; transform-origin: 50% 50%; }
+    .vh__rotate-arrow { width: 20px; height: 20px; opacity: .85; animation: arrowNudge 2.6s ease-in-out infinite; }
+    @keyframes phoneTurn {
+      0%, 18%   { transform: rotate(0deg); }
+      48%, 82%  { transform: rotate(-90deg); }
+      100%      { transform: rotate(0deg); }
+    }
+    @keyframes arrowNudge {
+      0%, 18%   { transform: rotate(0deg); opacity: .85; }
+      48%       { transform: rotate(-60deg); opacity: .3; }
+      82%, 100% { transform: rotate(0deg); opacity: .85; }
+    }
+    @media (orientation: portrait) {
+      html.vh-theater .vh__rotate.on { display: flex; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .vh__rotate-phone, .vh__rotate-arrow { animation: none; }
+    }
+
     /* ── Theater (full screen, landscape) ── */
     html.vh-theater, html.vh-theater body { overflow: hidden; }
     html.vh-theater #a11y-fab, html.vh-theater .cta-bar { display: none !important; }
@@ -858,7 +891,7 @@
         u_sqm: 'מ"ר', u_rooms: 'חדרים', u_floorOf: 'מתוך', u_spots: 'מקומות',
         ss_sale: 'למכירה', ss_neg: 'במשא ומתן', ss_sold: 'נמכר',
         notfound_h: 'הנכס לא נמצא', notfound_p: 'ייתכן שהנכס הוסר או שהקישור שגוי.', notfound_a: '← חזרה לכל הנכסים',
-        aria_sound: 'הפעל צליל', aria_call: 'התקשר', aria_lang: 'switch to English', aria_fs: 'הגדל למסך מלא', fs_label: 'צפייה במסך מלא', tap_sound: 'הקישו להפעלת קול', fs_close: 'דלג לדף הנכס', tour_start: 'צפו בסיור בנכס',
+        aria_sound: 'הפעל צליל', aria_call: 'התקשר', aria_lang: 'switch to English', aria_fs: 'הגדל למסך מלא', fs_label: 'צפייה במסך מלא', tap_sound: 'הקישו להפעלת קול', fs_close: 'דלג לדף הנכס', tour_start: 'צפו בסיור בנכס', rotate_hint: 'סובבו את הטלפון לצפייה מלאה',
         foot_disclaimer: 'האתר נמצא בהקמה. הנכסים והפרטים המוצגים הם להמחשה בלבד, אינם מהווים מידע עדכני או מחייב, ואין לראות בהם הצעה לרכישה או למכירה.'
       },
       en: {
@@ -875,7 +908,7 @@
         u_sqm: 'm²', u_rooms: 'rooms', u_floorOf: 'of', u_spots: 'spots',
         ss_sale: 'For Sale', ss_neg: 'Under Offer', ss_sold: 'Sold',
         notfound_h: 'Property not found', notfound_p: 'The property may have been removed or the link is incorrect.', notfound_a: '← Back to all properties',
-        aria_sound: 'Play sound', aria_call: 'Call', aria_lang: 'מעבר לעברית', aria_fs: 'Fullscreen', fs_label: 'Full screen', tap_sound: 'Tap for sound', fs_close: 'Skip to listing', tour_start: 'Watch the tour',
+        aria_sound: 'Play sound', aria_call: 'Call', aria_lang: 'מעבר לעברית', aria_fs: 'Fullscreen', fs_label: 'Full screen', tap_sound: 'Tap for sound', fs_close: 'Skip to listing', tour_start: 'Watch the tour', rotate_hint: 'Turn your phone sideways',
         foot_disclaimer: 'This site is under construction. All properties and details shown are for illustration only — they are not current or binding information and do not constitute an offer to buy or sell.'
       }
     };
@@ -1076,6 +1109,7 @@
           ${p.video ? '<button class="vh__start" id="tourStart" type="button" onclick="startTour()"><span class="vh__start-ico"><svg viewBox="0 0 24 24" width="26" height="26"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.6-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></span><span>' + esc(t('tour_start')) + '</span></button>' : ''}
           ${p.video ? '<button class="vh__tapsnd" id="tapSnd" type="button">' + SND_ON + '<span>' + esc(t('tap_sound')) + '</span></button>' : ''}
         </div>
+        ${p.video ? '<div class="vh__rotate" id="rotHint" aria-hidden="true"><svg class="vh__rotate-phone" viewBox="0 0 40 64" width="34" height="54"><rect x="4" y="2" width="32" height="60" rx="7"/><line x1="16" y1="8" x2="24" y2="8"/><circle cx="20" cy="55" r="2"/></svg><svg class="vh__rotate-arrow" viewBox="0 0 40 40" width="26" height="26"><path d="M30 10a14 14 0 1 0 4 12"/><path d="M30 3v7h-7"/></svg><span>' + esc(t('rotate_hint')) + '</span></div>' : ''}
         <div class="vh__info">
           ${(function(){ var ss = saleStatusInfo(p.saleStatus); return `<div class="vh__badge ${ss.cls}">${ss.label}</div>`; })()}
           <h1 class="vh__title">${esc(nm)}</h1>
@@ -1209,6 +1243,7 @@
       if (box.classList.contains('is-theater')) { exitTheater(); return; }
       box.classList.add('is-theater');
       document.documentElement.classList.add('vh-theater');
+      showRotateHint(auto !== true);
       if (auto === true) { box.classList.add('is-waiting'); return; }   /* on load: show the start screen, wait for a tap */
       playTour(vid);
       enterRealFullscreen(box);
@@ -1229,6 +1264,7 @@
       const box = vid && vid.closest('.vh__media');
       if (!box) return;
       box.classList.remove('is-waiting');
+      showRotateHint(true);
       playTour(vid);
       enterRealFullscreen(box);
     }
@@ -1241,6 +1277,14 @@
         if (pr && pr.then) pr.then(lock).catch(() => {}); else lock();
       } catch (e) {}
     }
+    var rotTimer = 0;
+    function showRotateHint(thenHide) {
+      const h = document.getElementById('rotHint');
+      if (!h) return;
+      h.classList.add('on');
+      clearTimeout(rotTimer);
+      if (thenHide) rotTimer = setTimeout(() => h.classList.remove('on'), 5000);
+    }
     var tourDone = false;   /* the opening full-screen tour has finished or was skipped */
     function exitTheater() {
       const box = document.querySelector('.vh__media.is-theater');
@@ -1252,6 +1296,7 @@
         if (vid) { vid.pause(); try { vid.currentTime = 0; } catch (e) {} }
       }
       document.documentElement.classList.remove('vh-theater');
+      document.getElementById('rotHint')?.classList.remove('on');
       try { screen.orientation && screen.orientation.unlock && screen.orientation.unlock(); } catch (e) {}
       if (document.fullscreenElement || document.webkitFullscreenElement) {
         (document.exitFullscreen || document.webkitExitFullscreen).call(document);
