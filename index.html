@@ -2673,7 +2673,9 @@
       const items = [...stage.querySelectorAll('.cf-item')];
       const n = items.length;
       if (!n) return;
-      let active = 0;
+      /* start centred on the showcase listing (the one with the real tour video) */
+      const CENTER_ID = 'herzliya-gold';
+      let active = Math.max(0, (DATA.properties || []).findIndex(p => p.id === CENTER_ID));
       const dotsBox = document.getElementById('cfDots');
       dotsBox.innerHTML = items.map((_, i) => '<button role="tab" aria-label="נכס ' + (i + 1) + '"></button>').join('');
       const dots = [...dotsBox.children];
@@ -2721,10 +2723,7 @@
       if (prev) prev.addEventListener('click', () => go(-1));
       if (next) next.addEventListener('click', () => go(1));
 
-      let timer = setInterval(() => go(1), 3000);
-      const cf = document.getElementById('coverflow');
-      cf.addEventListener('mouseenter', () => clearInterval(timer));
-      cf.addEventListener('mouseleave', () => { clearInterval(timer); timer = setInterval(() => go(1), 3000); });
+      /* no auto-rotation for now — visitors move between listings with the arrows / swipe */
 
       let sx = null;
       stage.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
