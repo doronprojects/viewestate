@@ -155,8 +155,8 @@ window.VIEWESTATE_DATA = {
       elevator:     "לא",
       storage:      "כן",
       condition:    "מצוין",
-      video:        "videos/sample-tour.mp4",
-      poster:       "videos/sample-tour-poster.jpg",
+      video:        "videos/sample-tour2.mp4",
+      poster:       "videos/sample-tour2-poster.jpg",
       gallery: [
         "images/sample-1.webp",
         "images/sample-2.webp",
