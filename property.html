@@ -100,8 +100,10 @@
       direction: ltr;
     }
 
-    .logo-sm .v { color: var(--gold-light); }
-    .logo-sm .e { color: rgba(248,244,238,0.9); }
+    /* wordmark colours = the VE logo: gold V gradient + silver E gradient */
+    .logo-sm .v, .logo-sm .e { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .logo-sm .v { color: #C2A24E; background-image: linear-gradient(170deg, #D9BE78 0%, #C2A24E 50%, #9C7A30 100%); }
+    .logo-sm .e { color: #EDEDED; background-image: linear-gradient(170deg, #FFFFFF 0%, #EDEDED 55%, #B9B9B9 100%); }
 
     .back-link {
       font-size: 13px;
