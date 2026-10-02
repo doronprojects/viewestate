@@ -125,36 +125,36 @@ window.VIEWESTATE_DATA = {
         "מחסן, חניון כפול, ומשרת בית."
     },
     {
-      id:           "herzliya-gold",
+      id:           "herzliya-gold",          /* id kept so existing links / QR codes keep working */
       featured:     false,
       saleStatus:   "negotiation",
       status:       "נכס זמין למכירה",
-      type:         "וילה",
-      name:         "וילה בשכונת הזהב",
-      name_en:         "Villa in the Gold Quarter",
-      type_en:         "Villa",
-      city:         "הרצליה פיתוח",
-      city_en:         "Herzliya Pituach",
-      neighborhood: "שכונת הזהב",
-      neighborhood_en: "Gold Quarter",
-      condition_en:    "Excellent",
+      type:         "דירה",
+      name:         "דירת 4 חדרים, ניסים אלוני 4",
+      name_en:         "4-Room Apartment, 4 Nissim Aloni St.",
+      type_en:         "Apartment",
+      city:         "ראש העין",
+      city_en:         "Rosh HaAyin",
+      neighborhood: "ניסים אלוני 4",
+      neighborhood_en: "4 Nissim Aloni St.",
+      condition_en:    "",
       areaInfo:
-        "שכונת הזהב בהרצליה פיתוח היא מהיוקרתיות בישראל — רחובות שקטים, בתים פרטיים מרווחים וקרבה לחופי הים. אזור מבוקש למשפחות ולאנשי עסקים, עם בתי ספר מובילים, מרינה, מלונות יוקרה ומרכזי קניות במרחק נסיעה קצר.",
+        "ראש העין היא מהערים המבוקשות במרכז — שכונות חדשות ומטופחות, פארקים ושטחים ירוקים, מוסדות חינוך ומרכזי מסחר, וגישה נוחה לכביש 6, לכביש 5 ולגוש דן.",
       areaInfo_en:
-        "The Gold Quarter in Herzliya Pituach is among Israel's most prestigious neighborhoods — quiet streets, spacious private homes and proximity to the beaches. A sought-after area for families and professionals, with leading schools, a marina, luxury hotels and shopping centers a short drive away.",
+        "Rosh HaAyin is one of the most sought-after cities in central Israel — new, well-kept neighborhoods, parks and green spaces, schools and shopping centers, with easy access to Highways 6 and 5 and the Tel Aviv metro area.",
       description_en:
-        "A luxurious villa in the Gold Quarter of Herzliya Pituach. 320 sqm built on a spacious plot, 7 rooms, a private pool and a landscaped garden. Meticulous architectural design with open, light-filled spaces.",
-      price:        7200000,
-      rooms:        7,
-      area:         320,
+        "A bright 4-room apartment on Nissim Aloni St. in Rosh HaAyin. 120 sqm with a 12 sqm balcony and 2 parking spaces. Open, light-filled living spaces and a modern kitchen.",
+      price:        2500000,
+      rooms:        4,
+      area:         120,
       floor:        0,
-      floorsTotal:  2,
-      balcony:      0,
-      parking:      3,
-      year:         2016,
-      elevator:     "לא",
-      storage:      "כן",
-      condition:    "מצוין",
+      floorsTotal:  0,
+      balcony:      12,
+      parking:      2,
+      year:         "",
+      elevator:     "",
+      storage:      "",
+      condition:    "",
       video:        "videos/sample-tour2.mp4",
       poster:       "videos/sample-tour2-poster.jpg",
       gallery: [
@@ -165,8 +165,8 @@ window.VIEWESTATE_DATA = {
         "images/sample-5.webp"
       ],
       description:
-        "וילה יוקרתית בשכונת הזהב בהרצליה פיתוח. 320 מ\"ר בנוי על מגרש מרווח, " +
-        "7 חדרים, בריכה פרטית וגינה מעוצבת. תכנון אדריכלי מוקפד, חללים פתוחים ומוצפי אור."
+        "דירת 4 חדרים מוארת ברחוב ניסים אלוני 4, ראש העין. 120 מ\"ר, מרפסת של 12 מ\"ר ו-2 חניות. " +
+        "חללים פתוחים ומוצפי אור ומטבח מודרני."
     },
     {
       id:           "tlv-garden",
