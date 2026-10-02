@@ -766,6 +766,32 @@
     .vh__tapsnd.show { display: flex; }
     .vh__tapsnd svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; fill: none; }
 
+    /* ── Start screen: poster + big "watch the tour" button (sound needs a tap) ── */
+    .vh__start {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+      z-index: 12; display: none; flex-direction: column; align-items: center; gap: 12px;
+      background: none; color: #F8F4EE; font: 600 17px/1.2 inherit; font-family: inherit;
+      text-shadow: 0 2px 10px rgba(0,0,0,.6); white-space: nowrap;
+    }
+    .vh__start-ico {
+      width: 78px; height: 78px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(20,10,4,0.45);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border: 1.5px solid var(--gold-light);
+      animation: sndPulse 1.8s ease-in-out infinite;
+    }
+    .vh__start-ico svg { fill: #F8F4EE; margin-left: 4px; }
+    .vh__start > span:last-child { background: rgba(20,10,4,0.55); padding: 7px 16px; border-radius: 18px; }
+    .vh__media.is-waiting .vh__start { display: flex; }
+    .vh__media.is-waiting .vh__sound,
+    .vh__media.is-waiting .vh__tapsnd { display: none !important; }
+    .vh__media.is-waiting::after {
+      content: ''; position: absolute; inset: 0; z-index: 2;
+      background: radial-gradient(circle at 50% 50%, rgba(0,0,0,.15), rgba(0,0,0,.45));
+      pointer-events: none;
+    }
+
     /* ── Theater (full screen, landscape) ── */
     html.vh-theater, html.vh-theater body { overflow: hidden; }
     html.vh-theater #a11y-fab, html.vh-theater .cta-bar { display: none !important; }
@@ -832,7 +858,7 @@
         u_sqm: 'מ"ר', u_rooms: 'חדרים', u_floorOf: 'מתוך', u_spots: 'מקומות',
         ss_sale: 'למכירה', ss_neg: 'במשא ומתן', ss_sold: 'נמכר',
         notfound_h: 'הנכס לא נמצא', notfound_p: 'ייתכן שהנכס הוסר או שהקישור שגוי.', notfound_a: '← חזרה לכל הנכסים',
-        aria_sound: 'הפעל צליל', aria_call: 'התקשר', aria_lang: 'switch to English', aria_fs: 'הגדל למסך מלא', fs_label: 'צפייה במסך מלא', tap_sound: 'הקישו להפעלת קול', fs_close: 'דלג לדף הנכס',
+        aria_sound: 'הפעל צליל', aria_call: 'התקשר', aria_lang: 'switch to English', aria_fs: 'הגדל למסך מלא', fs_label: 'צפייה במסך מלא', tap_sound: 'הקישו להפעלת קול', fs_close: 'דלג לדף הנכס', tour_start: 'צפו בסיור בנכס',
         foot_disclaimer: 'האתר נמצא בהקמה. הנכסים והפרטים המוצגים הם להמחשה בלבד, אינם מהווים מידע עדכני או מחייב, ואין לראות בהם הצעה לרכישה או למכירה.'
       },
       en: {
@@ -849,7 +875,7 @@
         u_sqm: 'm²', u_rooms: 'rooms', u_floorOf: 'of', u_spots: 'spots',
         ss_sale: 'For Sale', ss_neg: 'Under Offer', ss_sold: 'Sold',
         notfound_h: 'Property not found', notfound_p: 'The property may have been removed or the link is incorrect.', notfound_a: '← Back to all properties',
-        aria_sound: 'Play sound', aria_call: 'Call', aria_lang: 'מעבר לעברית', aria_fs: 'Fullscreen', fs_label: 'Full screen', tap_sound: 'Tap for sound', fs_close: 'Skip to listing',
+        aria_sound: 'Play sound', aria_call: 'Call', aria_lang: 'מעבר לעברית', aria_fs: 'Fullscreen', fs_label: 'Full screen', tap_sound: 'Tap for sound', fs_close: 'Skip to listing', tour_start: 'Watch the tour',
         foot_disclaimer: 'This site is under construction. All properties and details shown are for illustration only — they are not current or binding information and do not constitute an offer to buy or sell.'
       }
     };
@@ -1023,7 +1049,7 @@
         return s;
       })();
       const heroMedia = p.video
-        ? `<video class="vh__video" id="propVid" autoplay playsinline poster="${esc(p.poster || heroImg)}">${vidSources}</video>`
+        ? `<video class="vh__video" id="propVid" playsinline preload="auto" poster="${esc(p.poster || heroImg)}">${vidSources}</video>`
         : `<img class="vh__video" src="${esc(p.poster || heroImg)}" alt="${esc(nm)}">`;
 
       /* whatsapp prefilled */
@@ -1047,6 +1073,7 @@
           </div>
           ${p.video ? '<button class="vh__sound" id="soundBtn" onclick="toggleSound()" aria-label="' + esc(t('aria_sound')) + '"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z\"/><line x1=\"22\" x2=\"16\" y1=\"9\" y2=\"15\"/><line x1=\"16\" x2=\"22\" y1=\"9\" y2=\"15\"/></svg></button>' : ''}
           ${p.video ? '<button class="vh__fs" onclick="goFullscreen()" aria-label="' + esc(t('aria_fs')) + '"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M8 3H5a2 2 0 0 0-2 2v3\"/><path d="M21 8V5a2 2 0 0 0-2-2h-3\"/><path d="M3 16v3a2 2 0 0 0 2 2h3\"/><path d="M16 21h3a2 2 0 0 0 2-2v-3\"/></svg><span class="fs-open">' + esc(t('fs_label')) + '</span><span class="fs-close">' + esc(t('fs_close')) + '</span></button>' : ''}
+          ${p.video ? '<button class="vh__start" id="tourStart" type="button" onclick="startTour()"><span class="vh__start-ico"><svg viewBox="0 0 24 24" width="26" height="26"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.6-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></span><span>' + esc(t('tour_start')) + '</span></button>' : ''}
           ${p.video ? '<button class="vh__tapsnd" id="tapSnd" type="button">' + SND_ON + '<span>' + esc(t('tap_sound')) + '</span></button>' : ''}
         </div>
         <div class="vh__info">
@@ -1182,9 +1209,30 @@
       if (box.classList.contains('is-theater')) { exitTheater(); return; }
       box.classList.add('is-theater');
       document.documentElement.classList.add('vh-theater');
-      if (auto !== true) { vid.muted = false; vid.removeAttribute('muted'); syncSoundBtn(); }   /* a tap: sound is allowed */
-      if (vid.paused) vid.play().catch(() => {});
-      if (auto === true) return;   /* on page load: no gesture yet, so real fullscreen isn't allowed */
+      if (auto === true) { box.classList.add('is-waiting'); return; }   /* on load: show the start screen, wait for a tap */
+      playTour(vid);
+      enterRealFullscreen(box);
+    }
+    /* a tap is a user gesture: now the browser lets us play WITH sound and go truly full screen */
+    function playTour(vid) {
+      vid.muted = false; vid.removeAttribute('muted');
+      const pr = vid.play();
+      if (pr && pr.catch) pr.catch(() => {   /* rare: still refused — play muted, offer "tap for sound" */
+        vid.muted = true; vid.play().catch(() => {});
+        document.getElementById('tapSnd')?.classList.add('show');
+        syncSoundBtn();
+      });
+      syncSoundBtn();
+    }
+    function startTour() {
+      const vid = document.getElementById('propVid');
+      const box = vid && vid.closest('.vh__media');
+      if (!box) return;
+      box.classList.remove('is-waiting');
+      playTour(vid);
+      enterRealFullscreen(box);
+    }
+    function enterRealFullscreen(box) {
       const req = box.requestFullscreen || box.webkitRequestFullscreen;
       if (!req) return;
       try {
@@ -1197,7 +1245,7 @@
     function exitTheater() {
       const box = document.querySelector('.vh__media.is-theater');
       if (box) {
-        box.classList.remove('is-theater');
+        box.classList.remove('is-theater', 'is-waiting');
         tourDone = true;
         document.getElementById('tapSnd')?.classList.remove('show');
         const vid = document.getElementById('propVid');   /* tour is over — stop on the property page */
@@ -1215,51 +1263,21 @@
     document.addEventListener('keydown', e => { if (e.key === 'Escape') exitTheater(); });
 
     function wireUp(p) {
-      /* Video autoplay. Browsers (iPhone always, Chrome usually) refuse to start
-         a video WITH sound before the visitor has touched the page, so we try
-         with sound, fall back to muted playback, and turn the sound on at the
-         visitor's first tap — with a clear "tap for sound" prompt on the video. */
+      /* The page opens on a full-screen start screen (poster + "watch the tour").
+         Browsers never allow sound before the visitor taps, so the tap starts the
+         video with sound and real fullscreen; when it ends we drop to the listing. */
       const vid = document.getElementById('propVid');
       if (vid) {
         vid.playsInline = true;
-        let userSet = false;   /* visitor chose mute/unmute themselves */
-        let gen = 0;           /* ignore stale play() rejections */
-        const tap = document.getElementById('tapSnd');
-        const tryPlay = () => { const pr = vid.play(); if (pr && pr.catch) pr.catch(() => {}); };
-        const fallbackMuted = () => {
-          if (tourDone) return;
-          vid.muted = true;
-          vid.setAttribute('muted', '');
-          tryPlay();
-          syncSoundBtn();
-          if (userSet) return;
-          document.getElementById('soundBtn')?.classList.add('need-tap');
-          tap?.classList.add('show');
-        };
-        const playWithSound = () => {
-          const my = ++gen;
-          vid.muted = false; vid.removeAttribute('muted');
-          const pr = vid.play();
-          if (!pr || !pr.then) { syncSoundBtn(); return Promise.resolve(true); }
-          return pr.then(() => { syncSoundBtn(); return true; })
-                   .catch(() => { if (my === gen && !userSet) fallbackMuted(); return false; });
-        };
-        playWithSound();
-        /* open straight into the full-screen tour; when it ends, drop to the listing */
         goFullscreen(true);
+        vid.addEventListener('click', () => { if (vid.closest('.is-waiting')) startTour(); });
         vid.addEventListener('ended', exitTheater);
-        vid.addEventListener('loadeddata', () => { if (vid.paused) tryPlay(); }, { once: true });
-        document.getElementById('soundBtn')?.addEventListener('click', () => { userSet = true; tap?.classList.remove('show'); });
-        /* only events that count as a real user gesture */
-        const evts = ['touchend', 'click', 'keydown'];
-        const done = () => evts.forEach(n => document.removeEventListener(n, kick, true));
-        const kick = (e) => {
-          if (tourDone) { done(); return; }
-          if (userSet || (e.target && e.target.closest && e.target.closest('#soundBtn'))) { done(); return; }
-          if (!vid.muted && !vid.paused) { done(); return; }
-          playWithSound().then(ok => { if (ok) done(); });
-        };
-        evts.forEach(n => document.addEventListener(n, kick, { capture: true, passive: true }));
+        document.getElementById('tapSnd')?.addEventListener('click', () => {
+          vid.muted = false; vid.play().catch(() => {});
+          document.getElementById('tapSnd').classList.remove('show');
+          syncSoundBtn();
+        });
+        syncSoundBtn();
       }
 
       /* hide scroll cue on first scroll */
