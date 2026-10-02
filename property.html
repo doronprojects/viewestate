@@ -157,6 +157,8 @@
 
     .vh__sound:hover { border-color: var(--gold-light); }
     .vh__sound.hidden { display: none; }
+    .vh__sound.need-tap { animation: sndPulse 1.6s ease-in-out infinite; border-color: var(--gold-light); }
+    @keyframes sndPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(212,175,95,.55); } 50% { box-shadow: 0 0 0 10px rgba(212,175,95,0); } }
     .vh__sound svg {
       width: 20px; height: 20px;
       stroke: currentColor; stroke-width: 1.7;
@@ -169,8 +171,9 @@
       position: absolute;
       bottom: 14px; right: 14px;
       z-index: 10;
-      width: 46px; height: 46px;
-      border-radius: 50%;
+      height: 46px; padding: 0 18px 0 16px; gap: 8px;
+      border-radius: 23px;
+      font: 600 14px/1 inherit; font-family: inherit; letter-spacing: .3px; white-space: nowrap;
       background: rgba(20,10,4,0.38);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
@@ -181,6 +184,7 @@
     }
     .vh__fs:hover { border-color: var(--gold-light); }
     .vh__fs svg {
+      flex: none;
       width: 20px; height: 20px;
       stroke: currentColor; stroke-width: 1.7;
       stroke-linecap: round; stroke-linejoin: round;
@@ -792,7 +796,7 @@
         u_sqm: 'מ"ר', u_rooms: 'חדרים', u_floorOf: 'מתוך', u_spots: 'מקומות',
         ss_sale: 'למכירה', ss_neg: 'במשא ומתן', ss_sold: 'נמכר',
         notfound_h: 'הנכס לא נמצא', notfound_p: 'ייתכן שהנכס הוסר או שהקישור שגוי.', notfound_a: '← חזרה לכל הנכסים',
-        aria_sound: 'הפעל צליל', aria_call: 'התקשר', aria_lang: 'switch to English', aria_fs: 'הגדל למסך מלא',
+        aria_sound: 'הפעל צליל', aria_call: 'התקשר', aria_lang: 'switch to English', aria_fs: 'הגדל למסך מלא', fs_label: 'צפייה במסך מלא',
         foot_disclaimer: 'האתר נמצא בהקמה. הנכסים והפרטים המוצגים הם להמחשה בלבד, אינם מהווים מידע עדכני או מחייב, ואין לראות בהם הצעה לרכישה או למכירה.'
       },
       en: {
@@ -809,7 +813,7 @@
         u_sqm: 'm²', u_rooms: 'rooms', u_floorOf: 'of', u_spots: 'spots',
         ss_sale: 'For Sale', ss_neg: 'Under Offer', ss_sold: 'Sold',
         notfound_h: 'Property not found', notfound_p: 'The property may have been removed or the link is incorrect.', notfound_a: '← Back to all properties',
-        aria_sound: 'Play sound', aria_call: 'Call', aria_lang: 'מעבר לעברית', aria_fs: 'Fullscreen',
+        aria_sound: 'Play sound', aria_call: 'Call', aria_lang: 'מעבר לעברית', aria_fs: 'Fullscreen', fs_label: 'Full screen',
         foot_disclaimer: 'This site is under construction. All properties and details shown are for illustration only — they are not current or binding information and do not constitute an offer to buy or sell.'
       }
     };
@@ -980,7 +984,7 @@
         return s;
       })();
       const heroMedia = p.video
-        ? `<video class="vh__video" id="propVid" autoplay muted loop playsinline poster="${esc(p.poster || heroImg)}">${vidSources}</video>`
+        ? `<video class="vh__video" id="propVid" autoplay loop playsinline poster="${esc(p.poster || heroImg)}">${vidSources}</video>`
         : `<img class="vh__video" src="${esc(p.poster || heroImg)}" alt="${esc(nm)}">`;
 
       /* whatsapp prefilled */
@@ -1003,7 +1007,7 @@
             </div>
           </div>
           ${p.video ? '<button class="vh__sound" id="soundBtn" onclick="toggleSound()" aria-label="' + esc(t('aria_sound')) + '"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z\"/><line x1=\"22\" x2=\"16\" y1=\"9\" y2=\"15\"/><line x1=\"16\" x2=\"22\" y1=\"9\" y2=\"15\"/></svg></button>' : ''}
-          ${p.video ? '<button class="vh__fs" onclick="goFullscreen()" aria-label="' + esc(t('aria_fs')) + '"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M8 3H5a2 2 0 0 0-2 2v3\"/><path d="M21 8V5a2 2 0 0 0-2-2h-3\"/><path d="M3 16v3a2 2 0 0 0 2 2h3\"/><path d="M16 21h3a2 2 0 0 0 2-2v-3\"/></svg></button>' : ''}
+          ${p.video ? '<button class="vh__fs" onclick="goFullscreen()" aria-label="' + esc(t('aria_fs')) + '"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M8 3H5a2 2 0 0 0-2 2v3\"/><path d="M21 8V5a2 2 0 0 0-2-2h-3\"/><path d="M3 16v3a2 2 0 0 0 2 2h3\"/><path d="M16 21h3a2 2 0 0 0 2-2v-3\"/></svg><span>' + esc(t('fs_label')) + '</span></button>' : ''}
         </div>
         <div class="vh__info">
           ${(function(){ var ss = saleStatusInfo(p.saleStatus); return `<div class="vh__badge ${ss.cls}">${ss.label}</div>`; })()}
@@ -1110,12 +1114,19 @@
     /* ---------- interactions ---------- */
     const SND_OFF = '<svg viewBox="0 0 24 24" width="20" height="20"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
     const SND_ON  = '<svg viewBox="0 0 24 24" width="20" height="20"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.4 6.4a9 9 0 0 1 0 11.3"/></svg>';
+    function syncSoundBtn() {
+      const vid = document.getElementById('propVid');
+      const btn = document.getElementById('soundBtn');
+      if (!vid || !btn) return;
+      btn.innerHTML = vid.muted ? SND_OFF : SND_ON;
+      if (!vid.muted) btn.classList.remove('need-tap');
+    }
     function toggleSound() {
       const vid = document.getElementById('propVid');
       if (!vid) return;
       vid.muted = !vid.muted;
       if (!vid.muted) vid.play().catch(() => {});
-      document.getElementById('soundBtn').innerHTML = vid.muted ? SND_OFF : SND_ON;
+      syncSoundBtn();
     }
 
     function goFullscreen() {
@@ -1128,7 +1139,11 @@
       }
       if (vid.webkitEnterFullscreen) { vid.webkitEnterFullscreen(); return; }   /* iOS: video only */
       const el = box;
-      (el.requestFullscreen || el.webkitRequestFullscreen || function(){}).call(el);
+      const req = el.requestFullscreen || el.webkitRequestFullscreen;
+      if (!req) return;
+      const pr = req.call(el);
+      const lock = () => { try { const o = screen.orientation; if (o && o.lock) o.lock('landscape').catch(() => {}); } catch (e) {} };
+      if (pr && pr.then) pr.then(lock).catch(() => {}); else lock();
     }
 
     function wireUp(p) {
@@ -1137,20 +1152,38 @@
          tap-to-start fallback for Low Power Mode which blocks autoplay */
       const vid = document.getElementById('propVid');
       if (vid) {
-        vid.muted = true;
-        vid.setAttribute('muted', '');
         vid.playsInline = true;
+        let userSet = false;   /* visitor chose mute/unmute themselves */
         const tryPlay = () => { const pr = vid.play(); if (pr && pr.catch) pr.catch(() => {}); };
-        tryPlay();
-        vid.addEventListener('loadeddata', tryPlay, { once: true });
-        vid.addEventListener('canplay', tryPlay, { once: true });
-        const kick = () => {
-          tryPlay();
-          document.removeEventListener('touchstart', kick);
-          document.removeEventListener('click', kick);
+        /* Try to start WITH sound. Browsers only allow that for sites the
+           visitor has engaged with; otherwise fall back to muted playback
+           and turn the sound on at the visitor's first interaction. */
+        const startWithSound = () => {
+          vid.muted = false;
+          const pr = vid.play();
+          if (!pr || !pr.then) { syncSoundBtn(); return; }
+          pr.then(syncSoundBtn).catch(() => {
+            vid.muted = true;
+            vid.setAttribute('muted', '');
+            tryPlay();
+            syncSoundBtn();
+            const b = document.getElementById('soundBtn');
+            if (b) b.classList.add('need-tap');
+          });
         };
-        document.addEventListener('touchstart', kick, { once: true, passive: true });
-        document.addEventListener('click', kick, { once: true });
+        startWithSound();
+        vid.addEventListener('loadeddata', () => { if (vid.paused) tryPlay(); }, { once: true });
+        document.getElementById('soundBtn')?.addEventListener('click', () => { userSet = true; });
+        const evts = ['pointerdown', 'touchend', 'click', 'keydown'];
+        const done = () => evts.forEach(n => document.removeEventListener(n, kick, true));
+        const kick = (e) => {
+          if (userSet || (e.target && e.target.closest && e.target.closest('#soundBtn'))) { done(); tryPlay(); return; }
+          if (!vid.muted && !vid.paused) { done(); return; }
+          vid.muted = false; vid.removeAttribute('muted');
+          vid.play().then(() => { done(); syncSoundBtn(); })
+                    .catch(() => { vid.muted = true; tryPlay(); syncSoundBtn(); });   /* not a valid gesture yet — keep listening */
+        };
+        evts.forEach(n => document.addEventListener(n, kick, { capture: true, passive: true }));
       }
 
       /* hide scroll cue on first scroll */
