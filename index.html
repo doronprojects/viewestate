@@ -1305,8 +1305,8 @@
       display: flex; gap: 24px; align-items: flex-start;
       transform-origin: center;
       will-change: transform, filter;
-      /* 13s = the phone-scan cycle, so the cascade begins right after the scan */
-      animation: stepPulse 13s ease-in-out infinite;
+      /* 20s = the phone-scan cycle, so the cascade begins right after the scan */
+      animation: stepPulse 20s ease-in-out infinite;
       animation-play-state: paused;
     }
     /* sequential momentary highlight: starts after the QR scan, 01 -> 02 -> 03 -> 04 */
@@ -1316,9 +1316,9 @@
     .qr-step:nth-child(3) { animation-delay: 2s; }
     .qr-step:nth-child(4) { animation-delay: 3s; }
     @keyframes stepPulse {
-      0%, 30%   { transform: scale(1);     filter: brightness(1)    drop-shadow(0 0 0 rgba(201,163,90,0)); }
-      35%       { transform: scale(1.05);  filter: brightness(1.25) drop-shadow(0 8px 24px rgba(201,163,90,0.55)); }
-      42%, 100% { transform: scale(1);     filter: brightness(1)    drop-shadow(0 0 0 rgba(201,163,90,0)); }
+      0%, 19.5%   { transform: scale(1);     filter: brightness(1)    drop-shadow(0 0 0 rgba(201,163,90,0)); }
+      22.8%       { transform: scale(1.05);  filter: brightness(1.25) drop-shadow(0 8px 24px rgba(201,163,90,0.55)); }
+      27.3%, 100% { transform: scale(1);     filter: brightness(1)    drop-shadow(0 0 0 rgba(201,163,90,0)); }
     }
     @media (prefers-reduced-motion: reduce) {
       .qr-step { animation: none; }
@@ -1499,13 +1499,13 @@
     .cone-edge {
       stroke-dasharray: 100;
       stroke-dashoffset: 100;
-      animation: coneScan 13s ease-in-out infinite;
+      animation: coneScan 20s ease-in-out infinite;
       animation-play-state: paused;
     }
     /* sweeping lower beam (scan line + side lines) — sweeps via SMIL, shown only during scan */
     .cone-beam {
       opacity: 0;
-      animation: coneBeamCycle 13s ease-in-out infinite;
+      animation: coneBeamCycle 20s ease-in-out infinite;
       animation-play-state: paused;
     }
     .cone-sweepline { stroke-width: 1.4; }
@@ -1514,7 +1514,7 @@
       fill: var(--gold-light);
       filter: drop-shadow(0 0 4px rgba(201,163,90,0.9));
       opacity: 0;
-      animation: coneDot 13s ease-in-out infinite;
+      animation: coneDot 20s ease-in-out infinite;
       animation-play-state: paused;
     }
     /* run only while the section (and phone scan) is in view */
@@ -1522,42 +1522,42 @@
     .phone-wrap.visible .cone-beam,
     .phone-wrap.visible .scan-cone__dot { animation-play-state: running; }
     @keyframes coneScan {
-      0%   { stroke-dashoffset: 100; opacity: 0.85; }
-      9%   { stroke-dashoffset: 0;   opacity: 0.85; }
-      27%  { stroke-dashoffset: 0;   opacity: 0.85; }
-      32%  { stroke-dashoffset: 0;   opacity: 0; }
-      95%  { stroke-dashoffset: 0;   opacity: 0; }
-      96%  { stroke-dashoffset: 100; opacity: 0; }
-      100% { stroke-dashoffset: 100; opacity: 0.85; }
+      0%     { stroke-dashoffset: 100; opacity: 0.85; }
+      5.9%   { stroke-dashoffset: 0;   opacity: 0.85; }
+      17.5%  { stroke-dashoffset: 0;   opacity: 0.85; }
+      20.8%  { stroke-dashoffset: 0;   opacity: 0; }
+      95%    { stroke-dashoffset: 0;   opacity: 0; }
+      96%    { stroke-dashoffset: 100; opacity: 0; }
+      100%   { stroke-dashoffset: 100; opacity: 0.85; }
     }
     @keyframes coneBeamCycle {
-      0%   { opacity: 0; }
-      8%   { opacity: 0.9; }
-      27%  { opacity: 0.9; }
-      32%  { opacity: 0; }
-      100% { opacity: 0; }
+      0%     { opacity: 0; }
+      5.2%   { opacity: 0.9; }
+      17.5%  { opacity: 0.9; }
+      20.8%  { opacity: 0; }
+      100%   { opacity: 0; }
     }
     @keyframes coneDot {
-      0%, 27% { opacity: 0.9; }
-      32%     { opacity: 0; }
-      95%     { opacity: 0; }
-      100%    { opacity: 0.9; }
+      0%, 17.5% { opacity: 0.9; }
+      20.8%     { opacity: 0; }
+      95%       { opacity: 0; }
+      100%      { opacity: 0.9; }
     }
     /* ── mobile: shrink the whole scan scene so phone + QR fit, then zoom the
-       phone back to full size once the scan completes (synced to the 13s cycle) ── */
+       phone back to full size once the scan completes (synced to the 20s cycle) ── */
     @keyframes phoneZoomMobile {
-      0%, 27%   { transform: scale(0.68); }
-      36%, 91%  { transform: translateX(101px) scale(1); }
-      96%, 100% { transform: scale(0.68); }
+      0%, 17.5%  { transform: scale(0.68); }
+      23.5%, 91% { transform: translateX(101px) scale(1); }
+      96%, 100%  { transform: scale(0.68); }
     }
     @keyframes phoneTurnMobile {
-      0%, 38%   { transform: translateX(0) rotate(0deg) scale(1); }
-      44%, 59%  { transform: translateX(0) rotate(-90deg) scale(0.6); }
-      65%, 100% { transform: translateX(0) rotate(0deg) scale(1); }
+      0%, 25%   { transform: translateX(0) rotate(0deg) scale(1); }
+      29%, 70%  { transform: translateX(0) rotate(-90deg) scale(0.6); }
+      74%, 100% { transform: translateX(0) rotate(0deg) scale(1); }
     }
     @keyframes qrScanFadeMobile {
-      0%, 27%   { opacity: 1; }
-      33%, 91%  { opacity: 0; }
+      0%, 17.5% { opacity: 1; }
+      21.5%, 91% { opacity: 0; }
       96%, 100% { opacity: 1; }
     }
 
@@ -1701,7 +1701,7 @@
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       gap: 22px;
-      animation: phoneScanFade 13s ease-in-out infinite;
+      animation: phoneScanFade 20s ease-in-out infinite;
     }
     .phone__scan-cam {
       position: relative;
@@ -1727,7 +1727,7 @@
       background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
       box-shadow: 0 0 14px 2px rgba(201,163,90,0.75);
       top: 8%;
-      animation: phoneScanLine 13s ease-in-out infinite;
+      animation: phoneScanLine 20s ease-in-out infinite;
     }
     .phone__scan-hint {
       font-size: 12px; letter-spacing: 2px; color: var(--gold-pale);
@@ -1739,7 +1739,7 @@
       background: #fff; border-radius: 13px; padding: 11px 13px;
       box-shadow: 0 14px 36px rgba(0,0,0,0.45);
       opacity: 0; transform: translateY(18px);
-      animation: phoneScanPop 13s ease-in-out infinite;
+      animation: phoneScanPop 20s ease-in-out infinite;
     }
     .phone__scan-pop__ico {
       width: 34px; height: 34px; flex-shrink: 0; border-radius: 9px;
@@ -1753,7 +1753,7 @@
        then hands over to the property page (mirrors the real page) */
     .phone__tour {
       position: absolute; inset: 0; z-index: 19; background: #000; overflow: hidden;
-      opacity: 0; animation: phoneTour 13s ease-in-out infinite;
+      opacity: 0; animation: phoneTour 20s ease-in-out infinite;
     }
     .phone__tour-rot {
       position: absolute; top: 50%; left: 50%;
@@ -1768,25 +1768,25 @@
       border-radius: 10px; padding: 4px 9px;
     }
     @keyframes phoneTour {
-      0%, 27%   { opacity: 0; }
-      31%, 64%  { opacity: 1; }
-      68%, 100% { opacity: 0; }
+      0%, 17.5% { opacity: 0; }
+      20%, 73%  { opacity: 1; }
+      76%, 100% { opacity: 0; }
     }
 
     /* after the scan the phone itself turns sideways for the video tour, then
        turns back upright to the property page; the QR slides behind it */
-    .phone { z-index: 2; animation: phoneTurnDesk 13s ease-in-out infinite; animation-play-state: paused; }
-    .qr-scan { z-index: 1; animation: qrHide 13s ease-in-out infinite; animation-play-state: paused; }
+    .phone { z-index: 2; animation: phoneTurnDesk 20s ease-in-out infinite; animation-play-state: paused; }
+    .qr-scan { z-index: 1; animation: qrHide 20s ease-in-out infinite; animation-play-state: paused; }
     .phone-wrap.visible .phone,
     .phone-wrap.visible .qr-scan { animation-play-state: running; }
     @keyframes phoneTurnDesk {
-      0%, 38%   { transform: translateX(0) rotate(0deg) scale(1); }
-      44%, 59%  { transform: translateX(120px) rotate(-90deg) scale(0.78); }
-      65%, 100% { transform: translateX(0) rotate(0deg) scale(1); }
+      0%, 25%   { transform: translateX(0) rotate(0deg) scale(1); }
+      29%, 70%  { transform: translateX(120px) rotate(-90deg) scale(0.78); }
+      74%, 100% { transform: translateX(0) rotate(0deg) scale(1); }
     }
     @keyframes qrHide {
-      0%, 30%   { transform: translate(20px, -50px); opacity: 1; }
-      38%       { transform: translate(-150px, -50px) scale(.7); opacity: 0; }
+      0%, 18.5% { transform: translate(20px, -50px); opacity: 1; }
+      24%       { transform: translate(-150px, -50px) scale(.7); opacity: 0; }
       90%       { transform: translate(-150px, -50px) scale(.7); opacity: 0; }
       97%, 100% { transform: translate(20px, -50px); opacity: 1; }
     }
@@ -1799,26 +1799,26 @@
     .phone-wrap.visible .phone__scan-pop { animation-play-state: running; }
 
     @keyframes phoneScanFade {
-      0%, 27% { opacity: 1; }
-      30%     { opacity: 0; }
-      91%     { opacity: 0; }
-      96%     { opacity: 1; }
-      100%    { opacity: 1; }
+      0%, 17.5% { opacity: 1; }
+      19.5%     { opacity: 0; }
+      91%       { opacity: 0; }
+      96%       { opacity: 1; }
+      100%      { opacity: 1; }
     }
     @keyframes phoneScanLine {
-      0%   { top: 8%;  opacity: 0; }
-      3%   { opacity: 1; }
-      13%  { top: 90%; }
-      24%  { top: 8%; }
-      27%  { opacity: 1; }
-      30%  { opacity: 0; }
-      100% { opacity: 0; }
+      0%     { top: 8%;  opacity: 0; }
+      2%     { opacity: 1; }
+      8.5%   { top: 90%; }
+      15.6%  { top: 8%; }
+      17.5%  { opacity: 1; }
+      19.5%  { opacity: 0; }
+      100%   { opacity: 0; }
     }
     @keyframes phoneScanPop {
-      0%, 27% { opacity: 0; transform: translateY(18px); }
-      31%     { opacity: 1; transform: translateY(0); }
-      37%     { opacity: 1; transform: translateY(0); }
-      41%, 100% { opacity: 0; transform: translateY(-8px); }
+      0%, 17.5% { opacity: 0; transform: translateY(18px); }
+      20%       { opacity: 1; transform: translateY(0); }
+      24%       { opacity: 1; transform: translateY(0); }
+      26.5%, 100% { opacity: 0; transform: translateY(-8px); }
     }
     @media (prefers-reduced-motion: reduce) {
       .phone__scan, .phone__tour { animation: none; opacity: 0; }
@@ -2032,9 +2032,9 @@
       .sec-qr { overflow-x: clip; }
       .qr-inner { grid-template-columns: minmax(0, 1fr); }
       .phone-wrap { justify-self: center; transform-origin: center center;
-        animation: phoneZoomMobile 13s ease-in-out infinite; animation-play-state: paused; }
+        animation: phoneZoomMobile 20s ease-in-out infinite; animation-play-state: paused; }
       .phone-wrap.visible { animation-play-state: running; }
-      .qr-scan { display: flex; animation: qrScanFadeMobile 13s ease-in-out infinite; animation-play-state: paused; }
+      .qr-scan { display: flex; animation: qrScanFadeMobile 20s ease-in-out infinite; animation-play-state: paused; }
       .phone-wrap.visible .qr-scan { animation-play-state: running; }
       .phone { animation-name: phoneTurnMobile; }
       .qr-steps { grid-template-columns: 1fr; grid-template-rows: auto; grid-auto-flow: row; gap: 20px; }
@@ -2321,7 +2321,7 @@
 
             <div class="phone__tour" aria-hidden="true">
               <div class="phone__tour-rot">
-                <video class="phone-vid" autoplay muted loop playsinline webkit-playsinline preload="auto" poster="videos/sample-tour2-poster.jpg" src="videos/sample-tour2-phone.mp4"></video>
+                <video class="phone-vid" muted playsinline webkit-playsinline preload="auto" poster="videos/sample-tour2-poster.jpg" src="videos/sample-tour2-phone.mp4"></video>
                 <span class="phone__tour-skip">דלג לדף הנכס</span>
               </div>
             </div>
@@ -2572,8 +2572,36 @@
     /* ---- QR-section phone mockup videos: same iPhone-safe autoplay treatment
        (muted as a property, inline, retry when the section comes into view
        and on the first touch/scroll — Low Power Mode blocks plain autoplay) ---- */
+    /* tour clip inside the turned phone: hold on its first frame until the
+       phone has finished turning (29% of the 20s cycle), then play from the start */
+    (function phoneTourSync() {
+      const tour = document.querySelector('.phone__tour');
+      const v = tour && tour.querySelector('video');
+      if (!v) return;
+      v.removeAttribute('autoplay'); v.loop = false;
+      const CYCLE = 20000, START = 0.30 * CYCLE, END = 0.76 * CYCLE;
+      const tick = () => {
+        const a = tour.getAnimations()[0];
+        if (a && a.playState === 'running' && a.currentTime != null) {
+          const t = a.currentTime % CYCLE;
+          const inWin = t >= START && t < END;
+          if (inWin && v.paused && !v.dataset.played) {
+            v.dataset.played = '1';
+            v.muted = true; v.playsInline = true;
+            try { v.currentTime = 0; } catch (e) {}
+            const p = v.play(); if (p) p.catch(() => {});
+          } else if (!inWin && v.dataset.played) {
+            delete v.dataset.played;
+            v.pause();
+            try { v.currentTime = 0; } catch (e) {}
+          }
+        }
+      };
+      setInterval(tick, 150);
+    })();
+
     (function phoneMockVideos() {
-      const vids = document.querySelectorAll('.phone-vid');
+      const vids = document.querySelectorAll('.phone__media .phone-vid');
       if (!vids.length) return;
       const playAll = () => vids.forEach(v => {
         v.muted = true; v.defaultMuted = true; v.playsInline = true;
