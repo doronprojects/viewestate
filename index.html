@@ -2547,6 +2547,17 @@
       v.defaultMuted = true;
       v.playsInline = true;
       const tryPlay = () => { const p = v.play(); if (p) p.catch(() => {}); };
+      /* every visit starts the clip at a random point; from there it plays on
+         and loops normally */
+      let seekedSrc = '';
+      const randomStart = () => {
+        const d = v.duration;
+        if (!isFinite(d) || d < 4 || seekedSrc === v.currentSrc) return;
+        seekedSrc = v.currentSrc;
+        try { v.currentTime = Math.random() * (d - 3); } catch (e) {}
+      };
+      if (v.readyState >= 1) randomStart();
+      v.addEventListener('loadedmetadata', randomStart);
       tryPlay();
       v.addEventListener('loadedmetadata', tryPlay);
       v.addEventListener('canplay', tryPlay);
