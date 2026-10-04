@@ -155,8 +155,8 @@ window.VIEWESTATE_DATA = {
       elevator:     "",
       storage:      "",
       condition:    "",
-      video:        "videos/sample-tour4.mp4",
-      poster:       "videos/sample-tour4-poster.jpg",
+      video:        "videos/sample-tour5.mp4",
+      poster:       "videos/sample-tour5-poster.jpg",
       gallery: [
         "images/sample-1.webp",
         "images/sample-2.webp",
