@@ -2560,6 +2560,7 @@
       v.addEventListener('loadedmetadata', randomStart);
       tryPlay();
       v.addEventListener('loadedmetadata', tryPlay);
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) tryPlay(); });   /* browsers pause it while the tab is in the background */
       v.addEventListener('canplay', tryPlay);
       const kick = () => {
         tryPlay();
