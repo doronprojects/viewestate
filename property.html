@@ -994,12 +994,9 @@
     const SND_ON  = '<svg viewBox="0 0 24 24" width="20" height="20"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.4 6.4a9 9 0 0 1 0 11.3"/></svg>';
 
     function wants4k() {
-      const dpr = window.devicePixelRatio || 1;
-      const long = Math.max(screen.width, screen.height) * dpr;
-      const short = Math.min(screen.width, screen.height) * dpr;
-      const c = navigator.connection;
+      const c = navigator.connection;   /* Android/Chrome report this; iPhone doesn't (→ 4K) */
       const slow = c && (c.saveData || /(^|-)2g|3g/.test(c.effectiveType || ''));
-      return long >= 2560 && short >= 1440 && !slow;
+      return !slow;
     }
 
     /* ---------- render ---------- */
@@ -1109,12 +1106,18 @@
         let s = `<source src="${esc(p.video)}" type="video/mp4">`;
         if (/^videos\/.*\.mp4$/i.test(p.video || '')) {
           s += `<source src="${esc(p.video.replace(/\.mp4$/i, '.webm'))}" type="video/webm">`;
-          /* 4K only for big screens (desktop / TV / large tablet) on a decent
-             connection; phones keep the fast 1080p file. Convention: a
-             "<name>-4k.webm" next to the mp4 — if it's missing, the browser
-             just falls through to the next source. */
-          if (wants4k() && document.createElement('video').canPlayType('video/webm; codecs="vp9, opus"')) {
-            s = `<source src="${esc(p.video.replace(/\.mp4$/i, '-4k.webm'))}" type="video/webm">` + s;
+          /* 4K for everyone except slow / data-saver connections.
+             Convention: "<name>-4k.mp4" (HEVC — iPhone, Safari, most devices)
+             and "<name>-4k.webm" (VP9 — Chrome/Android/Firefox) next to the
+             1080p mp4; a missing file just falls through to the next source. */
+          if (wants4k()) {
+            const t = document.createElement('video');
+            const k4 = [];
+            if (t.canPlayType('video/mp4; codecs="hvc1.1.6.L153.B0, mp4a.40.2"') === 'probably')
+              k4.push(`<source src="${esc(p.video.replace(/\.mp4$/i, '-4k.mp4'))}" type='video/mp4; codecs="hvc1.1.6.L153.B0, mp4a.40.2"'>`);
+            if (t.canPlayType('video/webm; codecs="vp9, opus"'))
+              k4.push(`<source src="${esc(p.video.replace(/\.mp4$/i, '-4k.webm'))}" type="video/webm">`);
+            s = k4.join('') + s;
           }
         }
         return s;
