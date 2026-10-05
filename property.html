@@ -1356,10 +1356,10 @@
         document.getElementById('tapSnd')?.classList.remove('show');
         const vid = document.getElementById('propVid');   /* tour is over — stop on the property page */
         if (vid) { vid.pause(); try { vid.currentTime = 0; } catch (e) {} }
-        /* land the visitor straight on the photos (after layout settles back) */
+        /* skip past the video: land on the title + price, with the photos right below */
         setTimeout(() => {
-          const g = document.querySelector('.sec-gallery');
-          if (g) window.scrollTo({ top: g.getBoundingClientRect().top + window.scrollY - 12, behavior: 'smooth' });
+          const g = document.querySelector('.vh__info');
+          if (g) window.scrollTo({ top: g.getBoundingClientRect().top + window.scrollY, behavior: 'smooth' });
         }, 350);
       }
       document.documentElement.classList.remove('vh-theater');
