@@ -101,7 +101,7 @@
     @keyframes spin { to { transform:rotate(360deg); } }
     .err { background:#fbe6e3; color:#a23b2c; border-radius:9px; padding:12px 14px; font-size:13.5px; }
   </style>
-  <link rel="stylesheet" href="theme-light.css"><!-- theme-light -->
+  <link rel="stylesheet" href="theme-light.css?v=4"><!-- theme-light -->
 </head>
 <body>
   <!-- ===== access gate ===== -->
@@ -600,6 +600,6 @@
   // auto-login last (after all declarations) so initMap doesn't hit a TDZ on lmap
   if (sessionStorage.getItem('ve_admin_ok')==='1') showApp();
   </script>
-<script src="theme-light.js"></script><!-- theme-light -->
+<script src="theme-light.js?v=4"></script><!-- theme-light -->
 </body>
 </html>
