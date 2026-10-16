@@ -55,20 +55,20 @@
     .pcard:hover .pcard__media img { transform: scale(1.06); }
     .pcard.is-sold .pcard__media img { filter: grayscale(.5) brightness(.78); }
 
-    /* status band that fills the top of the card; its lower edge runs diagonally
-       from the left (higher) down to the right, coloured like the old traffic light */
+    /* status ribbon: an even-thickness band slanting from the top-left down to
+       the right, coloured like the old traffic light */
     .st-ribbon {
+      --rib: clamp(58px, 26%, 92px);              /* ribbon thickness */
       position: absolute; top: 0; left: 0; right: 0; z-index: 6;
-      height: clamp(58px, 26%, 92px);
-      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 42%);
-      -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 42%);
-      display: flex; align-items: flex-start; justify-content: center;
-      padding-top: clamp(12px, 5%, 20px); box-sizing: border-box;
+      height: calc(var(--rib) * 1.58);              /* thickness + the drop across the card */
+      clip-path: polygon(0 0, 100% 36.7%, 100% 100%, 0 63.3%);
+      -webkit-clip-path: polygon(0 0, 100% 36.7%, 100% 100%, 0 63.3%);
+      display: flex; align-items: center; justify-content: center;
       font-size: clamp(14px, 4.2vw, 18px); font-weight: 700; letter-spacing: .5px; color: #fff; line-height: 1.2;
       text-shadow: 0 1px 3px rgba(0,0,0,.3);
       pointer-events: none;
     }
-    .st-ribbon > b { display: inline-block; font-weight: 700; transform: rotate(6deg); margin-top: 4px; }
+    .st-ribbon > b { display: inline-block; font-weight: 700; transform: rotate(8deg); }
     .st-ribbon.st-sale { background: #1F9D4D; }
     .st-ribbon.st-neg  { background: #E07F12; }
     .st-ribbon.st-sold { background: #C93A2C; }
