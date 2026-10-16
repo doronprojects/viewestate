@@ -61,15 +61,15 @@
       --rib: clamp(56px, 16vw, 84px);             /* ribbon thickness (vw, not %: iPhone can't resolve % of the card height) */
       position: absolute; top: 0; left: 0; right: 0; z-index: 6;
       height: calc(var(--rib) * 1.72);              /* thickness + the drop across the card */
-      clip-path: polygon(0 0, 100% 42%, 100% 100%, 0 58%);
-      -webkit-clip-path: polygon(0 0, 100% 42%, 100% 100%, 0 58%);
+      clip-path: polygon(0 -10%, 100% 32%, 100% 90%, 0 48%);
+      -webkit-clip-path: polygon(0 -10%, 100% 32%, 100% 90%, 0 48%);
       display: flex; align-items: center; justify-content: center;
       font-size: clamp(14px, 4.2vw, 18px); font-weight: 700; letter-spacing: .5px; color: #fff; line-height: 1.2;
       text-shadow: 0 1px 3px rgba(0,0,0,.3);
       pointer-events: none;
       -webkit-transform: translateZ(0); transform: translateZ(0);   /* own layer: stays above the photo on iPhone */
     }
-    .st-ribbon > b { display: inline-block; font-weight: 700; transform: rotate(9deg); }
+    .st-ribbon > b { display: inline-block; font-weight: 700; transform: rotate(9deg); margin-top: -12px; }
     /* VE mark in the card's top-left corner, drawn inline (crisp, uses the page's Playfair font) */
     .st-logo {
       position: absolute; top: 8px; left: 10px; z-index: 7;

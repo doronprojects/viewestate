@@ -968,7 +968,7 @@
       border-radius: 16px 16px 0 0;                 /* Safari: round the corner on the layer itself */
     }
     .st-ribbon polygon { fill: var(--rib-c); }
-    .st-ribbon > b { position: relative; display: inline-block; font-weight: 700; transform: rotate(9deg); }
+    .st-ribbon > b { position: relative; display: inline-block; font-weight: 700; transform: rotate(9deg); margin-top: -12px; }
     /* VE mark in the card's top-left corner, drawn inline (crisp, uses the page's
        Playfair font) inside the ribbon so it shares the ribbon's layer on iPhone */
     .st-ribbon .st-logo {
@@ -2659,7 +2659,7 @@
           <div class="cf-item" data-idx="${i}"><a class="prop-card${p.saleStatus === 'sold' ? ' prop-card--sold' : ''}" href="property.html?id=${encodeURIComponent(p.id)}" aria-label="פתח דף נכס: ${label}">
             ${media}
             <div class="prop-card__shade"></div>
-            <span class="st-ribbon ${ss.cls}"><svg class="st-ribbon__bg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon points="0,0 100,42 100,100 0,58"/></svg><b>${ss.label}</b><svg class="st-logo" viewBox="0 0 256 224" aria-hidden="true"><defs><linearGradient id="veLogoG" x1="0" y1="0" x2="0.2" y2="1"><stop offset="0" stop-color="#ECD08A"/><stop offset=".5" stop-color="#C9A35A"/><stop offset="1" stop-color="#B58F44"/></linearGradient><linearGradient id="veLogoS" x1="0" y1="0" x2="0.1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#EDEDED"/><stop offset="1" stop-color="#B9B9B9"/></linearGradient></defs><text x="150" y="190" text-anchor="middle" font-family="\'Playfair Display\',Didot,Georgia,serif" font-weight="700" font-size="180" fill="url(#veLogoS)" stroke="rgba(40,22,8,.45)" stroke-width="6" paint-order="stroke">E</text><text x="96" y="157" text-anchor="middle" font-family="\'Playfair Display\',Didot,Georgia,serif" font-weight="700" font-size="215" fill="url(#veLogoG)" stroke="rgba(40,22,8,.45)" stroke-width="6" paint-order="stroke">V</text></svg></span>
+            <span class="st-ribbon ${ss.cls}"><svg class="st-ribbon__bg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon points="0,-10 100,32 100,90 0,48"/></svg><b>${ss.label}</b><svg class="st-logo" viewBox="0 0 256 224" aria-hidden="true"><defs><linearGradient id="veLogoG" x1="0" y1="0" x2="0.2" y2="1"><stop offset="0" stop-color="#ECD08A"/><stop offset=".5" stop-color="#C9A35A"/><stop offset="1" stop-color="#B58F44"/></linearGradient><linearGradient id="veLogoS" x1="0" y1="0" x2="0.1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#EDEDED"/><stop offset="1" stop-color="#B9B9B9"/></linearGradient></defs><text x="150" y="190" text-anchor="middle" font-family="\'Playfair Display\',Didot,Georgia,serif" font-weight="700" font-size="180" fill="url(#veLogoS)" stroke="rgba(40,22,8,.45)" stroke-width="6" paint-order="stroke">E</text><text x="96" y="157" text-anchor="middle" font-family="\'Playfair Display\',Didot,Georgia,serif" font-weight="700" font-size="215" fill="url(#veLogoG)" stroke="rgba(40,22,8,.45)" stroke-width="6" paint-order="stroke">V</text></svg></span>
             ${p.video ? '<div class="prop-card__video-tag" aria-hidden="true">▶ &nbsp;וידאו</div>' : ''}
             <div class="prop-card__play-cue" aria-hidden="true"><div class="play-tri"></div></div>
             <div class="prop-card__body">
