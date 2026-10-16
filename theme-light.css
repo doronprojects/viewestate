@@ -1,0 +1,22 @@
+/* Light "ivory white" theme layered over the original dark design.
+   To go back to the original colors, remove the theme-light.css / theme-light.js
+   lines from the pages (or check out the git tag original-dark-theme). */
+body { background: #FBF9F4 !important; }
+.site-bg { background: linear-gradient(160deg, #FFFEFB 0%, #FBF9F4 50%, #F5F1EA 100%) !important; }
+.site-bg .o1, .site-bg .o2, .site-bg .o3 { opacity: .55; }
+.nav { background: rgba(255,254,251,.96) !important; box-shadow: 0 1px 0 rgba(154,114,48,.22) !important; }
+.nav__ham span { background: #6B4E1A !important; }
+::placeholder { color: rgba(28,16,8,.38) !important; }
+
+/* gradient text: silver -> dark brown, light gold -> deeper gold */
+.logo-e, .wm-e, .hero__h1 .h1-silver {
+  background-image: linear-gradient(170deg, #4A3626 0%, #2A1A0E 55%, #1C1008 100%) !important;
+  color: #1C1008 !important;
+}
+.logo-v, .wm-v, .hero__h1 .h1-gold, .sig-accent {
+  background-image: linear-gradient(165deg, #C29A4C 0%, #A67C34 45%, #7E5B1E 100%) !important;
+  color: #9A7230 !important;
+}
+.hero__tagline {
+  background-image: linear-gradient(100deg, #7E5B1E 0%, #A67C34 20%, #C9A35A 36%, #D8BC7A 50%, #B58F44 66%, #9A7230 82%, #7E5B1E 100%) !important;
+}
