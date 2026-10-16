@@ -59,7 +59,7 @@
        the right, coloured like the old traffic light */
     .st-ribbon {
       --rib: clamp(58px, 26%, 92px);              /* ribbon thickness */
-      position: absolute; top: 0; left: 0; right: 0; z-index: 6;
+      position: absolute; top: -8px; left: 0; right: 0; z-index: 6;
       height: calc(var(--rib) * 1.58);              /* thickness + the drop across the card */
       clip-path: polygon(0 0, 100% 36.7%, 100% 100%, 0 63.3%);
       -webkit-clip-path: polygon(0 0, 100% 36.7%, 100% 100%, 0 63.3%);
@@ -69,9 +69,9 @@
       pointer-events: none;
     }
     .st-ribbon > b { display: inline-block; font-weight: 700; transform: rotate(8deg); }
-    .st-ribbon.st-sale { background: #1F9D4D; }
-    .st-ribbon.st-neg  { background: #E07F12; }
-    .st-ribbon.st-sold { background: #C93A2C; }
+    .st-ribbon.st-sale { background: #4F8C68; }
+    .st-ribbon.st-neg  { background: #C98A45; }
+    .st-ribbon.st-sold { background: #A9483C; }
 
     .pcard__body { padding: 18px 20px 20px; display: flex; flex-direction: column; flex: 1; }
     .pcard__name { font-family: var(--serif); font-size: 21px; font-weight: 700; color: #FAF6F0; margin: 0 0 4px; }
