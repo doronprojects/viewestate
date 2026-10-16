@@ -968,7 +968,7 @@
       border-radius: 16px 16px 0 0;                 /* Safari: round the corner on the layer itself */
     }
     .st-ribbon polygon { fill: var(--rib-c); }
-    .st-ribbon > b { position: relative; display: inline-block; font-weight: 700; transform: rotate(8deg); margin-top: -6px; }
+    .st-ribbon > b { position: relative; display: inline-block; font-weight: 700; transform: rotate(8deg); margin-top: -18px; }
     .st-ribbon.st-sale { --rib-c: #4F8C68; }
     .st-ribbon.st-neg  { --rib-c: #C98A45; }
     .st-ribbon.st-sold { --rib-c: #A9483C; }
@@ -2653,7 +2653,7 @@
           <div class="cf-item" data-idx="${i}"><a class="prop-card${p.saleStatus === 'sold' ? ' prop-card--sold' : ''}" href="property.html?id=${encodeURIComponent(p.id)}" aria-label="פתח דף נכס: ${label}">
             ${media}
             <div class="prop-card__shade"></div>
-            <span class="st-ribbon ${ss.cls}"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon points="0,0 100,29 100,92 0,63"/></svg><b>${ss.label}</b></span>
+            <span class="st-ribbon ${ss.cls}"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon points="0,0 100,19 100,82 0,53"/></svg><b>${ss.label}</b></span>
             ${p.video ? '<div class="prop-card__video-tag" aria-hidden="true">▶ &nbsp;וידאו</div>' : ''}
             <div class="prop-card__play-cue" aria-hidden="true"><div class="play-tri"></div></div>
             <div class="prop-card__body">
