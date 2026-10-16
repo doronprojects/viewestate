@@ -1407,10 +1407,10 @@
         el.classList.add('out');
         setTimeout(() => el.classList.remove('on', 'out'), 650);
       };
-      setTimeout(close, 3200);
+      setTimeout(close, 5000);
       el.addEventListener('click', close);
-      window.addEventListener('orientationchange', () => setTimeout(close, 400), { once: true });
-      matchMedia('(orientation: landscape)').addEventListener?.('change', e => { if (e.matches) setTimeout(close, 400); });
+      window.addEventListener('orientationchange', () => setTimeout(close, 1000), { once: true });
+      matchMedia('(orientation: landscape)').addEventListener?.('change', e => { if (e.matches) setTimeout(close, 1000); });
     }
 
     function wireUp(p) {
