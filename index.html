@@ -948,25 +948,28 @@
     .prop-card__name, .prop-card__info, .prop-card__type { width: 100%; }
 
     /* status ribbon: an even-thickness band slanting from the top-left down to
-       the right, coloured like the old traffic light */
+       the right, coloured like the old traffic light. Drawn as an inline SVG
+       (not clip-path / overflow clipping): inside the coverflow's 3D transforms
+       iPhone Safari drops clipped overlays, but paints an SVG like the photo. */
     .st-ribbon {
-      --rib: clamp(56px, 16vw, 84px);             /* ribbon thickness (vw, not %: iPhone can't resolve % of the card height) */
-      position: absolute; top: -8px; left: 0; right: 0; z-index: 6;
-      height: calc(var(--rib) * 1.58);              /* thickness + the drop across the card */
-      clip-path: polygon(0 0, 100% 36.7%, 100% 100%, 0 63.3%);
-      -webkit-clip-path: polygon(0 0, 100% 36.7%, 100% 100%, 0 63.3%);
+      --rib: clamp(56px, 16vw, 84px);             /* ribbon thickness */
+      position: absolute; top: 0; left: 0; right: 0; z-index: 6;
+      height: calc(var(--rib) * 1.5);               /* thickness + the drop across the card */
       display: flex; align-items: center; justify-content: center;
       font-size: clamp(14px, 4.2vw, 18px); font-weight: 700; letter-spacing: .5px; color: #fff; line-height: 1.2;
       text-shadow: 0 1px 3px rgba(0,0,0,.3);
       pointer-events: none;
-      -webkit-transform: translateZ(0); transform: translateZ(0);   /* own layer: stays above the photo on iPhone */
+      -webkit-transform: translateZ(0); transform: translateZ(0);   /* own layer above the photo, like .prop-card__type */
     }
-    .st-ribbon > b { display: inline-block; font-weight: 700; transform: rotate(8deg); }
-    /* clip box: the coverflow's 3D transforms stop the card's own overflow from clipping */
-    .st-ribbon-clip { position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 6; overflow: hidden; border-radius: inherit; pointer-events: none; transform-style: flat; -webkit-transform: translateZ(1px); transform: translateZ(1px); }
-    .st-ribbon.st-sale { background: #4F8C68; }
-    .st-ribbon.st-neg  { background: #C98A45; }
-    .st-ribbon.st-sold { background: #A9483C; }
+    .st-ribbon svg {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block;
+      border-radius: 16px 16px 0 0;                 /* Safari: round the corner on the layer itself */
+    }
+    .st-ribbon polygon { fill: var(--rib-c); }
+    .st-ribbon > b { position: relative; display: inline-block; font-weight: 700; transform: rotate(8deg); margin-top: -6px; }
+    .st-ribbon.st-sale { --rib-c: #4F8C68; }
+    .st-ribbon.st-neg  { --rib-c: #C98A45; }
+    .st-ribbon.st-sold { --rib-c: #A9483C; }
 
     .prop-card:hover .prop-card__body { transform: translateY(0); }
 
@@ -2648,7 +2651,7 @@
           <div class="cf-item" data-idx="${i}"><a class="prop-card${p.saleStatus === 'sold' ? ' prop-card--sold' : ''}" href="property.html?id=${encodeURIComponent(p.id)}" aria-label="פתח דף נכס: ${label}">
             ${media}
             <div class="prop-card__shade"></div>
-            <span class="st-ribbon-clip"><span class="st-ribbon ${ss.cls}"><b>${ss.label}</b></span></span>
+            <span class="st-ribbon ${ss.cls}"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon points="0,0 100,29 100,92 0,63"/></svg><b>${ss.label}</b></span>
             ${p.video ? '<div class="prop-card__video-tag" aria-hidden="true">▶ &nbsp;וידאו</div>' : ''}
             <div class="prop-card__play-cue" aria-hidden="true"><div class="play-tri"></div></div>
             <div class="prop-card__body">
