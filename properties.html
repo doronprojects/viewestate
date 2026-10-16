@@ -70,18 +70,11 @@
       -webkit-transform: translateZ(0); transform: translateZ(0);   /* own layer: stays above the photo on iPhone */
     }
     .st-ribbon > b { display: inline-block; font-weight: 700; transform: rotate(9deg); }
-    /* VE mark in the card's top-left corner, sitting on the ribbon */
+    /* VE mark in the card's top-left corner, drawn inline (crisp, uses the page's Playfair font) */
     .st-logo {
       position: absolute; top: 8px; left: 10px; z-index: 7;
-      width: clamp(30px, 9vw, 42px); height: auto; display: block;
-      filter: drop-shadow(0 1px 2px rgba(0,0,0,.35));
+      width: clamp(32px, 9.5vw, 44px); height: auto; display: block; overflow: visible;
       pointer-events: none;
-      -webkit-transform: translateZ(0); transform: translateZ(0);
-    }
-    /* the photo rules above stretch/zoom every img in the media box — not the logo */
-    .pcard__media img.st-logo, .pcard:hover .pcard__media img.st-logo {
-      width: clamp(30px, 9vw, 42px); height: auto; object-fit: contain;
-      -webkit-transform: translateZ(0); transform: translateZ(0); transition: none;
     }
     .st-ribbon.st-sale { background: #4F8C68; }
     .st-ribbon.st-neg  { background: #C98A45; }
@@ -168,7 +161,7 @@
         '<div class="pcard__media">'+
           (img?'<img src="'+esc(img)+'" alt="'+esc(p.name)+'" loading="lazy">':'')+
           '<span class="st-ribbon '+ss.cls+'"><b>'+ss.label+'</b></span>'+
-          '<img class="st-logo" src="logo.svg" alt="" aria-hidden="true">'+
+          '<svg class="st-logo" viewBox="0 0 256 224" aria-hidden="true"><defs><linearGradient id="veLogoG" x1="0" y1="0" x2="0.2" y2="1"><stop offset="0" stop-color="#ECD08A"/><stop offset=".5" stop-color="#C9A35A"/><stop offset="1" stop-color="#B58F44"/></linearGradient><linearGradient id="veLogoS" x1="0" y1="0" x2="0.1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#EDEDED"/><stop offset="1" stop-color="#B9B9B9"/></linearGradient></defs><text x="150" y="190" text-anchor="middle" font-family="\'Playfair Display\',Didot,Georgia,serif" font-weight="700" font-size="180" fill="url(#veLogoS)" stroke="rgba(40,22,8,.45)" stroke-width="6" paint-order="stroke">E</text><text x="96" y="157" text-anchor="middle" font-family="\'Playfair Display\',Didot,Georgia,serif" font-weight="700" font-size="215" fill="url(#veLogoG)" stroke="rgba(40,22,8,.45)" stroke-width="6" paint-order="stroke">V</text></svg>'+
         '</div>'+
         '<div class="pcard__body">'+
           '<h3 class="pcard__name">'+esc(p.name)+'</h3>'+
