@@ -947,31 +947,21 @@
     /* belt-and-suspenders: never let the text shrink-wrap to one word */
     .prop-card__name, .prop-card__info, .prop-card__type { width: 100%; }
 
-    /* in-flow traffic-light status (renders reliably on iOS, unlike a floating
-       absolutely-positioned overlay inside the clipped rounded card) */
-    .prop-tl {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 12px 5px 9px;
-      margin-bottom: 12px;
-      border-radius: 100px;
-      background: rgba(14,8,3,0.55);
-      border: 1px solid rgba(201,163,90,0.22);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+    /* diagonal status ribbon across the card's top corner, coloured like the old traffic light */
+    .st-ribbon {
+      position: absolute; top: 34px; right: -54px; z-index: 6;
+      width: 220px; padding: 9px 0; text-align: center;
+      transform: rotate(45deg);
+      font-size: 15px; font-weight: 700; letter-spacing: .4px; color: #fff; line-height: 1.2;
+      text-shadow: 0 1px 2px rgba(0,0,0,.25);
+      box-shadow: 0 3px 10px rgba(0,0,0,.28);
+      pointer-events: none;
     }
-    .prop-tl .tl-dot {
-      width: 8px; height: 8px; border-radius: 50%; flex: none;
-      background: rgba(250,246,240,0.20);
-    }
-    .prop-tl em {
-      font-style: normal; font-size: 11px; font-weight: 700;
-      letter-spacing: 0.4px; color: #FFFFFF; margin-inline-start: 3px;
-    }
-    /* light only the active lamp + tint the label */
-    .prop-tl.st-sale .tl-sale { background: #25B25A; box-shadow: 0 0 9px rgba(37,178,90,0.9); }
-    .prop-tl.st-neg  .tl-neg  { background: #E89321; box-shadow: 0 0 9px rgba(232,147,33,0.9); }
-    .prop-tl.st-sold .tl-sold { background: #D33F2E; box-shadow: 0 0 9px rgba(211,63,46,0.9); }
+    /* clip box: the coverflow's 3D transforms stop the card's own overflow from clipping */
+    .st-ribbon-clip { position: absolute; inset: 0; z-index: 6; overflow: hidden; border-radius: inherit; pointer-events: none; transform-style: flat; }
+    .st-ribbon.st-sale { background: #1F9D4D; }
+    .st-ribbon.st-neg  { background: #E07F12; }
+    .st-ribbon.st-sold { background: #C93A2C; }
 
     .prop-card:hover .prop-card__body { transform: translateY(0); }
 
@@ -2653,10 +2643,10 @@
           <div class="cf-item" data-idx="${i}"><a class="prop-card${p.saleStatus === 'sold' ? ' prop-card--sold' : ''}" href="property.html?id=${encodeURIComponent(p.id)}" aria-label="פתח דף נכס: ${label}">
             ${media}
             <div class="prop-card__shade"></div>
+            <span class="st-ribbon-clip"><span class="st-ribbon ${ss.cls}">${ss.label}</span></span>
             ${p.video ? '<div class="prop-card__video-tag" aria-hidden="true">▶ &nbsp;וידאו</div>' : ''}
             <div class="prop-card__play-cue" aria-hidden="true"><div class="play-tri"></div></div>
             <div class="prop-card__body">
-              <span class="prop-tl ${ss.cls}"><i class="tl-dot tl-sale"></i><i class="tl-dot tl-neg"></i><i class="tl-dot tl-sold"></i><em>${ss.label}</em></span>
               <p class="prop-card__type">${esc(p.type || '')}${p.city ? ' · ' + esc(p.city) : ''}</p>
               <h3 class="prop-card__name">${esc(p.name)}</h3>
             </div>
