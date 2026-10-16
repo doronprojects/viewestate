@@ -849,6 +849,7 @@
       backface-visibility: hidden;
     }
     .cf-item .prop-card {
+      display: block;   /* it is an <a>: inline by default, which makes Safari size its overlays to zero */
       width: 100%; height: 100%; border-radius: 16px;
       box-shadow: 0 30px 70px rgba(0,0,0,0.55);
       transition: none; backface-visibility: hidden;
@@ -954,6 +955,7 @@
     .st-ribbon {
       --rib: clamp(56px, 16vw, 84px);             /* ribbon thickness */
       position: absolute; top: 0; left: 0; right: 0; z-index: 6;
+      width: 100%;                                  /* Safari: the card is an inline <a>, so left/right alone give zero width */
       height: calc(var(--rib) * 1.5);               /* thickness + the drop across the card */
       display: flex; align-items: center; justify-content: center;
       font-size: clamp(14px, 4.2vw, 18px); font-weight: 700; letter-spacing: .5px; color: #fff; line-height: 1.2;
@@ -2122,7 +2124,7 @@
     .nav:not(.nav--scrolled) .nav__cta { border-color: var(--gold-light); color: var(--gold-light) !important; }
     .nav:not(.nav--scrolled) .nav__ham span { background: var(--gold-light); }
   </style>
-  <link rel="stylesheet" href="theme-light.css?v=4"><!-- theme-light -->
+  <link rel="stylesheet" href="theme-light.css?v=5"><!-- theme-light -->
 </head>
 <body>
   <div class="site-bg" aria-hidden="true">

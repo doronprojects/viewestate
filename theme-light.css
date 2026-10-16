@@ -18,3 +18,6 @@ body { background: #FBF9F4 !important; }
   color: #9A7230 !important;
 }
 .hero__tagline { color: #A67C34 !important; background: none !important; -webkit-text-fill-color: currentColor !important; }
+
+/* carousel cards: soft shadow on the light background */
+.cf-item .prop-card { box-shadow: 0 14px 30px rgba(28,16,8,.16) !important; }
